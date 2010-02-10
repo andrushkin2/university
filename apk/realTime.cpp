@@ -54,22 +54,24 @@ int main()
 		return 1;
 	}
     getchInitialization();
-    
+    printf("Menu:\n\t1) Print time\n\t2) Set new time\n\t3) Delay for RTC\n\t4) EXIT\n\n");
     char c;
     while(c != '4')
     {
-        printf("Menu:\n\t1) Print time\n\t2) Set new time\n\t3) Delay for RTC\n\t4) EXIT\n\n");
         c = getchar();
         switch(c)
         {
             case '1': 
                 getTime();
+                printf("Menu:\n\t1) Print time\n\t2) Set new time\n\t3) Delay for RTC\n\t4) EXIT\n\n");
                 break;
             case '2': 
                 setTime();
+                printf("Menu:\n\t1) Print time\n\t2) Set new time\n\t3) Delay for RTC\n\t4) EXIT\n\n");
                 break;
             case '3': 
                 delayRTC();
+                printf("Menu:\n\t1) Print time\n\t2) Set new time\n\t3) Delay for RTC\n\t4) EXIT\n\n");
                 break;
             default: break;
         }
@@ -101,26 +103,26 @@ void getTime(void)
     //  get current year
     printf("\n%d-", bcdCodeToInt(getValueFromPort(0x09)));
     //  get current month
-    printf("\n%d-", bcdCodeToInt(getValueFromPort(0x08)));
+    printf("%d-", bcdCodeToInt(getValueFromPort(0x08)));
     //  get current date
-    printf("\n%d\s\s", bcdCodeToInt(getValueFromPort(0x07)));
+    printf("%d  ", bcdCodeToInt(getValueFromPort(0x07)));
     //  get current hours
-    printf("\n%d:", bcdCodeToInt(getValueFromPort(0x04)));
+    printf("%d:", bcdCodeToInt(getValueFromPort(0x04)));
     //  get current minutes
-    printf("\n%d:", bcdCodeToInt(getValueFromPort(0x02)));
+    printf("%d:", bcdCodeToInt(getValueFromPort(0x02)));
     //  get current seconds
-    printf("\n%d\s\s", bcdCodeToInt(getValueFromPort(0x00)));
+    printf("%d  ", bcdCodeToInt(getValueFromPort(0x00)));
     //  get week day name
-    switch(bcdCodeToInt(getValueFromPort(0x00)))
+    switch(bcdCodeToInt(getValueFromPort(0x06)))
     {
-        case 1: printf("Sunday"); break;
         case 2: printf("Monday"); break;
         case 3: printf("Tuesday"); break;
         case 4: printf("Wednesday"); break;
         case 5: printf("Thursday"); break;
         case 6: printf("Friday"); break;
         case 7: printf("Saturday"); break;
-        default: printf(""); break;
+        case 1: printf("Sunday"); break;
+        default: break;
     }
     printf("\n");
 }
@@ -162,12 +164,8 @@ void setTime(void)
     printf("\nEnter seconds: "); 
     scanf("%d", &value);
     setValueToPort(0x00, value);
-    //  set week day number
-    printf("\nEnter week day number: "); 
-    scanf("%d", &value);
-    setValueToPort(0x06, value);
-    //  enable time update
     unfreezeTimeUpdate();
+    printf("\nDone!\n");
 }
 
 //  disable time update
@@ -215,11 +213,11 @@ void delayRTC(void)
     freezeTimeUpdate();
     //  run delay in milliseconds
 	usleep(delayInMilliseconds * 1000);
-    printf("\nEnd delay of %d ms\n", delayInMilliseconds);
+    printf("\nEnd delay of %ld ms\n", delayInMilliseconds);
     //  enable time update
     unfreezeTimeUpdate();
     //  print current dateTime after delay
-    printf("\Time after delay: ");
+    printf("\nTime after delay: ");
     getTime();
 }
 //  function for converting BCD code to integer
