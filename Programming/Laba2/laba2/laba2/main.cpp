@@ -16,59 +16,64 @@ int main(int argc, const char * argv[]) {
     do
     {
         {
-            system("cls");
-            matrix A, B, C;
-            cout<<"Input matrix A sizes: ";
-            cin>>m>>n;
+            system("clear");
+            matrixClass A, B, C;
             
+            //work with A matrix
+            cout << "Enter an A matrix size: ";
+            cin >> m >> n;
             A.SetSize(m, n);
             A.fill();
+            system("clear");
             A.print();
             
-            cout<<"Input matrix B sizes: ";
-            cin>>m>>n;
-            
+            //work with B matrix
+            cout << "\n\nEnter an B matrix size: ";
+            cin >> m >> n;
             B.SetSize(m, n);
             B.fill();
+            system("clear");
             B.print();
             
-            cout<<"Select operation: "<<endl<<"1. add"<<endl<<"2. mull"<<endl;
-            cin>>m;
+            cout << "\n\nSelect an operation:\n\t1) add\n\t2) mull\n\t";
+            cin >> m;
             
             switch (m)
             {
                 case (1):
                     try
-                {
-                    C = A + B;
-                    cout<<"A + B = "<<endl;
-                    C.print();
-                }
+                    {
+                        C = A + B;
+                        system("clear");
+                        cout<<"A + B = "<<endl;
+                        C.print();
+                    }
                     catch(exeption ex)
-                {
-                    cout<<"Matrix sizes mismatch!"<<endl;
-                }
+                    {
+                        cout<<"Matrix sizes mismatch!"<<endl;
+                    }
                     break;
                 case (2):
                     try
-                {
-                    C = A * B;
-                    cout<<"A * B = "<<endl;
-                    C.print();
-                }
+                    {
+                        C = A * B;
+                        system("clear");
+                        cout<<"A * B = "<<endl;
+                        C.print();
+                    }
                     catch(exeption ex)
-                {
-                    cout<<"Matrix a not consistent!"<<endl;
-                }
+                    {
+                        cout<<"Matrix a not consistent!"<<endl;
+                    }
                     break;
                 default:
-                    cout<<"Select error!"<<endl;
+                    cout<<"Unknown operation has been selected!"<<endl;
             }
         }
-        cout<<"Exit? (type \"y\" for exit) ";
+        cout<<"\n\nDo you want try again? (type an \"y\" symbol) ";
         cin>>exit;
         
-    } while(exit!='y');
+    } while(exit == 'y');
     
     return 0;
 }

@@ -14,33 +14,42 @@
 
 using namespace std;
 
-void matrix::SetSize(const int y, const int x)
+void matrixClass::SetSize(const int y, const int x)
 {
-    m = y;
     n = x;
+    m = y;
     try
     {
         p = new int*[m];
-        for(int i = 0; i < m; i++) p[i] = new int[n];
+        for(int i = 0; i < m; i++){
+            p[i] = new int[n];
+        }
     }
     catch (bad_alloc xa)
     {
-        cout<<"Memory Allocation Error!";
+        cout << "Memory Allocation Error!";
         exit(EXIT_FAILURE);
     }
     
-    for (int i = 0; i < m; i++)
-        for(int j = 0; j < n; j++) p[i][j] = 0;
+    for (int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++){
+            p[i][j] = 0;
+        }
+    }
 }
 
-matrix::~matrix()
+matrixClass::~matrixClass()
 {
-    if(!p) return;
-    for(int i = 0; i < m; i++) delete [] p[i];
+    if(!p){
+        return;
+    }
+    for(int i = 0; i < m; i++){
+        delete [] p[i];
+    }
     delete [] p;
 }
 
-matrix::matrix(const matrix& op2)
+matrixClass::matrixClass(const matrixClass& op2)
 {
     m = op2.m;
     n = op2.n;
@@ -51,16 +60,17 @@ matrix::matrix(const matrix& op2)
     }
     catch (bad_alloc xa)
     {
-        cout<<"Memory Allocation Error!";
+        cout << "Memory Allocation Error!";
         exit(EXIT_FAILURE);
     }
-    
-    for (int i = 0; i < m; i++)
-        for(int j = 0; j < n; j++)
+    for (int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++){
             p[i][j] = op2.p[i][j];
+        }
+    }
 }
 
-void matrix::fill()
+void matrixClass::fill()
 {
     for (int i = 0; i < m; i++)
         for(int j = 0; j < n; j++)
@@ -70,19 +80,23 @@ void matrix::fill()
         }
 }
 
-void matrix::print()
+void matrixClass::print()
 {
     for (int i = 0; i < m; i++)
     {
-        for(int j = 0; j < n; j++) cout<<setw(10)<<p[i][j];
+        for(int j = 0; j < n; j++){
+            cout<<setw(10)<<p[i][j];
+        }
         cout<<endl;
     }
 }
 
-matrix matrix::operator+(matrix B)
+matrixClass matrixClass::operator+(matrixClass B)
 {
-    matrix C;
-    if( (m!=B.m) || (n!=B.n) ) throw SizesMismatch;		//≈ÒÎË Ï‡ÚËˆ˚ ‡ÁÌÓ„Ó ‡ÁÏÂ‡, „ÂÌÂËÛÂÚÒˇ ËÒÍÎ˛˜ËÚÂÎ¸Ì‡ˇ ÒËÚÛ‡ˆËˇ
+    matrixClass C;
+    if( m!=B.m || n!=B.n){
+        throw SizesMismatch;
+    }
     C.SetSize(m, n);
     for (int i = 0; i < m; i++)
         for(int j = 0; j < n; j++)
@@ -90,25 +104,33 @@ matrix matrix::operator+(matrix B)
     return C;
 }
 
-matrix matrix::operator*(matrix B)
+matrixClass matrixClass::operator*(matrixClass B)
 {
-    matrix C;
-    if( n != B.m ) throw NotConsistent;		//≈ÒÎË Ï‡ÚËˆ˚ ÌÂ ÒÓ„Î‡ÒÓ‚‡Ì˚, „ÂÌÂËÛÂÚÒˇ ËÒÍÎ˛˜ËÚÂÎ¸Ì‡ˇ ÒËÚÛ‡ˆËˇ
+    matrixClass C;
+    if( n != B.m ){
+        throw NotConsistent;
+    }
     C.SetSize(m, B.n);
-    for (int i = 0; i < C.m; i++)
-        for(int j = 0; j < C.n; j++)
-            for(int k = 0; k < n; C.p[i][j] += p[i][k] * B.p[k][j], k++);
+    for (int i = 0; i < C.m; i++){
+        for(int j = 0; j < C.n; j++){
+            for(int k = 0; k < n; k++){
+                C.p[i][j] += p[i][k] * B.p[k][j];
+            };
+        }
+    }
     return C;
 }
 
-matrix matrix::operator=(matrix obj)
+matrixClass matrixClass::operator=(matrixClass obj)
 {
     m = obj.m;
     n = obj.n;
     try
     {
         p = new int*[m];
-        for(int i = 0; i < m; i++) p[i] = new int[n];
+        for(int i = 0; i < m; i++){
+            p[i] = new int[n];
+        }
     }
     catch (bad_alloc xa)
     {
@@ -116,9 +138,10 @@ matrix matrix::operator=(matrix obj)
         exit(EXIT_FAILURE);
     }
     
-    for (int i = 0; i < m; i++)
-        for(int j = 0; j < n; j++)
+    for (int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++){
             p[i][j] = obj.p[i][j];
-    
+        }
+    }
     return *this;
 }

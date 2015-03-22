@@ -18,20 +18,20 @@ enum exeption
     NotConsistent
 };
 
-class matrix
+class matrixClass
 {
     int **p, m, n;
     
 public:
-    matrix() { p = NULL; }
-    matrix(const matrix&);
-    ~matrix();
+    matrixClass() { p = NULL; }
+    matrixClass(const matrixClass&);
+    ~matrixClass();
     void SetSize(const int, const int);
     void fill();
     void print();
-    matrix operator+(matrix);
-    matrix operator*(matrix);
-    matrix operator=(matrix);
+    matrixClass operator+(matrixClass);
+    matrixClass operator*(matrixClass);
+    matrixClass operator=(matrixClass);
 };
 
 #endif /* defined(__laba2__arrayClass__) */
