@@ -25,13 +25,13 @@ class matrixClass
 public:
     matrixClass() { p = NULL; }
     matrixClass(const matrixClass&);
-    ~matrixClass();
-    void SetSize(const int, const int);
+    void SetSize(int, int);
     void fill();
     void print();
+    ~matrixClass();
+    matrixClass operator=(matrixClass);
     matrixClass operator+(matrixClass);
     matrixClass operator*(matrixClass);
-    matrixClass operator=(matrixClass);
 };
 
 #endif /* defined(__laba2__arrayClass__) */

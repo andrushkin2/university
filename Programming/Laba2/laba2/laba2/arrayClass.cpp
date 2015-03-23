@@ -14,7 +14,7 @@
 
 using namespace std;
 
-void matrixClass::SetSize(const int y, const int x)
+void matrixClass::SetSize(int y, int x)
 {
     n = x;
     m = y;
@@ -27,7 +27,7 @@ void matrixClass::SetSize(const int y, const int x)
     }
     catch (bad_alloc xa)
     {
-        cout << "Memory Allocation Error!";
+        cout << "Memory Allocation!";
         exit(EXIT_FAILURE);
     }
     
@@ -60,7 +60,7 @@ matrixClass::matrixClass(const matrixClass& op2)
     }
     catch (bad_alloc xa)
     {
-        cout << "Memory Allocation Error!";
+        cout << "Memory Allocation!";
         exit(EXIT_FAILURE);
     }
     for (int i = 0; i < m; i++){
@@ -75,7 +75,7 @@ void matrixClass::fill()
     for (int i = 0; i < m; i++)
         for(int j = 0; j < n; j++)
         {
-            cout<<"Input value of ["<<i+1<<","<<j+1<<"]: ";
+            cout<<"Fill ["<<i+1<<","<<j+1<<"] value: ";
             cin>>p[i][j];
         }
 }
@@ -93,10 +93,10 @@ void matrixClass::print()
 
 matrixClass matrixClass::operator+(matrixClass B)
 {
-    matrixClass C;
     if( m!=B.m || n!=B.n){
         throw SizesMismatch;
     }
+    matrixClass C;
     C.SetSize(m, n);
     for (int i = 0; i < m; i++)
         for(int j = 0; j < n; j++)
@@ -106,10 +106,10 @@ matrixClass matrixClass::operator+(matrixClass B)
 
 matrixClass matrixClass::operator*(matrixClass B)
 {
-    matrixClass C;
     if( n != B.m ){
         throw NotConsistent;
     }
+    matrixClass C;
     C.SetSize(m, B.n);
     for (int i = 0; i < C.m; i++){
         for(int j = 0; j < C.n; j++){
@@ -134,7 +134,7 @@ matrixClass matrixClass::operator=(matrixClass obj)
     }
     catch (bad_alloc xa)
     {
-        cout<<"Memory Allocation Error!";
+        cout<<"Memory Allocation!";
         exit(EXIT_FAILURE);
     }
     

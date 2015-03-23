@@ -35,7 +35,7 @@ int main(int argc, const char * argv[]) {
             system("clear");
             B.print();
             
-            cout << "\n\nSelect an operation:\n\t1) add\n\t2) mull\n\t";
+            cout << "\n\nSelect an operation:\n\t1) Addition\n\t2) Multiplication\n\t";
             cin >> m;
             
             switch (m)
@@ -45,7 +45,7 @@ int main(int argc, const char * argv[]) {
                     {
                         C = A + B;
                         system("clear");
-                        cout<<"A + B = "<<endl;
+                        cout<<"A + B = \n";
                         C.print();
                     }
                     catch(exeption ex)
@@ -58,12 +58,12 @@ int main(int argc, const char * argv[]) {
                     {
                         C = A * B;
                         system("clear");
-                        cout<<"A * B = "<<endl;
+                        cout<<"A * B = \n";
                         C.print();
                     }
                     catch(exeption ex)
                     {
-                        cout<<"Matrix a not consistent!"<<endl;
+                        cout<<"Matrix are not consistent!"<<endl;
                     }
                     break;
                 default:
