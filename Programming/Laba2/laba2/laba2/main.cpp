@@ -10,8 +10,12 @@
 #include "arrayClass.h"
 using namespace std;
 
+void workWithClass(matrixClass&, string);
+void multFunction(matrixClass&, matrixClass&, bool);
+
+
 int main(int argc, const char * argv[]) {
-    int m, n;
+    int m;
     char exit;
     do
     {
@@ -20,24 +24,12 @@ int main(int argc, const char * argv[]) {
             matrixClass A, B;
             
             //work with A matrix
-            cout << "Enter an A matrix size: ";
-            cin >> m >> n;
-            A.setSize(m, n);
-            A.fillMatrix();
-            system("clear");
-            cout<<"A = \n";
-            A.print();
+            workWithClass(A, "A");
             
             //work with B matrix
-            cout << "\n\nEnter an B matrix size: ";
-            cin >> m >> n;
-            B.setSize(m, n);
-            B.fillMatrix();
-            system("clear");
-            cout<<"B = \n";
-            B.print();
+            workWithClass(B, "B");
             
-            cout << "\n\nSelect an operation:\n\t1) Addition\n\t2) Multiplication\n\t3) Addition(overwrite)\n\t4) Multiplication(overwrite)\n\t";
+            cout << "\n\nSelect an operation:\n\t1) Addition\n\t2) Multiplication\n\t3) Addition(overload)\n\t4) Multiplication(overload)\n\t";
             cin >> m;
             
             switch (m)
@@ -104,4 +96,15 @@ int main(int argc, const char * argv[]) {
     } while(exit == 'y');
     
     return 0;
+}
+
+void workWithClass(matrixClass & object, string name = "Unknown name"){
+    int m, n;
+    cout << "Enter an "+ name +" matrix size: ";
+    cin >> m >> n;
+    object.setSize(m, n);
+    object.fillMatrix();
+    system("clear");
+    cout << name + " = \n";
+    object.print();
 }
