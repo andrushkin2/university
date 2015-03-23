@@ -10,7 +10,6 @@
 #define __laba2__arrayClass__
 
 #include <stdio.h>
-#include <cstddef>
 
 enum exeption
 {
@@ -20,13 +19,15 @@ enum exeption
 
 class matrixClass
 {
-    int **p, m, n;
+    int **arr, m, n;
     
 public:
-    matrixClass() { p = NULL; }
+    matrixClass() { arr = NULL; }
     matrixClass(const matrixClass&);
-    void SetSize(int, int);
-    void fill();
+    void setSize(int, int);
+    void fillMatrix();
+    matrixClass addition(matrixClass);
+    matrixClass multipl(matrixClass);
     void print();
     ~matrixClass();
     matrixClass operator=(matrixClass);

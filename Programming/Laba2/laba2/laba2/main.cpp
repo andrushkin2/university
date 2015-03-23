@@ -17,25 +17,27 @@ int main(int argc, const char * argv[]) {
     {
         {
             system("clear");
-            matrixClass A, B, C;
+            matrixClass A, B;
             
             //work with A matrix
             cout << "Enter an A matrix size: ";
             cin >> m >> n;
-            A.SetSize(m, n);
-            A.fill();
+            A.setSize(m, n);
+            A.fillMatrix();
             system("clear");
+            cout<<"A = \n";
             A.print();
             
             //work with B matrix
             cout << "\n\nEnter an B matrix size: ";
             cin >> m >> n;
-            B.SetSize(m, n);
-            B.fill();
+            B.setSize(m, n);
+            B.fillMatrix();
             system("clear");
+            cout<<"B = \n";
             B.print();
             
-            cout << "\n\nSelect an operation:\n\t1) Addition\n\t2) Multiplication\n\t";
+            cout << "\n\nSelect an operation:\n\t1) Addition\n\t2) Multiplication\n\t3) Addition(overwrite)\n\t4) Multiplication(overwrite)\n\t";
             cin >> m;
             
             switch (m)
@@ -43,31 +45,57 @@ int main(int argc, const char * argv[]) {
                 case (1):
                     try
                     {
-                        C = A + B;
+                        matrixClass C(A.addition(B));
                         system("clear");
                         cout<<"A + B = \n";
                         C.print();
                     }
                     catch(exeption ex)
                     {
-                        cout<<"Matrix sizes mismatch!"<<endl;
+                        cout<<"Matrix sizes mismatch!\n";
                     }
                     break;
                 case (2):
                     try
                     {
-                        C = A * B;
+                        matrixClass C = A.multipl(B);
                         system("clear");
                         cout<<"A * B = \n";
                         C.print();
                     }
                     catch(exeption ex)
                     {
-                        cout<<"Matrix are not consistent!"<<endl;
+                        cout<<"Matrix are not consistent!\n";
+                    }
+                    break;
+                case (3):
+                    try
+                    {
+                        matrixClass C = A + B;
+                        system("clear");
+                        cout<<"A + B = \n";
+                        C.print();
+                    }
+                    catch(exeption ex)
+                    {
+                        cout<<"Matrix sizes mismatch!\n";
+                    }
+                    break;
+                case (4):
+                    try
+                    {
+                        matrixClass C = A * B;
+                        system("clear");
+                        cout<<"A * B = \n";
+                        C.print();
+                    }
+                    catch(exeption ex)
+                    {
+                        cout<<"Matrix are not consistent!\n";
                     }
                     break;
                 default:
-                    cout<<"Unknown operation has been selected!"<<endl;
+                    cout<<"Unknown operation has been selected!\n";
             }
         }
         cout<<"\n\nDo you want try again? (type an \"y\" symbol) ";

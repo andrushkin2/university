@@ -7,77 +7,85 @@
 //
 
 #include "arrayClass.h"
-#include <new>
 #include <cstdlib>
 #include <iostream>
 #include <iomanip>
 
 using namespace std;
 
-void matrixClass::SetSize(int y, int x)
+void matrixClass::setSize(int y, int x)
 {
     n = x;
     m = y;
     try
     {
-        p = new int*[m];
+        if (n == 0 || m == 0){
+            throw SizesMismatch;
+        }
+        arr = new int*[m];
         for(int i = 0; i < m; i++){
-            p[i] = new int[n];
+            arr[i] = new int[n];
         }
     }
-    catch (bad_alloc xa)
+    catch (exeption xa)
     {
-        cout << "Memory Allocation!";
+        cout << "Memory Allocation!\n";
         exit(EXIT_FAILURE);
     }
     
     for (int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
-            p[i][j] = 0;
+            arr[i][j] = 0;
         }
     }
 }
 
 matrixClass::~matrixClass()
 {
-    if(!p){
+    if(!arr){
         return;
     }
     for(int i = 0; i < m; i++){
-        delete [] p[i];
+        delete [] arr[i];
     }
-    delete [] p;
+    delete [] arr;
 }
 
-matrixClass::matrixClass(const matrixClass& op2)
+matrixClass::matrixClass(const matrixClass& object)
 {
-    m = op2.m;
-    n = op2.n;
+    m = object.m;
+    n = object.n;
     try
     {
-        p = new int*[m];
-        for(int i = 0; i < m; i++) p[i] = new int[n];
+        if (n == 0 || m == 0){
+            throw SizesMismatch;
+        }
+        arr = new int*[m];
+        for(int i = 0; i < m; i++){
+            arr[i] = new int[n];
+        }
     }
-    catch (bad_alloc xa)
+    catch (exeption xa)
     {
-        cout << "Memory Allocation!";
+        cout << "Memory Allocation!\n";
         exit(EXIT_FAILURE);
     }
     for (int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
-            p[i][j] = op2.p[i][j];
+            arr[i][j] = object.arr[i][j];
         }
     }
 }
 
-void matrixClass::fill()
+void matrixClass::fillMatrix()
 {
-    for (int i = 0; i < m; i++)
+    for (int i = 0; i < m; i++){
         for(int j = 0; j < n; j++)
         {
-            cout<<"Fill ["<<i+1<<","<<j+1<<"] value: ";
-            cin>>p[i][j];
+            cout << "Fill [" << i+1 << "," << j+1 << "] value: ";
+            cin >> arr[i][j];
         }
+    }
 }
 
 void matrixClass::print()
@@ -85,36 +93,55 @@ void matrixClass::print()
     for (int i = 0; i < m; i++)
     {
         for(int j = 0; j < n; j++){
-            cout<<setw(10)<<p[i][j];
+            cout << setw(10) << arr[i][j];
         }
-        cout<<endl;
+        cout << endl;
     }
 }
-
-matrixClass matrixClass::operator+(matrixClass B)
-{
+matrixClass matrixClass::addition(matrixClass B){
     if( m!=B.m || n!=B.n){
         throw SizesMismatch;
     }
     matrixClass C;
-    C.SetSize(m, n);
+    C.setSize(m, n);
     for (int i = 0; i < m; i++)
         for(int j = 0; j < n; j++)
-            C.p[i][j] = p[i][j] + B.p[i][j];
+            C.arr[i][j] = arr[i][j] + B.arr[i][j];
+    return C;
+}
+
+matrixClass matrixClass::operator+(matrixClass B)
+{
+    matrixClass C;
+    C.setSize(m, n);
+    for (int i = 0; i < m; i++)
+        for(int j = 0; j < n; j++)
+            C.arr[i][j] = arr[i][j] + B.arr[i][j];
+    return C;
+}
+
+matrixClass matrixClass::multipl(matrixClass B)
+{
+    matrixClass C;
+    C.setSize(m, B.n);
+    for (int i = 0; i < C.m; i++){
+        for(int j = 0; j < C.n; j++){
+            for(int k = 0; k < n; k++){
+                C.arr[i][j] += arr[i][k] * B.arr[k][j];
+            };
+        }
+    }
     return C;
 }
 
 matrixClass matrixClass::operator*(matrixClass B)
 {
-    if( n != B.m ){
-        throw NotConsistent;
-    }
     matrixClass C;
-    C.SetSize(m, B.n);
+    C.setSize(m, B.n);
     for (int i = 0; i < C.m; i++){
         for(int j = 0; j < C.n; j++){
             for(int k = 0; k < n; k++){
-                C.p[i][j] += p[i][k] * B.p[k][j];
+                C.arr[i][j] += arr[i][k] * B.arr[k][j];
             };
         }
     }
@@ -127,20 +154,23 @@ matrixClass matrixClass::operator=(matrixClass obj)
     n = obj.n;
     try
     {
-        p = new int*[m];
+        if (n == 0 || m == 0){
+            throw "Cannot be zero!";
+        }
+        arr = new int*[m];
         for(int i = 0; i < m; i++){
-            p[i] = new int[n];
+            arr[i] = new int[n];
         }
     }
-    catch (bad_alloc xa)
+    catch (exeption xa)
     {
-        cout<<"Memory Allocation!";
+        cout<<"Memory Allocation!\n";
         exit(EXIT_FAILURE);
     }
     
     for (int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
-            p[i][j] = obj.p[i][j];
+            arr[i][j] = obj.arr[i][j];
         }
     }
     return *this;
