@@ -76,10 +76,11 @@ int main(int argc, const char * argv[]) {
                 case (4):
                     try
                     {
-                        matrixClass C = A * B;
+                        matrixClass C, D;
+                        C = D = A * B;
                         system("clear");
                         cout<<"A * B = \n";
-                        C.print();
+                        D.print();
                     }
                     catch(exeption ex)
                     {
