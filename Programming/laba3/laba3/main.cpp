@@ -7,9 +7,24 @@
 //
 
 #include <iostream>
+#include <string.h>
+#include "stringClass.h"
+
+using namespace std;
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    std::cout << "Hello, World!\n";
+    cout << "Hello, World!\n";\
+    
+    stringClass A;
+    
+    A = "stringClass";
+    
+    stringClass B = A(1, 4);
+    
+    cout << A << endl;
+    
+    cout << B << endl;
+    
     return 0;
 }

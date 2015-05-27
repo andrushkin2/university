@@ -1,0 +1,78 @@
+﻿Построение начато 27.12.2012 11:00:03.
+     1>Проект "D:\КПИЯП\Лабораторная работа №8\Files\Files\Files.vcxproj" в узле 2 (целевые объекты Rebuild).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt BinaryFileClass.cpp InpException.cpp main.cpp MyMenu.cpp Person.cpp String.cpp TextFileClass.cpp UTeacher.cpp
+         UTeacher.cpp
+         TextFileClass.cpp
+     1>d:\кпияп\лабораторная работа №8\files\files\string.h(31): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110): см. объявление "strcpy"
+     1>d:\кпияп\лабораторная работа №8\files\files\string.h(35): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110): см. объявление "strcpy"
+     1>d:\кпияп\лабораторная работа №8\files\files\string.h(36): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(115): см. объявление "strcat"
+     1>d:\кпияп\лабораторная работа №8\files\files\textfileclass.cpp(20): warning C4620: не найдена постфиксная форма "operator ++" для типа "Queue<T>::Iterator"; используется префиксная форма
+                 with
+                 [
+                     T=Person
+                 ]
+                 d:\кпияп\лабораторная работа №8\files\files\queue.h(25): см. объявление "Queue<T>::Iterator"
+                 with
+                 [
+                     T=Person
+                 ]
+     1>d:\кпияп\лабораторная работа №8\files\files\textfileclass.cpp(106): warning C4620: не найдена постфиксная форма "operator ++" для типа "Queue<T>::Iterator"; используется префиксная форма
+                 with
+                 [
+                     T=UTeacher
+                 ]
+                 d:\кпияп\лабораторная работа №8\files\files\queue.h(25): см. объявление "Queue<T>::Iterator"
+                 with
+                 [
+                     T=UTeacher
+                 ]
+         String.cpp
+         Person.cpp
+         MyMenu.cpp
+     1>d:\кпияп\лабораторная работа №8\files\files\string.h(31): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110): см. объявление "strcpy"
+     1>d:\кпияп\лабораторная работа №8\files\files\string.h(35): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110): см. объявление "strcpy"
+     1>d:\кпияп\лабораторная работа №8\files\files\string.h(36): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(115): см. объявление "strcat"
+         main.cpp
+     1>d:\кпияп\лабораторная работа №8\files\files\string.h(31): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110): см. объявление "strcpy"
+     1>d:\кпияп\лабораторная работа №8\files\files\string.h(35): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110): см. объявление "strcpy"
+     1>d:\кпияп\лабораторная работа №8\files\files\string.h(36): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(115): см. объявление "strcat"
+         InpException.cpp
+         BinaryFileClass.cpp
+     1>d:\кпияп\лабораторная работа №8\files\files\binaryfileclass.cpp(17): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _itoa. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdlib.h(909): см. объявление "itoa"
+     1>d:\кпияп\лабораторная работа №8\files\files\binaryfileclass.cpp(20): warning C4620: не найдена постфиксная форма "operator ++" для типа "Queue<T>::Iterator"; используется префиксная форма
+                 with
+                 [
+                     T=Person
+                 ]
+                 d:\кпияп\лабораторная работа №8\files\files\queue.h(25): см. объявление "Queue<T>::Iterator"
+                 with
+                 [
+                     T=Person
+                 ]
+         Создание кода...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\КПИЯП\Лабораторная работа №8\Files\Debug\Files.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\КПИЯП\Лабораторная работа №8\Files\Debug\Files.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\КПИЯП\Лабораторная работа №8\Files\Debug\Files.lib" /MACHINE:X86 Debug\BinaryFileClass.obj
+         Debug\InpException.obj
+         Debug\main.obj
+         Debug\MyMenu.obj
+         Debug\Person.obj
+         Debug\String.obj
+         Debug\TextFileClass.obj
+         Debug\UTeacher.obj
+         Files.vcxproj -> D:\КПИЯП\Лабораторная работа №8\Files\Debug\Files.exe
+     1>Построение проекта "D:\КПИЯП\Лабораторная работа №8\Files\Files\Files.vcxproj" завершено (целевые объекты Rebuild).
+
+Построение успешно завершено.
+
+Затраченное время: 00:00:05.71

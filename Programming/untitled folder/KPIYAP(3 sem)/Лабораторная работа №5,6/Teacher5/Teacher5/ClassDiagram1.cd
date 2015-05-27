@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Committeeman">
+    <Position X="0.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAARAAAAEAAAAAAAAAAAAQAAAAAAAAgIAAIAgA=</HashCode>
+      <FileName>Committeeman.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Person">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAQAAAAAABARAAAAAAAAAAAAAQAQAAAIAAgBAEAEAA=</HashCode>
+      <FileName>Person.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Queue&lt;T&gt;">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="Queue&lt;T&gt;::Node" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Queue.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Class Name="Queue&lt;T&gt;::Iterator" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Queue.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAACAAAACAAIEAAAAAQAEEEAAAAAAQAAAACgA=</HashCode>
+      <FileName>Queue.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="String">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAREAAAQAAAAACAAAAAAAgAAAAgAA=</HashCode>
+      <FileName>String.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TCMember">
+    <Position X="1.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAEAAAAAAQAAAAAAAAGAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>TCMember.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UTeacher">
+    <Position X="2.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>A0AABgARAAAAAAAAAAAEAAIAMAAAAAAAAAAgQAAAAAQ=</HashCode>
+      <FileName>UTeacher.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

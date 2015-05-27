@@ -1,0 +1,36 @@
+﻿Построение начато 05.12.2012 8:28:56.
+     1>Проект "D:\КПИЯП\Лабораторная работа №3\Shape\Shape\Shape.vcxproj" в узле 2 (целевые объекты build).
+     1>InitializeBuildStatus:
+         Создание "Debug\Shape.unsuccessfulbuild", так как было задано "AlwaysCreate".
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         Пропуск... (изменения не обнаружены)
+         main.cpp
+       ManifestResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\Shape.exe.embed.manifest.res" Debug\Shape_manifest.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\КПИЯП\Лабораторная работа №3\Shape\Debug\Shape.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Shape.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\КПИЯП\Лабораторная работа №3\Shape\Debug\Shape.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\КПИЯП\Лабораторная работа №3\Shape\Debug\Shape.lib" /MACHINE:X86 Debug\Shape.exe.embed.manifest.res
+         Debug\Circle.obj
+         Debug\Cylinder.obj
+         Debug\main.obj
+         Debug\Parallelepiped.obj
+         Debug\Rectangle.obj
+         Debug\Shape.obj
+         Debug\Sphere.obj
+         Debug\ThreeDShape.obj
+         Debug\Triangle.obj
+         Debug\TwoDShape.obj
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\Shape.exe.embed.manifest" /manifest Debug\Shape.exe.intermediate.manifest
+         Для всех выходных данных обновления не требуется.
+       LinkEmbedManifest:
+         Для всех выходных данных обновления не требуется.
+         Shape.vcxproj -> D:\КПИЯП\Лабораторная работа №3\Shape\Debug\Shape.exe
+       FinalizeBuildStatus:
+         Файл "Debug\Shape.unsuccessfulbuild" удаляется.
+         Обращение к "Debug\Shape.lastbuildstate".
+     1>Построение проекта "D:\КПИЯП\Лабораторная работа №3\Shape\Shape\Shape.vcxproj" завершено (целевые объекты build).
+
+Построение успешно завершено.
+
+Затраченное время: 00:00:02.46

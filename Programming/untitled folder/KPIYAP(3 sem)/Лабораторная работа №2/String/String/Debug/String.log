@@ -1,0 +1,20 @@
+﻿Построение начато 18.10.2012 9:59:18.
+     1>Проект "D:\КПИЯП\Лабораторная работа №2\String(сделано)\String\String.vcxproj" в узле 2 (целевые объекты build).
+     1>InitializeBuildStatus:
+         Создание "Debug\String.unsuccessfulbuild", так как было задано "AlwaysCreate".
+       ClCompile:
+         Для всех выходных данных обновления не требуется.
+       ManifestResourceCompile:
+         Для всех выходных данных обновления не требуется.
+       Link:
+         Для всех выходных данных обновления не требуется.
+       Manifest:
+         Для всех выходных данных обновления не требуется.
+       FinalizeBuildStatus:
+         Файл "Debug\String.unsuccessfulbuild" удаляется.
+         Обращение к "Debug\String.lastbuildstate".
+     1>Построение проекта "D:\КПИЯП\Лабораторная работа №2\String(сделано)\String\String.vcxproj" завершено (целевые объекты build).
+
+Построение успешно завершено.
+
+Затраченное время: 00:00:00.10

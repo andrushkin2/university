@@ -1,0 +1,68 @@
+﻿Построение начато 24.12.2012 16:52:06.
+     1>Проект "D:\КПИЯП\Лабораторная работа №7\MyException\MyException\MyException.vcxproj" в узле 2 (целевые объекты Rebuild).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Committeeman.cpp InpException.cpp main.cpp myMenu.cpp Person.cpp String.cpp TCMember.cpp TextFileClass.cpp UTeacher.cpp
+         UTeacher.cpp
+         TextFileClass.cpp
+     1>d:\кпияп\лабораторная работа №7\myexception\myexception\string.h(31): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110): см. объявление "strcpy"
+     1>d:\кпияп\лабораторная работа №7\myexception\myexception\string.h(35): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110): см. объявление "strcpy"
+     1>d:\кпияп\лабораторная работа №7\myexception\myexception\string.h(36): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(115): см. объявление "strcat"
+     1>d:\кпияп\лабораторная работа №7\myexception\myexception\textfileclass.cpp(11): warning C4620: не найдена постфиксная форма "operator ++" для типа "Queue<T>::Iterator"; используется префиксная форма
+                 with
+                 [
+                     T=Person
+                 ]
+                 d:\кпияп\лабораторная работа №7\myexception\myexception\queue.h(24): см. объявление "Queue<T>::Iterator"
+                 with
+                 [
+                     T=Person
+                 ]
+     1>d:\кпияп\лабораторная работа №7\myexception\myexception\textfileclass.cpp(37): warning C4620: не найдена постфиксная форма "operator ++" для типа "Queue<T>::Iterator"; используется префиксная форма
+                 with
+                 [
+                     T=UTeacher
+                 ]
+                 d:\кпияп\лабораторная работа №7\myexception\myexception\queue.h(24): см. объявление "Queue<T>::Iterator"
+                 with
+                 [
+                     T=UTeacher
+                 ]
+         TCMember.cpp
+         String.cpp
+         Person.cpp
+         myMenu.cpp
+     1>d:\кпияп\лабораторная работа №7\myexception\myexception\string.h(31): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110): см. объявление "strcpy"
+     1>d:\кпияп\лабораторная работа №7\myexception\myexception\string.h(35): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110): см. объявление "strcpy"
+     1>d:\кпияп\лабораторная работа №7\myexception\myexception\string.h(36): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(115): см. объявление "strcat"
+         main.cpp
+     1>d:\кпияп\лабораторная работа №7\myexception\myexception\string.h(31): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110): см. объявление "strcpy"
+     1>d:\кпияп\лабораторная работа №7\myexception\myexception\string.h(35): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(110): см. объявление "strcpy"
+     1>d:\кпияп\лабораторная работа №7\myexception\myexception\string.h(36): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\string.h(115): см. объявление "strcat"
+         InpException.cpp
+         Committeeman.cpp
+         Создание кода...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\КПИЯП\Лабораторная работа №7\MyException\Debug\MyException.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\КПИЯП\Лабораторная работа №7\MyException\Debug\MyException.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\КПИЯП\Лабораторная работа №7\MyException\Debug\MyException.lib" /MACHINE:X86 Debug\Committeeman.obj
+         Debug\InpException.obj
+         Debug\main.obj
+         Debug\myMenu.obj
+         Debug\Person.obj
+         Debug\String.obj
+         Debug\TCMember.obj
+         Debug\TextFileClass.obj
+         Debug\UTeacher.obj
+         MyException.vcxproj -> D:\КПИЯП\Лабораторная работа №7\MyException\Debug\MyException.exe
+     1>Построение проекта "D:\КПИЯП\Лабораторная работа №7\MyException\MyException\MyException.vcxproj" завершено (целевые объекты Rebuild).
+
+Построение успешно завершено.
+
+Затраченное время: 00:00:06.79

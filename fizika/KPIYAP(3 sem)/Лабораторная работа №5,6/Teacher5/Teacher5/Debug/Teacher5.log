@@ -1,0 +1,31 @@
+﻿Построение начато 13.12.2012 10:46:39.
+     1>Проект "D:\КПИЯП\Лабораторная работа №5,6\Teacher5\Teacher5\Teacher5.vcxproj" в узле 2 (целевые объекты build).
+     1>InitializeBuildStatus:
+         Создание "Debug\Teacher5.unsuccessfulbuild", так как было задано "AlwaysCreate".
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Committeeman.cpp
+         Committeeman.cpp
+       ManifestResourceCompile:
+         Для всех выходных данных обновления не требуется.
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\КПИЯП\Лабораторная работа №5,6\Teacher5\Debug\Teacher5.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Teacher5.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\КПИЯП\Лабораторная работа №5,6\Teacher5\Debug\Teacher5.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\КПИЯП\Лабораторная работа №5,6\Teacher5\Debug\Teacher5.lib" /MACHINE:X86 Debug\Teacher5.exe.embed.manifest.res
+         Debug\Committeeman.obj
+         Debug\main.obj
+         Debug\Person.obj
+         Debug\String.obj
+         Debug\TCMember.obj
+         Debug\UTeacher.obj
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\Teacher5.exe.embed.manifest" /manifest Debug\Teacher5.exe.intermediate.manifest
+         Для всех выходных данных обновления не требуется.
+       LinkEmbedManifest:
+         Для всех выходных данных обновления не требуется.
+         Teacher5.vcxproj -> D:\КПИЯП\Лабораторная работа №5,6\Teacher5\Debug\Teacher5.exe
+       FinalizeBuildStatus:
+         Файл "Debug\Teacher5.unsuccessfulbuild" удаляется.
+         Обращение к "Debug\Teacher5.lastbuildstate".
+     1>Построение проекта "D:\КПИЯП\Лабораторная работа №5,6\Teacher5\Teacher5\Teacher5.vcxproj" завершено (целевые объекты build).
+
+Построение успешно завершено.
+
+Затраченное время: 00:00:02.21
