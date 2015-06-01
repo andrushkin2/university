@@ -25,12 +25,6 @@ stringClass::stringClass(char str[])
     this->mystring = new char [this->length + 1];
     strcpy(this->mystring,str);
 }
-/*stringClass::stringClass(stringClass &str)
-{
-    this->length = str.length;
-    this->mystring = new char [this->length + 1];
-    strcpy(this->mystring,str.mystring);
-}*/
 
 stringClass::stringClass(const stringClass &str)
 {

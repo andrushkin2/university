@@ -25,7 +25,6 @@ public:
 
     stringClass(int len = 100);
     stringClass(char str[]);
-    //stringClass(stringClass &str);
     stringClass(const stringClass & str);
     ~stringClass();
     
