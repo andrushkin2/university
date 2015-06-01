@@ -22,8 +22,10 @@ private:
     unsigned long length;
     
 public:
+
     stringClass(int len = 100);
     stringClass(char str[]);
+    //stringClass(stringClass &str);
     stringClass(const stringClass & str);
     ~stringClass();
     
@@ -33,14 +35,14 @@ public:
     friend std::ostream & operator << (std::ostream & os,stringClass & str);
     friend std::istream & operator >> (std::istream & is,stringClass & str);
     void pringClass();
-    void operator = (const stringClass & tmp);
+    stringClass operator = (stringClass);
     void operator = (char * str);
     void operator = (const char str[]);
     void operator = (string str);
     bool operator == (const stringClass & tmp) const;
     bool operator == (const char * tmp) const;
     void operator += (char *str);
-    stringClass operator () (int, int);
+    void operator () (int, int);
 };
 
 #endif /* defined(__laba3__stringClass__) */

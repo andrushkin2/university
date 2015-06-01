@@ -25,8 +25,14 @@ stringClass::stringClass(char str[])
     this->mystring = new char [this->length + 1];
     strcpy(this->mystring,str);
 }
+/*stringClass::stringClass(stringClass &str)
+{
+    this->length = str.length;
+    this->mystring = new char [this->length + 1];
+    strcpy(this->mystring,str.mystring);
+}*/
 
-stringClass::stringClass(const stringClass & str)
+stringClass::stringClass(const stringClass &str)
 {
     this->length = str.length;
     this->mystring = new char [this->length + 1];
@@ -56,12 +62,14 @@ istream & operator >> (istream & is,stringClass & str)
 }
 
 
-void stringClass::operator = (const stringClass & tmp)
+stringClass stringClass::operator = (stringClass tmp)
 {
     delete [] this->mystring;
     this->length = tmp.GetLength();
     this->mystring = new char [this->length + 1];
     strcpy(this->mystring,tmp.mystring);
+    
+    return *this;
 }
 
 void stringClass::operator = (char * str)
@@ -113,16 +121,17 @@ void stringClass::operator += (char *str)
     this->length = len;
 }
 
-stringClass stringClass::operator () (int start, int end = 0){
+void stringClass::operator () (int start, int end = 0){
     end = (int)(end > length || end == 0? this->length : end);
-    stringClass result(end - start + 1);
+    char *mystringTemp = this->mystring;
+    delete [] this->mystring;
+    this->length = end - start + 1;
+    this->mystring = new char[this->length];
     int counter = 0;
     for (int i = start; i <= end; i++){
-        result.mystring[counter] = mystring[i];
+        this->mystring[counter] = mystringTemp[i];
         counter++;
     }
-    
-    return result;
 }
 
 void stringClass::pringClass(){

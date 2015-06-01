@@ -20,9 +20,11 @@ int main(int argc, const char * argv[]) {
     int m;
     char exit;
     char *temp = new char[50];
-    stringClass a, b;
+    stringClass a, b, c;
     
     a = "stringClass";
+    
+    c = b = a;
     
     do
     {
@@ -67,7 +69,8 @@ int main(int argc, const char * argv[]) {
                     
                     cout << "Input end number of symbol:\n";
                     cin >> end;
-                    b = a(st, end);
+                    a = b;
+                    b(st, end);
                     cout << "\n\nResult - class B value: " << b << endl;
                     break;
                 case (6):
