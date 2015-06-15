@@ -18,10 +18,10 @@
 using namespace std;
 class Mechanic : public clockClass
 {
-    string belt;
+    char belt[15];
 public:
-    string GetBelt() { return belt; }
-    void SetBelt(string value) { belt = value; }
+    char* GetBelt() { return belt; }
+    void SetBelt(char* value) { strcpy(belt, value); }
     
     void Print(ostream &stream) { stream << *this; }
     void Input(istream &stream) { stream >> *this; }

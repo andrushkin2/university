@@ -11,16 +11,12 @@ using namespace std;
 
 istream &operator>>(istream &stream, Electronic &_in)
 {
-    string x;
     cout << "Enter mark of the clock: ";
-    stream>>x;
-    _in.SetMark(x);
+    stream>>_in.mark;
     cout<<"Enter screen of the clock: ";
-    stream>>x;
-    _in.SetScreen(x);
+    stream>>_in.screen;
     cout<<"Enter size of the clock: ";
-    stream>>x;
-    _in.SetSize(x);
+    stream>>_in.size;
     cout<<"Enter the type of powersource: ";
     stream>>_in.powersource;
     return stream;
@@ -30,11 +26,11 @@ ostream &operator<<(ostream &stream, Electronic &_out)
 {
     stream << "Electronic clock: " << endl;
     stream<<"Production of: ";
-    stream<<_out.GetMark()<<endl;
+    stream<<_out.mark<<endl;
     stream<<"With face of: ";
-    stream<<_out.GetScreen()<<endl;
+    stream<<_out.screen<<endl;
     stream<<"Size: ";
-    stream<<_out.GetSize()<<endl;
+    stream<<_out.size<<endl;
     stream<<"Type of powersource: ";
     stream<<_out.powersource<<endl;
     return stream;
@@ -42,23 +38,25 @@ ostream &operator<<(ostream &stream, Electronic &_out)
 
 ifstream &operator>>(ifstream &stream, Electronic &_in)
 {
-    string x;
+    stream.read(reinterpret_cast<char*>(&_in), sizeof(_in));
+    /*char* x;
     stream >> x;
     _in.SetMark(x);
     stream >> x;
     _in.SetScreen(x);
     stream >> x;
     _in.SetSize(x);
-    stream >> _in.powersource;
+    stream >> _in.powersource;*/
     return stream;
 }
 
 ofstream &operator<<(ofstream &stream, Electronic &_out)
 {
-    stream << "e" << "%";
-    stream << _out.GetMark() << "%";
-    stream << _out.GetScreen() << "%";
-    stream << _out.GetSize() << "%";
-    stream << _out.powersource << endl;
+    stream.write(reinterpret_cast<char*>(&_out), sizeof(_out));
+    /*stream << "e" << " ";
+    stream << _out.GetMark() << " ";
+    stream << _out.GetScreen() << " ";
+    stream << _out.GetSize() << " ";
+    stream << _out.powersource << endl;*/
     return stream;
 }

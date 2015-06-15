@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>EB4AE465-6359-4DE4-960C-00762DDF1758</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>Example files</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>F2FE792CEBAF941F938A08E869737CCC3A22DF56</key>
 		<string>github.com:andrushkin2/university.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>programming/Files/Example files/Example files.xcodeproj/project.xcworkspace</string>
+	<string>programming/Files/Example files/Example files.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>F2FE792CEBAF941F938A08E869737CCC3A22DF56</key>

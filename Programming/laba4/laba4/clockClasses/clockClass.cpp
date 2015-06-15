@@ -34,17 +34,19 @@ ostream &operator<<(ostream &stream, clockClass &_out)
 
 ifstream &operator>>(ifstream &stream, clockClass &_in)
 {
-    stream >> _in.mark;
+    stream.read(reinterpret_cast<char*>(&_in), sizeof(_in));
+    /*stream >> _in.mark;
     stream >> _in.screen;
-    stream >> _in.size;
+    stream >> _in.size;*/
     return stream;
 }
 
 ofstream &operator<<(ofstream &stream, clockClass &_out)
 {
-    stream << "c" << "%";
-    stream << _out.mark << "%";
-    stream << _out.screen << "%";
-    stream << _out.size << endl;
+    stream.write(reinterpret_cast<char*>(&_out), sizeof(_out));
+    /*stream << "c" << " ";
+    stream << _out.mark << " ";
+    stream << _out.screen << " ";
+    stream << _out.size << endl;*/
     return stream;
 }

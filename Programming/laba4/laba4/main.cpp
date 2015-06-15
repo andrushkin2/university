@@ -17,16 +17,20 @@
 #include <sstream>
 using namespace std;
 
+void stringParse();
+string readString(ifstream);
+
 int main(int argc, const char * argv[]) {
-    queue<clockClass*> cl;
+    queue<clockClass*> clock;
+    queue<clockClass*> elect;
+    queue<clockClass*> mech;
     clockClass* x = NULL;
     int select,
         maxsize,
         ch;
     
-    
-    ofstream fout("myclock.txt",ios::app);
-    ifstream fin("myclock.txt");
+    ofstream fout;
+    ifstream fin;
     
     
     cout << "1: Enter some clock" << endl;
@@ -46,60 +50,108 @@ int main(int argc, const char * argv[]) {
                 cin >> select;
                 switch (select)
                 {
-                    case 1:	x = new clockClass;
+                    case 1:
+                        x = new clockClass;
+                        x->Input(cin);
+                        clock.Push(x);
+                        fout.open("clock.txt", ios::out | ios::binary);
+                        x->PrintFromFile(fout);
+                        fout.close();
+                        
                         break;
-                    case 2:	x = new Electronic;
+                    case 2:{
+                        x = new Electronic;
+                        x->Input(cin);
+                        elect.Push(x);
+                        fout.open("elect.txt",ios::out | ios::binary);
+                        x->PrintFromFile(fout);
+                        fout.close();
                         break;
-                    case 3:	x = new Mechanic;
+                    }
+                    case 3:{
+                        x = new Mechanic();
+                        x->Input(cin);
+                        fout.open("mech.txt", ios::out | ios::binary);
+                        x->PrintFromFile(fout);
+                        fout.close();
+                        mech.Push(x);
+
                         break;
+                    }
                     default: cout << "Fatal error" << "\n";
                         system("pause");
                         return 1;
                 }
-                x->Input(cin);
-                cl.Push(x);
             }
             cout << endl << "My clocks:" << endl << endl;
-            while (!cl.IsEmpty())
-            {
-                cl.Pick()->PrintFromFile(fout);
-                cl.Pop()->Print(cout);
-                cout << endl;
-            }
+
             break;
         }
         case 2:
         {
-            string line;
-            while (!!fin && !fin.eof())
-            {
-                fin >> line;
-                switch (line.at(0))
-                {
-                    case 'c':	x = new clockClass;
+            for (int i = 1; i <= 3; i++){
+                switch (i) {
+                    case 1:
+                        x = new clockClass;
+                        fin.open("clock.txt", ios::in | ios::binary);
+                        while (!!fin && !fin.eof()){
+                            x->InputToFile(fin);
+                            if (fin.eof()){
+                                break;
+                            }
+                            clock.Push(x);
+                        }
+                        fin.close();
                         break;
-                    case 'e':	x = new Electronic;
+                    case 2:
+                        x = new Electronic;
+                        fin.open("elect.txt", ios::in | ios::binary);
+                        while (!!fin && !fin.eof()){
+                            x->InputToFile(fin);
+                            if (fin.eof()){
+                                break;
+                            }
+                            elect.Push(x);
+                        }
+                        fin.close();
                         break;
-                    case 'm':	x = new Mechanic;
+                    case 3:
+                        x = new Mechanic;
+                        fin.open("mech.txt", ios::in | ios::binary);
+                        while (!!fin && !fin.eof()){
+                            x->InputToFile(fin);
+                            if (fin.eof()){
+                                break;
+                            }
+                            mech.Push(x);
+                        }
+                        fin.close();
                         break;
-                    default: cout << "Input error" << "\n";
-                        system("pause");
-                        return 1;
+
+                    default:
+                        break;
                 }
-                x->InputToFile(fin);
-                cl.Push(x);
-            }
-            cout << endl << "My clocks:" << endl << endl;
-            while (!cl.IsEmpty())
-            {
-                cl.Pop()->Print(cout);
-                cout << endl;
-            }
-            break;
         }
+            
     }
+    }
+    while (!clock.IsEmpty())
+    {
+        clock.Pop()->Print(cout);
+        cout << endl;
+    }
+    while (!elect.IsEmpty())
+    {
+        elect.Pop()->Print(cout);
+        cout << endl;
+    }
+    while (!mech.IsEmpty())
+    {
+        mech.Pop()->Print(cout);
+        cout << endl;
+    }
+
     
-    fout.close();
     system("pause");
     return 0;
 }

@@ -17,18 +17,21 @@
 using namespace std;
 class clockClass
 {
-    string size;
-    string screen;
-    string mark;
+protected:
+    char size[15];
+    char screen[15];
+    char mark[15];
     
 public:
     
-    string GetSize(){ return size; }
-    string GetScreen(){ return screen; }
-    string GetMark(){ return mark; }
-    void SetSize(string value) { size = value; }
-    void SetScreen(string value) { screen = value; }
-    void SetMark(string value) { mark = value; }
+    char* GetSize(){ return size; }
+    char* GetScreen(){ return screen; }
+    char* GetMark(){ return mark; }
+    void SetSize(char* value) {
+        strcpy(size, value);
+    }
+    void SetScreen(char* value) { strcpy(screen, value); }
+    void SetMark(char* value) { strcpy(mark, value); }
     
     virtual void Print(ostream &stream) { stream << *this; }
     virtual void Input(istream &stream) { stream >> *this; }

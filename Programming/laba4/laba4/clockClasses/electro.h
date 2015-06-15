@@ -19,11 +19,14 @@ using namespace std;
 
 class Electronic : public clockClass
 {
-    string powersource;
+    char powersource[15];
     
 public:
-    string GetPowersource() { return powersource; }
-    void SetPowersource(string value) { powersource = value; }
+    //Electronic(char* s = "", char* m = "", char* s = ""){
+        
+    //}
+    char* GetPowersource() { return powersource; }
+    void SetPowersource(char* value) { strcpy(powersource, value); }
     
     void Print(ostream &stream) { stream << *this; }
     void Input(istream &stream) { stream >> *this; }
