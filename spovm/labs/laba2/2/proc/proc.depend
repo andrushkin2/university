@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1444775386 source:/home/slava/Документы/СПОВМ/2/proc/proc.cpp
+	<iostream>
+	<unistd.h>
+	<fcntl.h>
+	<sys/stat.h>
+	<semaphore.h>
+	<stdio.h>
+
