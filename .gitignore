@@ -80,7 +80,7 @@ ipch/
 *.sdf
 *.cachefile
 
-*..DS_Store
+*.DS_Store
 
 # Visual Studio profiler
 *.psess
