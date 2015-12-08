@@ -66,20 +66,22 @@ start:
 
     ;xor bx, bx
     ;lea dx, buf[]
-    call clearBuf
+    ;call clearBuf
 ;--------------------------------------------------------------
 ;reset Word    
 out_str:
     mov bx, iterator
     mov ah, 3fh      ; read form the file
     mov cx, 1        ; a byte
+    ;xor dx, dx
     lea dx, buf[bx]      ; set read symbol to the buf variable
     mov bx, handle
     int 21h 
+    mov bx, iterator
     cmp dl, 0Dh
-    jmp workWithRow 
+    je workWithRow 
     cmp dl, 0Ah
-    jmp incIterator  
+    je incIterator  
     cmp ax, cx       ; if EoF or reading error
     jnz quit   
     ;inc w.[iterator]    
@@ -109,8 +111,21 @@ workWithRow:
     push cx
     ;body
     mov index, 0
-
+workWithRowStart:
+    call getWord
+    lea di, interestWord
+    lea si, foundWord
+    ;if find end of string, then exit and load next row
+    cmp si, '$'
+    je workWithRowEnd
+    mov cx, interestWord+1
+    repe cmpsb
+    ;if equal -> write to file
+    ;;cmp
+    ;if not eqaul -> workWithRowStart(find next word) 
     ;body end
+    ;interestWord
+workWithRowEnd:
     pop cx
     pop ax
     pop di
@@ -121,12 +136,32 @@ workWithRow:
 ;get next word from string
 ;output: foundWord contained a word
 getWord:
+    push bx
+    push si
+    push di
+    push ax
+    push cx
+
     call clearFoundWord
+getWordStart:
+    mov bx, index
+    mov ax, buf[bx]
+    call checkIsSplitter
+    jnc getWordEnd
+    inc index
+    jmp getWordStart
     ;
     ;mov al, [di]
     ;call checkIsSplitter
     ;jnc findFirstSymbolExit
     ;
+getWordEnd:
+    pop cx
+    pop ax
+    pop di
+    pop si
+    pop bx
+    ret
     
 ;--------------------------------------------------------------
 ;reset foundWord variable
