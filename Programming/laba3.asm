@@ -78,9 +78,9 @@ out_str:
     mov bx, handle
     int 21h 
     mov bx, iterator
-    cmp dl, 0Dh
+    cmp buf[bx], 0Dh
     je workWithRow 
-    cmp dl, 0Ah
+    cmp buf[bx], 0Ah
     je incIterator  
     cmp ax, cx       ; if EoF or reading error
     jnz quit   
@@ -108,6 +108,7 @@ workWithRow:
     push si
     push di
     push ax
+    push bx
     push cx
     ;body
     mov index, 0
@@ -116,10 +117,22 @@ workWithRowStart:
     lea di, interestWord
     lea si, foundWord
     ;if find end of string, then exit and load next row
-    cmp si, '$'
+    cmp [si], '$'
     je workWithRowEnd
-    mov cx, interestWord+1
-    repe cmpsb
+    
+    ;mov bx, 0
+checkByte:
+    mov al, [di]
+
+    cmp al, [si]
+    je nextByte
+
+    jmp workWithRowStart
+
+nextByte:
+    inc di
+    inc si
+    jmp checkByte
     ;if equal -> write to file
     ;;cmp
     ;if not eqaul -> workWithRowStart(find next word) 
@@ -127,6 +140,7 @@ workWithRowStart:
     ;interestWord
 workWithRowEnd:
     pop cx
+    pop bx
     pop ax
     pop di
     pop si
@@ -141,14 +155,17 @@ getWord:
     push di
     push ax
     push cx
+    push dx
 
     call clearFoundWord
+    mov dx, foundWord
 getWordStart:
     mov bx, index
-    mov ax, buf[bx]
+    mov al, buf[bx]
     call checkIsSplitter
     jnc getWordEnd
     inc index
+    mov [di], al
     jmp getWordStart
     ;
     ;mov al, [di]
@@ -156,6 +173,7 @@ getWordStart:
     ;jnc findFirstSymbolExit
     ;
 getWordEnd:
+    pop dx
     pop cx
     pop ax
     pop di
