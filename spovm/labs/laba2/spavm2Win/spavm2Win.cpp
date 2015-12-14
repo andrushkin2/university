@@ -19,7 +19,7 @@ const int MAX_AMOUNT = 10;
 
 PROCESS_INFORMATION createNewProcess(char*, char*);
 void initProcessWithPath(char*);
-void printProcessById(char*);
+void printProcessById(char*, char*);
 
 int getSymbol(){
 	if(_kbhit()){
@@ -39,12 +39,15 @@ void main(int argc, char* argv[])
 	*/
 	if (argc == 1){
 		initProcessWithPath(argv[0]);
-	} else {
+	} else{
 		cout << "HellO!" << endl;
-		Sleep(1000);
+		
+		cout << argv[0]<< argv[1]<< argv[2] << endl;
+	system("pause");
 		cout << argv[1] << endl;
-		printProcessById(argv[1]);
+		printProcessById(argv[1], argv[2]);
 	}
+
 	return;
 }
 
@@ -86,15 +89,16 @@ void initProcessWithPath(char* path){
 		switch(enteredSymbol){
 			case '+':{
 				if(closeEvents.size() < MAX_AMOUNT){
-					sprintf(eventId, "%dc", closeEvents.size() + 1);
+					int newId = closeEvents.size() + 1;
+					sprintf(eventId, "%dclose", newId);
 					//set a new event with non active state with autoreset
 					closeEvents.push_back(CreateEvent(NULL, false, false, eventId));
 					
-					sprintf(eventId, "%sp", eventId);
+					sprintf(eventId, "%dprint", newId);
 					//manually reset event	
 					printEvents.push_back(CreateEvent(NULL, true, false, eventId));
 					
-					sprintf(eventId, "%dc", closeEvents.size());
+					sprintf(eventId, "%dclose %dprint %d", newId, newId, newId);
 					// create a new process and save it process info
 					processInfo[closeEvents.size() - 1] = createNewProcess(path, eventId);
 				}
@@ -183,7 +187,7 @@ PROCESS_INFORMATION createNewProcess(char* path, char* commandLine){
 	return procInfo;
 }
 
-void printProcessById(char* processNumber){
+void printProcessById(char* processNumber, char* printName){
 	char eventId[30];
 	cout << processNumber << endl;
 	int i;
@@ -197,11 +201,11 @@ void printProcessById(char* processNumber){
 	}
 	
 	sprintf(eventId, "%s", processNumber);
-	HANDLE closeEvent = OpenEvent(EVENT_ALL_ACCESS, false, eventId);
+	HANDLE closeEvent = OpenEvent(EVENT_ALL_ACCESS, false, processNumber);
 	cout << eventId << endl;
 	sprintf(eventId, "%sp", eventId);
 	cout << eventId << endl;
-	HANDLE printEvent = OpenEvent(EVENT_ALL_ACCESS, false, eventId);
+	HANDLE printEvent = OpenEvent(EVENT_ALL_ACCESS, false, printName);
 	
 	HANDLE events[2]={printEvent, closeEvent};
 	while(1){
