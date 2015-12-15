@@ -10,6 +10,8 @@
 
 using namespace std;
 
+#define bzero(a) memset(a,0,sizeof(a))
+
 string strings[10] = {
 	"First process", "Second process", "Third process", "Fouth process", "Fifth process",
 	"Sixth process", "Seventh process", "Eighth process", "Ninth process", "Tenth process"
@@ -17,9 +19,9 @@ string strings[10] = {
 
 const int MAX_AMOUNT = 10;
 
-PROCESS_INFORMATION createNewProcess(char*, char*);
+PROCESS_INFORMATION createNewProcess(char*, char*, HANDLE);
 void initProcessWithPath(char*);
-void printProcessById(char*, char*);
+void printProcessById(char*, char*, int);
 
 int getSymbol(){
 	if(_kbhit()){
@@ -40,12 +42,7 @@ void main(int argc, char* argv[])
 	if (argc == 1){
 		initProcessWithPath(argv[0]);
 	} else{
-		cout << "HellO!" << endl;
-		
-		cout << argv[0]<< argv[1]<< argv[2] << endl;
-	system("pause");
-		cout << argv[1] << endl;
-		printProcessById(argv[1], argv[2]);
+		printProcessById(argv[0], argv[1], atoi(argv[2]));
 	}
 
 	return;
@@ -54,31 +51,32 @@ void main(int argc, char* argv[])
 void initProcessWithPath(char* path){
 	char	enteredSymbol = 0,
 			eventId[30];
-	char buffer[100];				 // input message
-	int bufferSize = sizeof(buffer); 
+
+	char buf[1024];// input message
+
+
+	HANDLE newstdout,read_stdout;
+	SECURITY_ATTRIBUTES sa;
+	sa.lpSecurityDescriptor = NULL;
+	sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+	sa.bInheritHandle = true;       //разрешаем наследование дескрипторов
+	 if (!CreatePipe(&read_stdout, &newstdout, &sa, 0)) //создаем пайп для stdout
+	  {
+		cout << "\tCannot create a pipe :(\n" << endl;
+		system("pause");
+		return;
+	  }
 
 	string	errorText = "Error on closing hanlde: ";
 	string message;
 
 	int		currentNum = 0;
 
-	bool	flag = false;
 
 	vector<HANDLE> closeEvents;
 	vector<HANDLE> printEvents;
 
-
-	//create pipe
-	HANDLE printPipe = CreateNamedPipe("\\\\.\\pipe\\MyPipe", PIPE_ACCESS_OUTBOUND, PIPE_TYPE_MESSAGE | PIPE_WAIT,PIPE_UNLIMITED_INSTANCES ,0 , 0, INFINITE, (LPSECURITY_ATTRIBUTES)NULL);
-	if (!printPipe){
-		cout << "\tCannot create a pipe :(\n";
-		system("pause");
-		return;
-	}
-
 	PROCESS_INFORMATION processInfo[MAX_AMOUNT];
-
-	//PROCESS_INFORMATION processInfo[MAX_AMOUNT];
 
 	while(1){
 		Sleep(1);
@@ -100,7 +98,7 @@ void initProcessWithPath(char* path){
 					
 					sprintf(eventId, "%dclose %dprint %d", newId, newId, newId);
 					// create a new process and save it process info
-					processInfo[closeEvents.size() - 1] = createNewProcess(path, eventId);
+					processInfo[closeEvents.size() - 1] = createNewProcess(path, eventId, newstdout);
 				}
 				break;
 			}
@@ -118,8 +116,7 @@ void initProcessWithPath(char* path){
 					printEvents.pop_back();
 					
 					if (currentNum >= closeEvents.size()){
-						currentNum = 0;
-						flag = true;						
+						currentNum = 0;			
 					}
 				}
 				break;
@@ -148,87 +145,91 @@ void initProcessWithPath(char* path){
 			break;
 		}
 		
-		if (printEvents.size() > 0 && WaitForSingleObject(printEvents[currentNum], 1) != WAIT_OBJECT_0){
+		if (printEvents.size() > 0 && WaitForSingleObject(printEvents[currentNum], 1) == WAIT_TIMEOUT){
 			DWORD NumberOfBytesRead;
 			if (currentNum >= (printEvents.size() - 1)){
 				currentNum = 0;
 			} else {
 				currentNum++;
 			}
-			//sprintf(eventId, "%dp", currentNum);
-			SetEvent(printEvents[currentNum]);
-			int size;
-			if(!ReadFile(printPipe, &size, sizeof(size), &NumberOfBytesRead, NULL)){
-				break;
-			}			
-			if(!ReadFile(printPipe, buffer, bufferSize, &NumberOfBytesRead, NULL)) {
-				break;
-			}
-			message.append(buffer, bufferSize); //add to message read buffer
 
-			message.resize(size);
-			flag = false;
+			SetEvent(printEvents[currentNum]);
+
+			unsigned long bread;   //read butes
+			unsigned long avail;   //total bytes
+			PeekNamedPipe(read_stdout,buf,1023,&bread,&avail,NULL);
+
+			// if data for reading exists
+			if (bread != 0)
+			{
+			  bzero(buf);
+			  if (avail > 1023)
+			  {
+				while (bread >= 1023)
+				{
+				  ReadFile(read_stdout, buf, 1023, &bread , NULL);  //read from pipe
+				  printf("%s",buf);
+				  bzero(buf);
+				}
+			  } else {
+				ReadFile(read_stdout, buf, 1023, &bread, NULL);		//read from pipe
+				printf("%s",buf);
+			  }
+			}
 		}
 	}
 }
 
 
-PROCESS_INFORMATION createNewProcess(char* path, char* commandLine){
+PROCESS_INFORMATION createNewProcess(char* path, char* commandLine, HANDLE newstdout){
 	STARTUPINFO si;
 	ZeroMemory(&si, sizeof(si));
+	GetStartupInfo(&si); 
+	si.dwFlags = STARTF_USESTDHANDLES|STARTF_USESHOWWINDOW;
+	si.wShowWindow = SW_HIDE;
+	si.hStdOutput = newstdout;
+	si.hStdError = newstdout;   //set descriptiors for std:out 
 	si.cb = sizeof(si);
 	
 	PROCESS_INFORMATION procInfo;
 	ZeroMemory(&procInfo, sizeof(procInfo));
 	
-	if (!CreateProcess((LPCSTR)path, (LPSTR)commandLine, NULL, NULL, false, CREATE_NEW_CONSOLE, NULL, NULL, &si, &procInfo)){
+	if (!CreateProcess((LPCSTR)path, (LPSTR)commandLine, NULL, NULL, true, CREATE_NEW_CONSOLE, NULL, NULL, &si, &procInfo)){
 		cout << "Error on creating a new process :(\t" << GetLastError() << endl;
 	}
 	return procInfo;
 }
 
-void printProcessById(char* processNumber, char* printName){
+void printProcessById(char* processNumber, char* printName, int id){
 	char eventId[30];
-	cout << processNumber << endl;
 	int i;
 	char buffer[100];				 // input message
 	int bufferSize = sizeof(buffer); 
 	string message;
-
-	HANDLE printPipe = CreateFile("\\\\.\\pipe\\MyPipe", GENERIC_WRITE, FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
-	if(!printPipe){
-		cout << "\tCannot create a pipe :(\n";
-	}
 	
-	sprintf(eventId, "%s", processNumber);
 	HANDLE closeEvent = OpenEvent(EVENT_ALL_ACCESS, false, processNumber);
-	cout << eventId << endl;
-	sprintf(eventId, "%sp", eventId);
-	cout << eventId << endl;
 	HANDLE printEvent = OpenEvent(EVENT_ALL_ACCESS, false, printName);
 	
-	HANDLE events[2]={printEvent, closeEvent};
+	HANDLE events[2]= {printEvent, closeEvent};
 	while(1){
 		message.clear();
 		DWORD NumberOfBytesWritten;
 		int index = WaitForMultipleObjects(2, events, FALSE, INFINITE) - WAIT_OBJECT_0; 
 		if (index == 1){
-			cout << "close child" << endl;
 			CloseHandle(closeEvent);
+			ResetEvent(printEvent);
 			CloseHandle(printEvent);
 			break;
 		}
-		cout << "Start writing" << endl;
-		message.append(processNumber);//strings[processNumber - 1];
-		//send size of message
+
+		message = strings[id - 1];
 		int size = message.size();
-		WriteFile(printPipe, &size, sizeof(size), &NumberOfBytesWritten, (LPOVERLAPPED)NULL);
-		//send message
 		message.copy(buffer, bufferSize, 0);
-		if( !WriteFile(printPipe, buffer, bufferSize, &NumberOfBytesWritten, (LPOVERLAPPED)NULL)){ 
-			cout << "Cannot write to pipe :(\n";
+		for (int i = 0; i < size; i++){
+			cout << buffer[i];
+			Sleep(100);
 		}
-		cout << "Reset print event" << endl;
+		cout << endl;
 		ResetEvent(printEvent);
 	}
 	return;
