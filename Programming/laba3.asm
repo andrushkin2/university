@@ -1,26 +1,15 @@
-include "emu8086.inc"
 
-data segment
-	inputOpenFileText  db "Open file: ", 10, 13, "$"
-	inputWriteFile  db "Write to file: ", 10, 13, "$"
-    inputWord  db "Enter the word for searching: ", 10, 13, "$"
-    split   db 6, ' ', '.', ',', 9, 10, 13
-    errorOnOpenText  db "Error on open file!", 10, 13, "$"
-    buf  db 255, 255 dup('$')
-    iterator dw 0
-    handle dw ?
+ include emu8086.inc   
 
-
-    file1 db "file1.txt", 0
-    file2 db "C:\emu8086\newfile.txt", 0
-
-    ;buf = 'asd asdasd asd asd $$$$$$$'
-    ;buf = '$$$$$$$$$$$$'
-    ; first and second :
-    interestWord db 255, 255 dup('$')
-    index dw 0
-    foundWord db 255, 255 dup('$')
-    foundWordIterator dw 0
+data segment  
+    HANDLE dw 0 
+    HANDLE1 dw 0       
+    count dw 0    
+    PATH    db   200, 199 dup('$') ;'C:\emuread.txt',0
+    PATH_RES    db    'C:\result.txt',0   
+    buf     db 200, 199 dup('$')    
+    key     db 200, 199 dup('$')
+    pkey db "press any key...$"
 ends
 
 stack segment
@@ -28,225 +17,206 @@ stack segment
 ends
 
 code segment
-===============================================
-
 start:
+; set segment registers:
     mov ax, data
     mov ds, ax
     mov es, ax
-    mov ax, stack
-    mov ss, ax
 
-    ; input text show
-    lea dx, inputOpenFileText
-    mov ah, 9
-    int 21h 
+    ;enter a path to file with data
+    PRINT 'Enter PATH:'
+    lea di,PATH
+    mov dx,200
+    CALL GET_STRING  
 
-    mov ah, 3Dh     ; open the file1.txt
-    mov cx, 0
-    mov dx, offset file1
-    mov al, 2
-    int 21h
-    jc errorOnOpen
-
-    mov [handle], ax       ; set to bx link to the opened file
-    xor cx, cx
-    xor dx, dx
-    mov ax, 4200h    ; go to the start of file
-    int 21h  
-
-      ; input text show
-    lea dx, inputWord
-    mov ah, 9
-    int 21h 
-
-    lea dx, interestWord     ; enter a word for searching in file row
+    ;enter a key for searching
+    PRINT 'Enter key:'
+    lea dx, key
     mov ah, 0ah
     int 21h 
-
-    ;xor bx, bx
-    ;lea dx, buf[]
-    ;call clearBuf
-;--------------------------------------------------------------
-;reset Word    
-out_str:
-    mov bx, iterator
-    mov ah, 3fh      ; read form the file
-    mov cx, 1        ; a byte
-    ;xor dx, dx
-    lea dx, buf[bx]      ; set read symbol to the buf variable
-    mov bx, handle
-    int 21h 
-    mov bx, iterator
-    cmp buf[bx], 0Dh
-    je workWithRow 
-    cmp buf[bx], 0Ah
-    je incIterator  
-    cmp ax, cx       ; if EoF or reading error
-    jnz quit   
-    ;inc w.[iterator]    
-    ;mov dl, buf
-    ;mov ah, 2        ; output the symbol in dl
-    ;int 21h  
-incIterator:    
-    inc iterator
-    inc dx 
-    jmp out_str
-
-errorOnOpen:
-    lea dx, errorOnOpenText
-    mov ah, 9
-    int 21h 
-    jmp quit
-
-quit:
-    mov ax, 4c00h
-    int 21h
-;--------------------------------------------------------------
-;reset Word
-workWithRow:
-    push si
-    push di
-    push ax
-    push bx
-    push cx
-    ;body
-    mov index, 0
-workWithRowStart:
-    call getWord
-    lea di, interestWord
-    lea si, foundWord
-    ;if find end of string, then exit and load next row
-    cmp [si], '$'
-    je workWithRowEnd
     
-    ;mov bx, 0
-checkByte:
-    mov al, [di]
-
-    cmp al, [si]
-    je nextByte
-
-    jmp workWithRowStart
-
-nextByte:
-    inc di
-    inc si
-    jmp checkByte
-    ;if equal -> write to file
-    ;;cmp
-    ;if not eqaul -> workWithRowStart(find next word) 
-    ;body end
-    ;interestWord
-workWithRowEnd:
-    pop cx
-    pop bx
-    pop ax
-    pop di
-    pop si
-    ;go back to loading file
-    ret
-;--------------------------------------------------------------
-;get next word from string
-;output: foundWord contained a word
-getWord:
-    push bx
-    push si
-    push di
-    push ax
-    push cx
-    push dx
-
-    call clearFoundWord
-    mov dx, foundWord
-getWordStart:
-    mov bx, index
-    mov al, buf[bx]
-    call checkIsSplitter
-    jnc getWordEnd
-    inc index
-    mov [di], al
-    jmp getWordStart
-    ;
-    ;mov al, [di]
-    ;call checkIsSplitter
-    ;jnc findFirstSymbolExit
-    ;
-getWordEnd:
-    pop dx
-    pop cx
-    pop ax
-    pop di
-    pop si
-    pop bx
-    ret
-    
-;--------------------------------------------------------------
-;reset foundWord variable
-clearFoundWord:
-    push si
-    push di
-    push ax
-    push cx
-    ;body
-    cld
-    mov al, '$'
-    lea di, foundWord
-    mov cx, 255
-    rep stosb       ;set to variable symbols "$" 
-    ;body end
-    mov foundWordIterator, 0
-    pop cx
-    pop ax
-    pop di
-    pop si
-    ;go back to loading file
-    ret
-
-;--------------------------------------------------------------
-;input:     al - symbol
-;output:    C flag set if symbol is splitter
-checkIsSplitter:
-    push di
-    push cx
-    lea di, split
+    ;set symbol $ to the end of key
+    lea di, key+1  ; calculate adress of the last symbol in string
+    lea si, key+2
     xor cx, cx
-    mov cl, [di] ; load amount bytes to compare
-    inc di
-isSplitter:
-    cmp al, [di]
-    je setAsFound
-    inc di
-    loop isSplitter   
-    clc
-    jmp setAsNotFound
-setAsFound:    
-    stc
-setAsNotFound:   
-    pop cx
-    pop di
-    ret
-;--------------------------------------------------------------
-;reset clear variable
-clearBuf:
-    push si
-    push di
-    push ax
-    push cx
-    ;body
-    cld
-    mov al, '$'
+    mov cl, [di]
+    add si, cx
+    mov [si], '$'    ; replace last symbol to $ for correct print by ah=9 dos function 
+    
+    ;open file for writing    
+    mov ah,3Ch              
+    lea dx,PATH_RES       
+    xor cx,cx               
+    int 21h                 
+    jc onError               
+    mov [HANDLE1],ax 
+
+    ;open file for reading 
+    mov ah, 3Dh
+    mov al,2         
+    lea dx,PATH      
+    int 21h
+    jc onError    
+    mov HANDLE, ax   
+    
+    mov bx,ax       
+    xor cx,cx
+    xor dx,dx 
+    xor di,di
+    mov ax,4200h
+    int 21h 
+; mark for reading next one symbol from file
+readNextSymbol:   
+    mov bx, count
+    mov ah,3fh      
+    mov cx,1
+    xor dx,dx       
+    lea dx,buf[bx]
+    mov bx,HANDLE
+    int 21h
+    
+    mov bx, count           
+    cmp buf[bx],0ah
+    je searchKeyInRow
+    ;if end of file -> exit    
+    cmp ax,cx       
+    jnz exit
+    ;increment counter and repeat reading a new symbol
+    inc count  
+    jmp readNextSymbol   
+    
+; mark for searching key in read row          
+searchKeyInRow:
+    ;if end of row -> exit
+    cmp [key+1], 0
+    je exit 
+    
+    call clear_screen
+    ; set into di pointer to the first symbol in row 
     lea di, buf
-    mov cx, 255
-    rep stosb       ;set to variable symbols "$" 
-    ;body end
-    mov iterator, 0
-    pop cx
-    pop ax
-    pop di
-    pop si
-    ;go back to loading file
-    ret
+searchLoop: 
+    ;if end of row -> jump to reading a new line   
+    cmp [di], '$'
+    je clearRow
+
+    mov dx, di 
+    ;in si pointer to first symbol in row      
+    lea si, key+2 
+    xor cx, cx
+    ; in cx - length of string that we conld find
+    mov cl, key[1]
+    ;run repe for searching is row include key  
+    repe cmpsb        
+    ; if find out key in row -> write it to file
+    je writeToFile
+    ; else repeat until end of row    
+    jmp searchLoop
+   
+; mark for writing found row to file   
+writeToFile:   
+    ;increment count
+    inc count 
+
+    ;open result file for writing
+    mov ah, 3Dh
+    mov al,2         
+    lea dx,PATH_RES      
+    int 21h
+    jc  onError        
+    mov HANDLE1, ax         
+    mov bx,ax   
+    mov ah, 42h
+    mov al,2        
+    mov dx,0
+    xor cx,cx 
+    mov bx,HANDLE1
+    int 21h 
+
+    ;write to file row 
+    mov ah,40h              
+    lea dx,buf           
+    mov cx,[count]         
+    int 21h
+    jc onError     
+              
+;close file opened for writing 
+closeFile:
+    mov ah,3Eh              
+    mov bx,[HANDLE1]         
+    int 21h                 
+    jnc clearRow                
+
+; clear previous row and rewrite new 
+clearRow:     
+    cld
+    lea di, buf 
+    mov al,'$'
+    mov cx, 200
+    rep stosb 
+
+    xor bx,bx 
+    xor cx,cx
+    mov ah, 42h
+    mov al,1
+    mov dx,10  
+    int 21h
+  
+    ;reset count to 0 and jump to read a new line in file
+    mov count,0
+    jmp readNextSymbol
+ 
+; mark of exit program   
+exit:            
+    mov ah,4ch
+    int 21h    
+    ;prinit waiting message            
+    lea dx, pkey
+    mov ah, 9
+    int 21h       
+    
+    ; wait for any key....    
+    mov ah, 1
+    int 21h
+    
+    ; exit to operating system.
+    mov ax, 4c00h 
+    int 21h    
+
+;mark of some error      
+onError:
+    PRINT 'ERROR' 
+    lea dx, pkey
+    mov ah, 9
+    int 21h    
+    
+    ; wait for any key....    
+    mov ah, 1
+    int 21h
+    
+    mov ax, 4c00h ; exit to operating system.
+    int 21h      
+    
+    ;define function for working with string
+    DEFINE_GET_STRING
+    DEFINE_CLEAR_SCREEN
+    DEFINE_PRINT_STRING  
+    
+    
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;   
 ends
 
-end start
+end start ; set entry point and stop the assembler.
+    ;output message ot press any key    
+    lea dx, pkey
+    mov ah, 9
+    int 21h 
+    
+    ; wait for any key....    
+    mov ah, 1
+    int 21h
+    ; exit to operating system.
+    mov ax, 4c00h
+    int 21h    
+ends
+
+end start ; set entry point and stop the assembler.
