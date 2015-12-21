@@ -16,40 +16,38 @@ ends
 ;======================================================================    
 code segment
 
+NEW_INT PROC FAR
+    sti
+    push ax
+    push dx 
+    ; wait for any key....    
+    mov ah, 01h
+    int 21h     
+
+    pop dx
+    pop ax
+    iret
+NEW_INT ENDP    
+
 start:
 ; set segment registers:
     mov ax, data
     mov ds, ax
     mov es, ax
-                    
-    NEW_INT PROC FAR
-        push ax;сохраняем все изменяемые регистры
-        push dx 
-        ; wait for any key....    
-        mov ah, 08h
-        int 21h     
-        cli
-    
-        pop dx ;восстанавливаем регистры
-        pop ax
-        iret
-    NEW_INT ENDP                 
-                    
-                    
-    mov ah, 35h ; функция получения вектора
-    mov al, 23h ; номер вектора
+                                                     
+    mov ah, 35h ; function for getting vector
+    mov al, 23h ; vector number
     int 21h
-    mov old_ip, bx ; запоминание смещения
-    mov old_cs, es ; и сегмента
+    mov old_ip, bx ; save interval
+    mov old_cs, es ; save segment
 
     push ds 
-    ;mov ax ,2500h
-    mov dx, offset NEW_INT ; смещение для процедуры в DX
-    mov bx, seg NEW_INT ; сегмент процедуры
-    mov ds, bx ; помещаем в DS
-    mov ah, 25h ; функция установки вектора
-    mov al, 23h ; номер вектора
-    int 21h ; меняем прерывание
+    mov dx, offset NEW_INT ; set interval of procedure to DX
+    mov bx, seg NEW_INT ; segment of procedure
+    mov ds, bx ; 
+    mov ah, 25h ; function to set vector
+    mov al, 23h ; vector number
+    int 21h ; change to new vector
     pop ds
 
     ;enter a filePath to file with data
@@ -104,14 +102,14 @@ onError:
 ; mart for exit program
 exit: 
     cli
-    push ds ;DS будет разрушен
-    mov dx, old_ip ;подготовка к восстановлению
-    mov ax, old_cs ;
-    mov ds, ax ;подготовка к восстановлению
-    mov ah, 25h ;функция установки вектора
-    mov al, 23h ;номер вектора
-    int 21h ;восстанавливаем вектор
-    pop ds ;восстанавливаем DS
+    push ds ;
+    mov dx, old_ip 
+    mov ax, old_cs 
+    mov ds, ax 
+    mov ah, 25h 
+    mov al, 23h 
+    int 21h 
+    pop ds 
     sti
 
     ;prinit waiting message            
@@ -124,7 +122,7 @@ exit:
     int 21h
     
     ; exit to operating system.
-    mov ax, 4c00h 
+    mov ax, 3100h 
     int 21h     
     
     ;define function for working with string
