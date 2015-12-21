@@ -23,11 +23,21 @@ stack<HANDLE> threads;
 stack<HANDLE> closingThreads;
 vector<bool*> quitFlags;
 
+int printNumber = -1;
+bool printEnd = true;
+
 struct threadArg
 {
 	bool* quitFlag;
 	int num;
 };
+
+int getSymbol(){
+	if(_kbhit()){
+		return _getch();
+	}
+	return -1;
+}
 
 
 void main()
@@ -35,7 +45,7 @@ void main()
 	InitializeCriticalSection(&critSection);
 	while(1)
 	{
-		switch(_getch())
+		switch(getSymbol())
 		{
 			case '+':
 				if(threads.size() < MAX_COUNT) {
@@ -52,7 +62,13 @@ void main()
 				break;
 			case '-':
 				if(threads.size() > 0){
+					if (printNumber == threads.size() - 1){
+						printNumber = -1;
+						printEnd = true;
+					}
 					exitLastThread();
+					WaitForSingleObject(closingThreads.top(), INFINITE);
+					closingThreads.pop();
 				}
 				break;
 			case 'q':
@@ -70,6 +86,15 @@ void main()
 				return;
 			default:
 				break;
+		}
+
+		if (threads.size() && printEnd){
+			printEnd = false;
+			if (printNumber + 1 >= threads.size()){
+				printNumber = 0;
+			} else {
+				printNumber++;
+			}
 		}
 	}
 }
@@ -93,20 +118,21 @@ unsigned int __stdcall  threadCallFunc(void* arg)
 		if(*qFlag) {
 			break;	
 		}
-
-		EnterCriticalSection(&critSection);
-		for(int i = 0; i < strlen(strings[threadNumber]); i++)
-		{
-			if(*qFlag){
-				break;
+		if (printNumber == threadNumber){
+			EnterCriticalSection(&critSection);
+			for(int i = 0; i < strlen(strings[threadNumber]); i++)
+			{
+				if(*qFlag){
+					break;
+				}
+				cout << strings[threadNumber][i];
+				Sleep(50);
 			}
-			cout << strings[threadNumber][i];
-			Sleep(50);
+			cout << endl;
+			LeaveCriticalSection(&critSection);
+			printEnd = true;
 		}
-		cout << endl;
-		LeaveCriticalSection(&critSection);
-
-		Sleep(1);
+		Sleep(100);
 	}
 
 	delete qFlag;

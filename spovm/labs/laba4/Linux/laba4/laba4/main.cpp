@@ -24,8 +24,6 @@ using namespace std;
 
 void* printString(void* arg);
 void CloseLastThread();
-void WaitThreads();
-void AddThread();
 
 char getch() {
     termios settings, stored;
@@ -34,7 +32,7 @@ char getch() {
     tcgetattr(STDIN_FILENO, &stored);   //Получаем текущие настройки терминала
     settings = stored;      //Копируем их
     settings.c_lflag &= ~(ICANON|ECHO);     //Отключаем канонический режим и эхо
-    settings.c_cc[VTIME] = 0;       //Таймаут ожидания ввода - бесконечно
+    settings.c_cc[VTIME] = 1;       //Таймаут ожидания ввода - бесконечно
     settings.c_cc[VMIN] = 1;       //Размер буфера для ввода - 1 символ
     tcsetattr(STDIN_FILENO, TCSANOW, &settings);    //Применяем новые настройки
     ch = getchar();     //Теперь действие getchar() аналогично getch() в DOS-овском conio.h
@@ -43,6 +41,8 @@ char getch() {
     return ch;
 }
 
+int printNumber = -1;
+bool printEnd = true;
 char strings[10][30] = {{"1) First thread"}, {"2) Second thread"}, {"3) Third thread"}, {"4) Fourth thread"}, {"5) Fifth thread"}, {"6) Sixth thread"}, {"7) Seventh thread"}, {"8) Eighth thread"}, {"9) Ninth thread"}, {"10) Tenth thread"}};
 
 pthread_mutex_t printMutex;
@@ -62,111 +62,104 @@ int main()
 {
     if(pthread_mutex_init(&printMutex, NULL) != 0)
     {
-        cout <<"Initialize mutex error...\n";
-        
+        cout <<"Cannot initialize mutex :(\n"; 
         return 0;
     }
     
-   
-    
     while(1)
     {
-        usleep(10000);
         switch(getch())
         {
             case '+':
-                if(threads.size() < MAX_COUNT) AddThread();
+                if(threads.size() < MAX_COUNT) {
+                    quitFlags.push_back(new bool(false));
+                    threadArg* arg = new threadArg();
+                    (*arg).num = (int)threads.size();    
+                    (*arg).quitFlag = quitFlags.back();       
+                    pthread_t thread;
+                    if(pthread_create(&thread, NULL, printString, arg) != 0)
+                    {
+                        cout << "Cannot create a thread :(\n";
+                        return;
+                    }
+                    threads.push(thread); 
+                }
                 break;
                 
             case '-':
-                if(threads.size() > 0) CloseLastThread();
+                if(threads.size() > 0) {
+                    if (printNumber == threads.size() - 1){
+                        printNumber = -1;
+                        printEnd = true;
+                    }
+                    CloseLastThread();
+                    pthread_join(closingThreads.top(), NULL); // // waiting for thread close
+                    closingThreads.pop();
+                }
                 break;
                 
             case 'q':
-                while(threads.size() > 0)
+                while(threads.size() > 0){
                     CloseLastThread();
-                WaitThreads();
-                
+                }
+                while(closingThreads.size() > 0)
+                {
+                    pthread_join(closingThreads.top(), NULL); // waiting for thread close
+                    closingThreads.pop();
+                }
                 pthread_mutex_destroy(&printMutex);
-                
-                
                 return 0;
                 
             default:
                 break;
         }
     }
-}
 
+    if (threads.size() && printEnd){
+        printEnd = false;
+        if (printNumber + 1 >= threads.size()){
+            printNumber = 0;
+        } else {
+            printNumber++;
+        }
+    }
+}
 
 void CloseLastThread()
 {
-    closingThreads.push(threads.top()); // Добавляем id последнего потока в стек закрывающихся потоков
-    
-    *(quitFlags.back()) = true;   // Устанавливаем флаг выхода для последнего потока
-    
-    quitFlags.pop_back();         // Удаляем указатель на флаг закрытия последнего потока из массива
-    
-    threads.pop();				  // Удаляем id последнего потока
+    closingThreads.push(threads.top()); 
+    *(quitFlags.back()) = true;   
+    quitFlags.pop_back();         
+    threads.pop();			
 }
-
-void WaitThreads()
-{
-    while(closingThreads.size() > 0)
-    {
-        pthread_join(closingThreads.top(), NULL); // Ожидаем завершения последнего потока
-        closingThreads.pop();
-    }
-}
-
-void AddThread()
-{
-    quitFlags.push_back(new bool(false));
-    
-    threadArg* arg = new threadArg();
-    (*arg).num = (int)threads.size();              // Номер добавляемого потока
-    (*arg).quitFlag = quitFlags.back();		  // Указатель на флаг закрытия для данного потока
-    
-    pthread_t thread;
-    
-    if(pthread_create(&thread, NULL, printString, arg) != 0)
-    {
-        cout << "Creating new thread error...\n";
-        return;
-    }
-    threads.push(thread);
-    
-}
-
-
 
 void* printString(void* arg)
-{
-    //	usleep(1000000); // для проверки на ошибки
-    
-    bool *qFlag = (*(threadArg*)arg).quitFlag;   // Указатель на флаг выхода для данного потока
-    int threadNumber = (*(threadArg*)arg).num;   // Номер данного потока
+{   
+    bool *qFlag = (*(threadArg*)arg).quitFlag;   // link to Quit flag
+    int threadNumber = (*(threadArg*)arg).num;   // thread number
     delete (threadArg*)arg;
     
     while(1)
     {
-        if(*qFlag) break;
-        
-        pthread_mutex_lock(&printMutex);
-        for(int i = 0; i < strlen(strings[threadNumber]); i++)
-        {
-            
-            if(*qFlag) break;
-            
-            printf("%c",strings[threadNumber][i]);
-            usleep(100000);
+        if(*qFlag) {
+            break;
         }
-        
-        pthread_mutex_unlock(&printMutex);
-        
+        if (printNumber == threadNumber){
+            pthread_mutex_lock(&printMutex);
+            for(int i = 0; i < strlen(strings[threadNumber]); i++)
+            { 
+                if(*qFlag) {
+                    break;
+                }
+                cout << strings[threadNumber][i];
+                usleep(50);
+            }
+            cout << endl;
+            printEnd = true;
+            pthread_mutex_unlock(&printMutex);
+        }
         usleep(100);
     }
-    
     delete qFlag;
     return NULL;
 }
