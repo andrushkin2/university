@@ -16,35 +16,37 @@ ends
 ;======================================================================    
 code segment
 
-NEW_INT PROC FAR
-    push ax;сохраняем все изменяемые регистры
-    push dx
-    ; wait for any key....    
-    mov ah, 1
-    int 21h
-
-    pop dx ;восстанавливаем регистры
-    pop ax
-    iret
-NEW_INT ENDP 
-
-
 start:
 ; set segment registers:
     mov ax, data
     mov ds, ax
     mov es, ax
-
+                    
+    NEW_INT PROC FAR
+        push ax;сохраняем все изменяемые регистры
+        push dx 
+        ; wait for any key....    
+        mov ah, 08h
+        int 21h     
+        cli
+    
+        pop dx ;восстанавливаем регистры
+        pop ax
+        iret
+    NEW_INT ENDP                 
+                    
+                    
     mov ah, 35h ; функция получения вектора
     mov al, 23h ; номер вектора
     int 21h
     mov old_ip, bx ; запоминание смещения
     mov old_cs, es ; и сегмента
 
-    push ds
+    push ds 
+    ;mov ax ,2500h
     mov dx, offset NEW_INT ; смещение для процедуры в DX
-    mov ax, seg NEW_INT ; сегмент процедуры
-    mov ds, ax ; помещаем в DS
+    mov bx, seg NEW_INT ; сегмент процедуры
+    mov ds, bx ; помещаем в DS
     mov ah, 25h ; функция установки вектора
     mov al, 23h ; номер вектора
     int 21h ; меняем прерывание
