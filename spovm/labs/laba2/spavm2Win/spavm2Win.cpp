@@ -116,7 +116,7 @@ void initProcessWithPath(char* path){
 					printEvents.pop_back();
 					
 					if (currentNum >= closeEvents.size()){
-						currentNum = 0;			
+						currentNum = -1;			
 					}
 				}
 				break;
@@ -145,7 +145,7 @@ void initProcessWithPath(char* path){
 			break;
 		}
 		
-		if (printEvents.size() > 0 && WaitForSingleObject(printEvents[currentNum], 1) == WAIT_TIMEOUT){
+		if (printEvents.size() > 0 && (currentNum == -1 || (WaitForSingleObject(printEvents[currentNum], 1) == WAIT_TIMEOUT))){
 			DWORD NumberOfBytesRead;
 			if (currentNum >= (printEvents.size() - 1)){
 				currentNum = 0;
