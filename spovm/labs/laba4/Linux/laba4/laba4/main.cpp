@@ -14,6 +14,7 @@
 #include <stack>
 #include <unistd.h>
 #include <termios.h>
+#include <fcntl.h>
 
 #include <pthread.h>
 #include <string.h>
@@ -24,6 +25,33 @@ using namespace std;
 
 void* printString(void* arg);
 void CloseLastThread();
+
+int kbhit(void)
+{
+    struct termios oldt, newt;
+    int ch;
+    int oldf;
+    
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+    
+    ch = getchar();
+    
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
+    
+    if(ch != EOF)
+    {
+        ungetc(ch, stdin);
+        return 1;
+    }
+    
+    return 0;
+}
 
 char getch() {
     termios settings, stored;
@@ -40,6 +68,15 @@ char getch() {
     
     return ch;
 }
+
+
+char getSymbol(){
+    if (kbhit()){
+        return getch();
+    }
+    return 'a';
+}
+
 
 int printNumber = -1;
 bool printEnd = true;
@@ -68,7 +105,7 @@ int main()
     
     while(1)
     {
-        switch(getch())
+        switch(getSymbol())
         {
             case '+':
                 if(threads.size() < MAX_COUNT) {
@@ -80,7 +117,7 @@ int main()
                     if(pthread_create(&thread, NULL, printString, arg) != 0)
                     {
                         cout << "Cannot create a thread :(\n";
-                        return;
+                        return 0;
                     }
                     threads.push(thread); 
                 }
@@ -113,14 +150,13 @@ int main()
             default:
                 break;
         }
-    }
-
-    if (threads.size() && printEnd){
-        printEnd = false;
-        if (printNumber + 1 >= threads.size()){
-            printNumber = 0;
-        } else {
-            printNumber++;
+        if (threads.size() && printEnd){
+            printEnd = false;
+            if (printNumber + 1 >= threads.size()){
+                printNumber = 0;
+            } else {
+                printNumber++;
+            }
         }
     }
 }
@@ -152,13 +188,13 @@ void* printString(void* arg)
                     break;
                 }
                 cout << strings[threadNumber][i];
-                usleep(50);
+                usleep(50 * 1000);
             }
             cout << endl;
             printEnd = true;
             pthread_mutex_unlock(&printMutex);
         }
-        usleep(100);
+        usleep(100 * 1000);
     }
     delete qFlag;
     return NULL;
