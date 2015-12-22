@@ -20,8 +20,8 @@ NEW_INT PROC FAR
     sti
     push ax
     push dx 
-    ; wait for any key....    
-    mov ah, 01h
+    ; stop reading file and wait for any key to continue    
+    mov ah, 07h
     int 21h     
 
     pop dx
@@ -87,11 +87,15 @@ readNextSymbol:
     cmp ax, cx       
     jnz exit
     ;print symbol to console
+
     lea dx, buf[bx]
     mov ah, 9
     int 21h   
-    ;increment counter and repeat reading a new symbol
-    inc count  
+    
+    
+    ;int 23h    ; call ctrl-c(ctrl-break) manually to check custum procedure works well
+    
+    
     jmp readNextSymbol     
 ;======================================================================
 ;mark of some error      
