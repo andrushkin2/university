@@ -9,6 +9,9 @@
 *.userosscache
 *.sln.docstates
 
+university.sublime-project
+university.sublime-workspace 
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
