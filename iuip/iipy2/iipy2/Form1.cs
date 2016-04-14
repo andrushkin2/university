@@ -20,8 +20,12 @@ namespace iipy2
         {
             InitializeComponent();
             infoGroupBoxHide();
+            ejectButton.Hide();
+            openCd.Hide();
+            loadDiskAgain();
         }
         private OpenOrCloseCDDrive openOrClose = new OpenOrCloseCDDrive();
+        private EjectUsb ejectUsbDevice = new EjectUsb();
         private void infoGroupBoxHide()
         {
             infoGroupBox.Hide();
@@ -50,6 +54,10 @@ namespace iipy2
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             int index = listBox1.SelectedIndex;
+            if (index < 0)
+            {
+                return;
+            }
             DriveInfo info = diskInfo[index];
 
             if (info.Name != "")
@@ -57,10 +65,23 @@ namespace iipy2
                 infoGroupBoxShow();
                 textName.Text = "Name: " + info.Name;
                 textFileType.Text = "File type: " + info.DriveType;
-                if (info.DriveType.ToString() == "CDRom")
+               
+
+                if (info.DriveType == DriveType.CDRom)
                 {
-                    openOrClose.Open(info);
-                    EjectDrive();
+                    openCd.Show();
+                } else
+                {
+                    openCd.Hide();
+                }
+
+
+                if (info.DriveType == DriveType.Removable && info.IsReady)
+                {
+                    ejectButton.Show();
+                } else
+                {
+                    ejectButton.Hide();
                 }
                 if (info.IsReady)
                 {
@@ -110,6 +131,49 @@ namespace iipy2
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int index = listBox1.SelectedIndex;
+            if (index < 0)
+            {
+                return;
+            }
+            DriveInfo info = diskInfo[index];
+
+            if (info.Name != "")
+            {
+                if (info.DriveType == DriveType.Removable && info.IsReady)
+                {
+                    bool res = ejectUsbDevice.ejectDrive(info);
+                    if (res)
+                    {
+                        MessageBox.Show("Ejected");
+                    } else
+                    {
+                        MessageBox.Show("Ejection failed");
+                    }
+                }
+            }
+        }
+
+        private void openCd_Click(object sender, EventArgs e)
+        {
+            int index = listBox1.SelectedIndex;
+            if (index < 0)
+            {
+                return;
+            }
+            DriveInfo info = diskInfo[index];
+
+            if (info.Name != "")
+            {
+                if (info.DriveType == DriveType.CDRom)
+                {
+                    openOrClose.Open(info);
+                }
+            }
         }
     };
 }
