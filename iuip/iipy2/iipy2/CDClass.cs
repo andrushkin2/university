@@ -11,115 +11,29 @@ namespace iipy2
     internal class OpenOrCloseCDDrive
     {
         [DllImport("winmm.dll", CharSet = CharSet.Auto, EntryPoint = "mciSendString")]
-        public static extern int MciSendString(string command,
-           StringBuilder buffer, int bufferSize, IntPtr hwndCallback);
+        public static extern int MciSendString(string command, StringBuilder buffer, int bufferSize, IntPtr hwndCallback);
 
-        protected const int IntMciSuccess = 0;
         protected const int IntBufferSize = 127;
 
-        protected List<DriveInfo> listCDDrives = new List<DriveInfo>();
-
-        public List<DriveInfo> GetCDDrives
-        {
-            get
-            {
-                return listCDDrives;
-            }
-        }
-
-        public OpenOrCloseCDDrive()
-        {
-            DriveInfo[] drives = DriveInfo.GetDrives();
-
-            foreach (DriveInfo drive in drives)
-            {
-                if (drive.DriveType == DriveType.CDRom)
-                {
-                    listCDDrives.Add(drive);
-                }
-            }
-        }
-
-        public void Open(DriveInfo cdDrive)
+        public int Open(DriveInfo cdDrive)
         {
             if (cdDrive.DriveType != DriveType.CDRom)
             {
-                throw new InvalidOperationException
-                    ("Handed over parameter does not contain a valid CD/DVD drive!");
+                throw new InvalidOperationException("Current drive doesn't have CD-ROM drive type");
             }
-
-            StringBuilder buffer = new StringBuilder();
-
-            int errorCode = MciSendString
-                (
-                (
-                String.Format
-                ("set CDAudio!{0} door open", cdDrive.Name)
-                ),
-                buffer,
-                IntBufferSize,
-                IntPtr.Zero
-                );
-        }
-
-        public void Close(DriveInfo cdDrive)
-        {
-            if (cdDrive.DriveType != DriveType.CDRom)
-            {
-                throw new InvalidOperationException
-                    ("Handed over parameter does not contain a valid CD/DVD drive!");
-            }
-
-            StringBuilder buffer = new StringBuilder();
-
-            int errorCode = MciSendString
-                (
-                (
-                String.Format
-                ("set CDAudio!{0} door closed", cdDrive.Name)
-                ),
-                buffer,
-                IntBufferSize,
-                IntPtr.Zero
-                );
+            return MciSendString((String.Format("set CDAudio!{0} door open", cdDrive.Name)), new StringBuilder(), IntBufferSize, IntPtr.Zero);
         }
     }
     internal class EjectUsb
     {
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern IntPtr CreateFile(
-    string lpFileName,
-    uint dwDesiredAccess,
-    uint dwShareMode,
-    IntPtr SecurityAttributes,
-    uint dwCreationDisposition,
-    uint dwFlagsAndAttributes,
-    IntPtr hTemplateFile
-);
+        private static extern IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr SecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile);
 
         [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern bool DeviceIoControl(
-            IntPtr hDevice,
-            uint dwIoControlCode,
-            IntPtr lpInBuffer,
-            uint nInBufferSize,
-            IntPtr lpOutBuffer,
-            uint nOutBufferSize,
-            out uint lpBytesReturned,
-            IntPtr lpOverlapped
-        );
+        private static extern bool DeviceIoControl(IntPtr hDevice, uint dwIoControlCode, IntPtr lpInBuffer, uint nInBufferSize, IntPtr lpOutBuffer, uint nOutBufferSize, out uint lpBytesReturned, IntPtr lpOverlapped);
 
         [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern bool DeviceIoControl(
-            IntPtr hDevice,
-            uint dwIoControlCode,
-            byte[] lpInBuffer,
-            uint nInBufferSize,
-            IntPtr lpOutBuffer,
-            uint nOutBufferSize,
-            out uint lpBytesReturned,
-            IntPtr lpOverlapped
-        );
+        private static extern bool DeviceIoControl(IntPtr hDevice, uint dwIoControlCode, byte[] lpInBuffer, uint nInBufferSize, IntPtr lpOutBuffer, uint nOutBufferSize, out uint lpBytesReturned, IntPtr lpOverlapped);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -144,13 +58,12 @@ namespace iipy2
         {
             return Eject(USBEject(info.Name));
         }
-        public IntPtr USBEject(string driveLetter)
+        private IntPtr USBEject(string driveLetter)
         {
             string filename = @"\\.\" + driveLetter[0] + ":";
             return CreateFile(filename, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, IntPtr.Zero, 0x3, 0, IntPtr.Zero);
         }
-
-        public bool Eject(IntPtr handle)
+        private bool Eject(IntPtr handle)
         {
             if (LockVolume(handle) && DismountVolume(handle))
             {
@@ -161,7 +74,6 @@ namespace iipy2
             }
             return false;
         }
-
         private bool LockVolume(IntPtr handle)
         {
             uint byteReturned;
@@ -176,7 +88,6 @@ namespace iipy2
             }
             return false;
         }
-
         private bool PreventRemovalOfVolume(IntPtr handle, bool prevent)
         {
             byte[] buf = new byte[1];
@@ -185,19 +96,16 @@ namespace iipy2
             buf[0] = (prevent) ? (byte)1 : (byte)0;
             return DeviceIoControl(handle, IOCTL_STORAGE_MEDIA_REMOVAL, buf, 1, IntPtr.Zero, 0, out retVal, IntPtr.Zero);
         }
-
         private bool DismountVolume(IntPtr handle)
         {
             uint byteReturned;
             return DeviceIoControl(handle, FSCTL_DISMOUNT_VOLUME, IntPtr.Zero, 0, IntPtr.Zero, 0, out byteReturned, IntPtr.Zero);
         }
-
         private bool AutoEjectVolume(IntPtr handle)
         {
             uint byteReturned;
             return DeviceIoControl(handle, IOCTL_STORAGE_EJECT_MEDIA, IntPtr.Zero, 0, IntPtr.Zero, 0, out byteReturned, IntPtr.Zero);
         }
-
         private bool CloseVolume(IntPtr handle)
         {
             return CloseHandle(handle);

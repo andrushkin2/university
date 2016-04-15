@@ -50,11 +50,9 @@ namespace iipy2
             }
             
         }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void selectDrive(int index)
         {
-            int index = listBox1.SelectedIndex;
-            if (index < 0)
+            if (index < 0 && diskInfo.Length > index)
             {
                 return;
             }
@@ -65,12 +63,13 @@ namespace iipy2
                 infoGroupBoxShow();
                 textName.Text = "Name: " + info.Name;
                 textFileType.Text = "File type: " + info.DriveType;
-               
+
 
                 if (info.DriveType == DriveType.CDRom)
                 {
                     openCd.Show();
-                } else
+                }
+                else
                 {
                     openCd.Hide();
                 }
@@ -79,7 +78,8 @@ namespace iipy2
                 if (info.DriveType == DriveType.Removable && info.IsReady)
                 {
                     ejectButton.Show();
-                } else
+                }
+                else
                 {
                     ejectButton.Hide();
                 }
@@ -92,14 +92,16 @@ namespace iipy2
                     if (info.VolumeLabel != "")
                     {
                         textVolumeLabel.Text = "Volume label: " + info.VolumeLabel;
-                    } else
+                    }
+                    else
                     {
                         textVolumeLabel.Hide();
                     }
                     textFileSystem.Text = "File system: " + info.DriveFormat;
                     textTotal.Text = "Total drive size: " + ConvertBytesToMegabytes(info.TotalSize);
                     textFreeSpace.Text = "Free space: " + ConvertBytesToMegabytes(info.AvailableFreeSpace);
-                } else
+                }
+                else
                 {
                     textVolumeLabel.Hide();
                     textFileSystem.Hide();
@@ -107,6 +109,12 @@ namespace iipy2
                     textFreeSpace.Hide();
                 }
             }
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            selectDrive(listBox1.SelectedIndex);
+            
         }
         static string ConvertBytesToMegabytes(long bytes)
         {
@@ -147,13 +155,8 @@ namespace iipy2
                 if (info.DriveType == DriveType.Removable && info.IsReady)
                 {
                     bool res = ejectUsbDevice.ejectDrive(info);
-                    if (res)
-                    {
-                        MessageBox.Show("Ejected");
-                    } else
-                    {
-                        MessageBox.Show("Ejection failed");
-                    }
+                    selectDrive(index);
+                    MessageBox.Show(res ? "Ejected" : "Ejection failed");
                 }
             }
         }
@@ -171,7 +174,11 @@ namespace iipy2
             {
                 if (info.DriveType == DriveType.CDRom)
                 {
-                    openOrClose.Open(info);
+                    int result = openOrClose.Open(info);
+                    if (result != 0)
+                    {
+                        MessageBox.Show("CD-ROM cannot be open. Last error: " + result);
+                    }
                 }
             }
         }
