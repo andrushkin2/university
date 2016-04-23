@@ -9,8 +9,39 @@
 
 using namespace std;
 
-void runDelayInTicks(int);
-void playSound(int, int);
+struct notes {
+	int a1 = 262;
+	int a2 = 293;
+	int a3 = 330;
+	int a4 = 350;
+	int a5 = 392;
+	int a6 = 440;
+	int a7 = 493;
+} note;
+
+struct notesTime {
+	double a1 = 0.1;
+	double a2 = 0.1;
+	double a3 = 0.2;
+	double a4 = 0.1;
+	double a5 = 0.1;
+	double a6 = 0.1;
+	double a7 = 0.1;
+} noteTime;
+
+struct notesDelay {
+	double a1 = 0.1;
+	double a2 = 0.2;
+	double a3 = 0.3;
+	double a4 = 0.4;
+	double a5 = 0.5;
+	double a6 = 0.6;
+	double a7 = 0.7;
+} noteDelay;
+
+
+void runDelayInTicks(double);
+void playSound(int, double, double);
 int enablePermissions(bool);
 int main();
 
@@ -35,9 +66,33 @@ int main()
 	if (enablePermissions(true)) {
 		return 1;
 	}
+	/**
+	1 - 262
+	2 - 293
+	3 - 330
+	4 - 350
+	5 - 392
+	6 - 440
+	7 - 493
+	*/
+	
+	int nots[] = {
+		note.a1, note.a1, note.a1, note.a2, note.a3, note.a1, note.a2, note.a3, note.a1
+	};
+	
+	double notsTime[] = {
+		noteTime.a1, noteTime.a1, noteTime.a1, noteTime.a2, noteTime.a3, noteTime.a1, noteTime.a2, noteTime.a3, noteTime.a1
+	};
+	
+	double notsTimeDelay[] = {
+		0.3, 0.3, 0.3, 0.3, 0.15, 0.3, 0.3, 0.15, 0.3
+	};
 	
 	//getch_init();
-	playSound(330, 5);
+	int i = 0, len = 9;
+	for (i = 0; i < len; i++){
+		playSound(nots[i], notsTime[i], notsTimeDelay[i]);
+	}	
 	//getchar();
 	//getch_fin();
 	
@@ -48,11 +103,11 @@ int main()
     return 0;
 }
 
-void runDelayInTicks(int steps) {
+void runDelayInTicks(double steps) {
 	usleep(steps * 1000000);
 }
 
-void playSound(int freq, int delayTime) {
+void playSound(int freq, double delayTime, double afterSleep = 0.1) {
 	int delay, i;
 	unsigned char _0x0061_port;
 	//	set mode chanel of 2 timer
@@ -72,6 +127,7 @@ void playSound(int freq, int delayTime) {
 	_0x0061_port = inb_p(0x0061);
     _0x0061_port &= 0xFC;
     outb_p(_0x0061_port, 0x0061);
+	runDelayInTicks(afterSleep);
 }   
 
 int enablePermissions(bool enable)

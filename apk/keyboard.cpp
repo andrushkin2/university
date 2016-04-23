@@ -4,6 +4,7 @@
 #include <termios.h>
 #include <unistd.h>
 
+int enablePermissions(bool);
 termios stored;
 
 void getch_init() {
@@ -25,19 +26,9 @@ using namespace std;
 
 int main() {
     unsigned char _0x0061_port;
-
-    if(ioperm(0x0042, 2, 1)) {
-        perror("Error getting access to timer ports");
-        return 1;
-    }
-    if(ioperm(0x0061, 1, 1)) {
-        perror("Error getting access to 55 controller");
-        return 1;
-    }
-    if(ioperm(0x0080, 1, 1)) {
-        perror("Error getting access to 80 port");
-        return 1;
-    }
+    if (enablePermissions(true)) {
+		return 1;
+	}
 
     getch_init();
 
@@ -54,6 +45,26 @@ int main() {
     _0x0061_port = inb_p(0x0061);
     _0x0061_port &= 0xFC;
     outb_p(_0x0061_port, 0x0061);
-
+    if (enablePermissions(false)) {
+		return 1;
+	}
     return 0;
+}
+
+int enablePermissions(bool enable)
+{
+	int value = enable ? 1 : 0;
+	if(ioperm(0x0042, 2, value)) {
+        perror("Error getting access to timer ports");
+        return 1;
+    }
+    if(ioperm(0x0061, 1, value)) {
+        perror("Error getting access to 55 controller");
+        return 1;
+    }
+    if(ioperm(0x0080, 1, value)) {
+        perror("Error getting access to 80 port");
+        return 1;
+    }
+	return 0;
 }
