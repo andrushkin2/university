@@ -10,24 +10,25 @@
 using namespace std;
 
 struct notes {
-	int a1 = 262;
-	int a2 = 293;
-	int a3 = 330;
-	int a4 = 350;
-	int a5 = 392;
+	int a1 = 440;
+	int a2 = 349;
+	int a3 = 523;
+	int a4 = 659;
+	int a5 = 415;
 	int a6 = 440;
 	int a7 = 493;
 } note;
 
 struct notesTime {
-	double a1 = 0.1;
-	double a2 = 0.1;
-	double a3 = 0.2;
+	double a1 = 0.5;
+	double a2 = 0.35;
+	double a3 = 0.15;
 	double a4 = 0.1;
 	double a5 = 0.1;
 	double a6 = 0.1;
 	double a7 = 0.1;
 } noteTime;
+
 
 struct notesDelay {
 	double a1 = 0.1;
@@ -67,13 +68,13 @@ int main()
 		return 1;
 	}
 	/**
-	1 - 262
-	2 - 293
-	3 - 330
-	4 - 350
-	5 - 392
-	6 - 440
-	7 - 493
+	int a1 = 440;
+	int a2 = 349;
+	int a3 = 523;
+	int a4 = 659;
+	int a5 = 415;
+	int a6 = 440;
+	int a7 = 493;
 	*/
 	
 	int nots[] = {
@@ -85,7 +86,7 @@ int main()
 	};
 	
 	double notsTimeDelay[] = {
-		0.3, 0.3, 0.3, 0.3, 0.15, 0.3, 0.3, 0.15, 0.3
+		0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1
 	};
 	
 	//getch_init();
