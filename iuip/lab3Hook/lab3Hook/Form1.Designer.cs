@@ -30,7 +30,6 @@
         {
             this.startStopButton = new System.Windows.Forms.Button();
             this.hookGroup = new System.Windows.Forms.GroupBox();
-            this.hookConf = new System.Windows.Forms.GroupBox();
             this.createHookGroup = new System.Windows.Forms.GroupBox();
             this.createCreateButton = new System.Windows.Forms.Button();
             this.createCancelButton = new System.Windows.Forms.Button();
@@ -44,6 +43,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.hookConf = new System.Windows.Forms.GroupBox();
             this.fadeCheck = new System.Windows.Forms.CheckBox();
             this.stopProcText = new System.Windows.Forms.TextBox();
             this.runProcText = new System.Windows.Forms.TextBox();
@@ -56,8 +56,8 @@
             this.addHookButton = new System.Windows.Forms.Button();
             this.configButton = new System.Windows.Forms.Button();
             this.hookGroup.SuspendLayout();
-            this.hookConf.SuspendLayout();
             this.createHookGroup.SuspendLayout();
+            this.hookConf.SuspendLayout();
             this.SuspendLayout();
             // 
             // startStopButton
@@ -72,6 +72,7 @@
             // 
             // hookGroup
             // 
+            this.hookGroup.Controls.Add(this.createHookGroup);
             this.hookGroup.Controls.Add(this.hookConf);
             this.hookGroup.Controls.Add(this.hooksList);
             this.hookGroup.Location = new System.Drawing.Point(12, 82);
@@ -80,25 +81,6 @@
             this.hookGroup.TabIndex = 1;
             this.hookGroup.TabStop = false;
             this.hookGroup.Text = "Hooks";
-            // 
-            // hookConf
-            // 
-            this.hookConf.Controls.Add(this.createHookGroup);
-            this.hookConf.Controls.Add(this.fadeCheck);
-            this.hookConf.Controls.Add(this.stopProcText);
-            this.hookConf.Controls.Add(this.runProcText);
-            this.hookConf.Controls.Add(this.emulateText);
-            this.hookConf.Controls.Add(this.label4);
-            this.hookConf.Controls.Add(this.label3);
-            this.hookConf.Controls.Add(this.label2);
-            this.hookConf.Controls.Add(this.label1);
-            this.hookConf.Location = new System.Drawing.Point(265, 19);
-            this.hookConf.Name = "hookConf";
-            this.hookConf.Size = new System.Drawing.Size(390, 251);
-            this.hookConf.TabIndex = 1;
-            this.hookConf.TabStop = false;
-            this.hookConf.Text = "Hook config";
-            this.hookConf.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // createHookGroup
             // 
@@ -114,7 +96,7 @@
             this.createHookGroup.Controls.Add(this.label6);
             this.createHookGroup.Controls.Add(this.label7);
             this.createHookGroup.Controls.Add(this.label8);
-            this.createHookGroup.Location = new System.Drawing.Point(9, 19);
+            this.createHookGroup.Location = new System.Drawing.Point(259, 19);
             this.createHookGroup.Name = "createHookGroup";
             this.createHookGroup.Size = new System.Drawing.Size(390, 251);
             this.createHookGroup.TabIndex = 8;
@@ -140,6 +122,7 @@
             this.createCancelButton.TabIndex = 4;
             this.createCancelButton.Text = "Cancel";
             this.createCancelButton.UseVisualStyleBackColor = true;
+            this.createCancelButton.Click += new System.EventHandler(this.createCancelButton_Click);
             // 
             // createKeyLabel
             // 
@@ -233,6 +216,24 @@
             this.label8.Size = new System.Drawing.Size(43, 16);
             this.label8.TabIndex = 0;
             this.label8.Text = "Fade:";
+            // 
+            // hookConf
+            // 
+            this.hookConf.Controls.Add(this.fadeCheck);
+            this.hookConf.Controls.Add(this.stopProcText);
+            this.hookConf.Controls.Add(this.runProcText);
+            this.hookConf.Controls.Add(this.emulateText);
+            this.hookConf.Controls.Add(this.label4);
+            this.hookConf.Controls.Add(this.label3);
+            this.hookConf.Controls.Add(this.label2);
+            this.hookConf.Controls.Add(this.label1);
+            this.hookConf.Location = new System.Drawing.Point(265, 19);
+            this.hookConf.Name = "hookConf";
+            this.hookConf.Size = new System.Drawing.Size(390, 251);
+            this.hookConf.TabIndex = 1;
+            this.hookConf.TabStop = false;
+            this.hookConf.Text = "Hook config";
+            this.hookConf.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // fadeCheck
             // 
@@ -354,10 +355,10 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.hookGroup.ResumeLayout(false);
-            this.hookConf.ResumeLayout(false);
-            this.hookConf.PerformLayout();
             this.createHookGroup.ResumeLayout(false);
             this.createHookGroup.PerformLayout();
+            this.hookConf.ResumeLayout(false);
+            this.hookConf.PerformLayout();
             this.ResumeLayout(false);
 
         }

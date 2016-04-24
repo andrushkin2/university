@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace lab3Hook
+namespace lab3
 {
     public partial class Form1 : Form
     {
@@ -59,13 +59,11 @@ namespace lab3Hook
                 case createNewHook:
                     {
                         startStopButton.Enabled = false;
-                        hookGroup.Show();
-                        createHookGroup.Show();
-                        hookConf.Hide();
                         hooksList.ClearSelected();
                         hooksList.Enabled = false;
-                        createCancelButton.Show();
-                        createCreateButton.Show();
+                        hookGroup.Show();
+                        hookConf.Hide();
+                        createHookGroup.Show();
                         createKeyLabel.Text = "";
                         createCheckFade.Checked = false;
                         createEmulateText.Text = "";
@@ -111,11 +109,6 @@ namespace lab3Hook
         {
             setStateOfApp(createNewHook);
         }
-
-        private void createCancelButton_Click(object sender, EventArgs e)
-        {
-            setStateOfApp(openHookManager);
-        }
     }
     class Hook
     {
@@ -156,7 +149,7 @@ namespace lab3Hook
             if (code >= 0 && wParam == (IntPtr)WM_KEYDOWN)
             {
                 int vkCode = Marshal.ReadInt32(lParam);
-                
+
                 return (IntPtr)1;
             }
             else
