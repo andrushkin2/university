@@ -30,20 +30,11 @@ struct notesTime {
 } noteTime;
 
 
-struct notesDelay {
-	double a1 = 0.1;
-	double a2 = 0.2;
-	double a3 = 0.3;
-	double a4 = 0.4;
-	double a5 = 0.5;
-	double a6 = 0.6;
-	double a7 = 0.7;
-} noteDelay;
-
 
 void runDelayInTicks(double);
 void playSound(int, double, double);
 int enablePermissions(bool);
+void printState();
 int main();
 
 termios stored;
@@ -89,13 +80,14 @@ int main()
 		0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1
 	};
 	
-	//getch_init();
+	getch_init();
 	int i = 0, len = 9;
 	for (i = 0; i < len; i++){
 		playSound(nots[i], notsTime[i], notsTimeDelay[i]);
 	}	
-	//getchar();
-	//getch_fin();
+	printState();
+	getchar();
+	getch_fin();
 	
 	if (enablePermissions(false)) {
 		return 1;
@@ -104,12 +96,25 @@ int main()
     return 0;
 }
 
+void printState()
+{
+	unsigned char values[] = {0xe2, 0xe4, 0xe8},
+	int len = 3;
+	for (i = 0; i < len; i++)
+	{
+		outp(0x43, values[i]);
+        printf("\nСлово состояния канала %d: %02.2X", i + 1, inp(0x40));
+	}
+	outp(0x43, 0xe2);
+	printf("\nСлово состояния канала: %02.2X", inp(0x40));
+}
+
 void runDelayInTicks(double steps) {
 	usleep(steps * 1000000);
 }
 
 void playSound(int freq, double delayTime, double afterSleep = 0.1) {
-	int delay, i;
+	int delay;
 	unsigned char _0x0061_port;
 	//	set mode chanel of 2 timer
 	outb_p(0xb6, 0x0043);
