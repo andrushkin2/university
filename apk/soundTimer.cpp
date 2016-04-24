@@ -80,33 +80,35 @@ int main()
 		0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1
 	};
 	
-	getch_init();
+	//getch_init();
+	printf("\n\n\tStart play\n");
 	int i = 0, len = 9;
 	for (i = 0; i < len; i++){
 		playSound(nots[i], notsTime[i], notsTimeDelay[i]);
-	}	
+	}
+	printf("\n\n\tStop play\n");	
 	printState();
-	getchar();
-	getch_fin();
 	
 	if (enablePermissions(false)) {
 		return 1;
 	}
-
+	printf("\n\n\tPress any key...");
+	//getchar();
+	//getch_fin();
     return 0;
 }
 
 void printState()
 {
-	unsigned char values[] = {0xe2, 0xe4, 0xe8},
-	int len = 3;
+	unsigned char values[] = {0xe2, 0xe4, 0xe8};
+	int len = 3, i;
 	for (i = 0; i < len; i++)
 	{
-		outp(0x43, values[i]);
-        printf("\nСлово состояния канала %d: %02.2X", i + 1, inp(0x40));
+		outb_p(values[i], 0x0043);
+        printf("\nСлово состояния канала %d: %02X", i + 1, inb_p(0x40));
 	}
-	outp(0x43, 0xe2);
-	printf("\nСлово состояния канала: %02.2X", inp(0x40));
+	outb_p(0xe2, 0x0043);
+	printf("\nСлово состояния канала: 0x%02X", (unsigned int)(inb_p(0x40)));
 }
 
 void runDelayInTicks(double steps) {
