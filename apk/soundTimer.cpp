@@ -4,7 +4,9 @@
 #include <iostream>
 #include <sys/io.h>
 #include <stdio.h>
-#include <termios.h>
+#include <string>
+#include <algorithm>
+#include <sys/types.h>
 #include <unistd.h>
 
 using namespace std;
@@ -32,26 +34,11 @@ struct notesTime {
 
 
 void runDelayInTicks(double);
+void printBinary(unsigned int value);
 void playSound(int, double, double);
 int enablePermissions(bool);
 void printState();
 int main();
-
-termios stored;
-
-void getch_init() {
-    termios settings;
-
-    tcgetattr(STDIN_FILENO, &stored);   //Получаем текущие настройки терминала
-    settings = stored;      //Копируем их
-    settings.c_lflag &= ~(ICANON|ECHO);     //Отключаем канонический режим и эхо
-    settings.c_cc[VTIME] = 0;       //Таймаут ожидания ввода - без ожидания
-    settings.c_cc[VMIN] = 1;        //Размер буфера для ожиания - 1 символ
-    tcsetattr(STDIN_FILENO, TCSANOW, &settings);    //Применяем новые настройки
-}
-void getch_fin() {
-    tcsetattr(STDIN_FILENO, TCSANOW, &stored);      //Восстанавливаем настройки терминала
-}
 
 int main()
 {
@@ -80,7 +67,6 @@ int main()
 		0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1
 	};
 	
-	//getch_init();
 	printf("\n\n\tStart play\n");
 	int i = 0, len = 9;
 	for (i = 0; i < len; i++){
@@ -93,26 +79,41 @@ int main()
 		return 1;
 	}
 	printf("\n\n\tPress any key...");
-	//getchar();
-	//getch_fin();
     return 0;
 }
 
 void printState()
 {
-	unsigned char values[] = {0xe2, 0xe4, 0xe8};
-	int len = 3, i;
-	for (i = 0; i < len; i++)
-	{
-		outb_p(values[i], 0x0043);
-        printf("\nСлово состояния канала %d: %02X", i + 1, inb_p(0x40));
-	}
 	outb_p(0xe2, 0x0043);
-	printf("\nСлово состояния канала: 0x%02X", (unsigned int)(inb_p(0x40)));
+	runDelayInTicks(0.1);
+	printf("\nState of channel 0: ");
+	printBinary((unsigned int)(inb_p(0x0040)));
+	outb_p(0xe4, 0x0043);
+	printf("\nState of channel 1: ");
+	printBinary((unsigned int)(inb_p(0x0041)));
+	outb_p(0xe8, 0x0043);
+	printf("\nState of channel 2: ");
+	printBinary((unsigned int)(inb_p(0x0042)));
 }
 
 void runDelayInTicks(double steps) {
 	usleep(steps * 1000000);
+}
+
+void printBinary(unsigned int value)
+{
+	string res = "";
+	while (value){
+		if (value & 1){
+			res += "1";
+		}
+		else {
+			res += "0";
+		}
+		value >>= 1;
+	}
+	reverse(res.begin(), res.end());
+	cout << res;
 }
 
 void playSound(int freq, double delayTime, double afterSleep = 0.1) {
@@ -141,7 +142,19 @@ void playSound(int freq, double delayTime, double afterSleep = 0.1) {
 int enablePermissions(bool enable)
 {
 	int value = enable ? 1 : 0;
+	if(ioperm(0x0040, 2, value)) {
+        perror("Error getting access to timer ports");
+        return 1;
+    }
+	if(ioperm(0x0041, 2, value)) {
+        perror("Error getting access to timer ports");
+        return 1;
+    }
 	if(ioperm(0x0042, 2, value)) {
+        perror("Error getting access to timer ports");
+        return 1;
+    }
+	if(ioperm(0x0043, 2, value)) {
         perror("Error getting access to timer ports");
         return 1;
     }
