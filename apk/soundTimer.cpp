@@ -67,7 +67,7 @@ int main()
 	};
 	//	play music
 	printf("\nStart playing\n");
-	int i = 0, len = 9;
+	int i = 0, len = 18;
 	for (i = 0; i < len; i++){
 		playSound(nots[i], notsTime[i]);
 	}
