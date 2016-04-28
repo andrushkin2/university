@@ -23,14 +23,17 @@ namespace lab3Hook
         private const int editRemoveHook = 3;
         private int activeState;
         TypeConverter converter = TypeDescriptor.GetConverter(typeof(Keys));
-        private hookManager hooksManager = new hookManager();
-
+        public hookManager hooksManager = Manager.hooksManager;
         public Form1()
         {
             InitializeComponent();
             hooksManager.clearHooks();
             startStopButton.Text = startStopButtonTextStart;
             setStateOfApp(startStopState);
+        }
+        public hookManager getHookManager()
+        {
+            return hooksManager;
         }
         private void groupBox1_Enter(object sender, EventArgs e)
         {
@@ -210,8 +213,55 @@ namespace lab3Hook
                 stopProcText.Text = hook.stopProcess;
             }
         }
+
+        private void saveHookConfigButton_Click(object sender, EventArgs e)
+        {
+            int index = hooksList.SelectedIndex;
+            if (index >= 0 && hooksList.Items.Count > index)
+            {
+                hookClass hook = hooksManager.getHookByIndex(index);
+                if (hook.isClassEmpty())
+                {
+                    MessageBox.Show("Cannot find hook selected hook");
+                    refreshHooksList();
+                    return;
+                }
+
+                hook.fade = fadeCheck.Checked;
+                hook.emulate = emulateText.Text;
+                hook.runPocess = runProcText.Text;
+                hook.stopProcess = stopProcText.Text;
+            }
+            setStateOfApp(openHookManager);
+        }
+
+        private void removeHookConfigButton_Click(object sender, EventArgs e)
+        {
+            int index = hooksList.SelectedIndex;
+            if (index >= 0 && hooksList.Items.Count > index)
+            {
+                hookClass hook = hooksManager.getHookByIndex(index);
+                if (hook.isClassEmpty())
+                {
+                    MessageBox.Show("Cannot remove empty hook");
+                    refreshHooksList();
+                    return;
+                }
+                if (!hooksManager.removeHookWithCode(hook.keyCode))
+                {
+                    MessageBox.Show("Cannot remove selected hook");
+                    refreshHooksList();
+                    return;
+                }
+            }
+            setStateOfApp(openHookManager);
+        }
     }
-    class Hook
+    public static class Manager
+    {
+        public static hookManager hooksManager = new hookManager();
+    }
+    public partial class Hook
     {
         [DllImport("user32.dll")]
         static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc callback, IntPtr hInstance, uint threadId);
@@ -249,9 +299,19 @@ namespace lab3Hook
         {
             if (code >= 0 && wParam == (IntPtr)WM_KEYDOWN)
             {
-                int vkCode = Marshal.ReadInt32(lParam);
+                int keyCode = Marshal.ReadInt32(lParam);
+                hookClass hook = Manager.hooksManager.getHookByCode(code);
+                if (hook.isClassEmpty())
+                {
+                    return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                }
+                if (hook.fade)
+                {
+                    return (IntPtr)1;
+                } else {
+                    return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                }
                 
-                return (IntPtr)1;
             }
             else
                 return CallNextHookEx(hhook, code, (int)wParam, lParam);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace lab3Hook
 {
-    class hookClass
+    public class hookClass
     {
         public string key;
         public int keyCode;

@@ -76,8 +76,8 @@
             // 
             // hookGroup
             // 
-            this.hookGroup.Controls.Add(this.hookConf);
             this.hookGroup.Controls.Add(this.createHookGroup);
+            this.hookGroup.Controls.Add(this.hookConf);
             this.hookGroup.Controls.Add(this.hooksList);
             this.hookGroup.Location = new System.Drawing.Point(12, 82);
             this.hookGroup.Name = "hookGroup";
@@ -116,6 +116,7 @@
             this.saveHookConfigButton.TabIndex = 9;
             this.saveHookConfigButton.Text = "Save";
             this.saveHookConfigButton.UseVisualStyleBackColor = true;
+            this.saveHookConfigButton.Click += new System.EventHandler(this.saveHookConfigButton_Click);
             // 
             // removeHookConfigButton
             // 
@@ -126,6 +127,7 @@
             this.removeHookConfigButton.TabIndex = 4;
             this.removeHookConfigButton.Text = "Remove";
             this.removeHookConfigButton.UseVisualStyleBackColor = true;
+            this.removeHookConfigButton.Click += new System.EventHandler(this.removeHookConfigButton_Click);
             // 
             // hookConfigLabel
             // 
@@ -166,6 +168,7 @@
             // 
             this.emulateText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.emulateText.Location = new System.Drawing.Point(137, 62);
+            this.emulateText.MaxLength = 1;
             this.emulateText.Name = "emulateText";
             this.emulateText.Size = new System.Drawing.Size(162, 22);
             this.emulateText.TabIndex = 4;
@@ -302,6 +305,7 @@
             // 
             this.createEmulateText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.createEmulateText.Location = new System.Drawing.Point(137, 89);
+            this.createEmulateText.MaxLength = 1;
             this.createEmulateText.Name = "createEmulateText";
             this.createEmulateText.Size = new System.Drawing.Size(162, 22);
             this.createEmulateText.TabIndex = 4;

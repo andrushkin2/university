@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace lab3Hook
 {
-    class hookManager
+    public class hookManager
     {
         private List<hookClass> hooks;
         public hookManager()
