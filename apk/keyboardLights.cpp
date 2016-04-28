@@ -16,7 +16,7 @@ using namespace std;
 //  declarations
 int enablePermissions(bool);
 void runDelayInSeconds(double);
-void actionHandler();
+void actionHandler(int);
 void sendToIndicator(unsigned char);
 void waitAndRunMask(unsigned char);
 void lightShow();
@@ -40,7 +40,10 @@ int main()
     act.sa_handler = actionHandler;
     sigemptyset(&act.sa_mask);
     act.sa_flags = 0;
-    sigaction(SIGINT, &act, &oldAct);
+    if (sigaction(SIGINT, &act, &oldAct) == -1){
+        perror("sigaction error");
+        return 1;
+    };
     //  work with lights until isCanExit flag disabled 
     while(!isCanExit)
     {
@@ -48,11 +51,10 @@ int main()
         {
             lightShow();
         }
-        runDelayInSeconds(0.001);
     }
     
     // restore old signal handler
-    sigaction(SIGINT, &oldact, 0);
+    sigaction(SIGINT, &oldAct, 0);
     
     //	disable permissions for ports
 	if (enablePermissions(false)) {
@@ -90,13 +92,11 @@ void waitAndRunMask(unsigned char mask)
     while (isNeedRepeatOperation)
     {
         // wait for keyboard buffer enable
-        while((inb_p(0x64) & 0x02) != 0x00) {
-            runDelayInSeconds(0.001);
-        }
+        while((inb_p(0x0064) & 0x02) != 0x00);
         //  send command with mask
-        outb_p(mask, 0x60);
+        outb_p(mask, 0x0060);
         //  a small delay
-        runDelayInSeconds(0.1);
+        runDelayInSeconds(0.5);
     }
 }
 
@@ -109,12 +109,14 @@ void sendToIndicator(unsigned char mask)
 }
 
 
-void actionHandler(){
+void actionHandler(int exitCode){
+    cout << "\nrun";
     unsigned char value = 0;
     //  run  old signal handler 
-    oldAct();
+    oldAct.sa_handler(exitCode);
     //  get value from 60 port
-    value = inb_p(0x60);
+    printf("\t%x", value);
+    value = inb_p(0x0060);
     //  check value
     switch (value) {
         //  check is ESC clicked
@@ -132,7 +134,7 @@ void actionHandler(){
     //  print value of 60 port
     printf("\t%x", value);
     //  reset interrupt controller
-    outb_p(0x20, 0x20);
+    //outb_p(0x20, 0x20);
 }
 
 void runDelayInSeconds(double second) 
@@ -144,6 +146,10 @@ int enablePermissions(bool enable)
 {
 	int value = enable ? 1 : 0;
 	if(ioperm(0x0060, 1, value)) {
+        perror("Error getting access to timer ports");
+        return 1;
+    }
+    if(ioperm(0x0020, 1, value)) {
         perror("Error getting access to timer ports");
         return 1;
     }

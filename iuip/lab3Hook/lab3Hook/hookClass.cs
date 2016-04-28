@@ -13,7 +13,7 @@ namespace lab3Hook
         public string emulate;
         public string runPocess;
         public string stopProcess;
-        public void hookClasss(string key, bool fade, string emulate, string runPorcess, string stopProcess)
+        public hookClass(string key, bool fade, string emulate, string runPorcess, string stopProcess)
         {
             this.key = key;
             this.fade = fade;
