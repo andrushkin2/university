@@ -9,17 +9,30 @@ namespace lab3Hook
     class hookClass
     {
         public string key;
+        public int keyCode;
         public bool fade;
         public string emulate;
         public string runPocess;
         public string stopProcess;
-        public hookClass(string key, bool fade, string emulate, string runPorcess, string stopProcess)
+        private bool isEmptyClass;
+        public hookClass()
+        {
+            this.keyCode = -1;
+            this.isEmptyClass = true;
+        }
+        public hookClass(string key, int keyCode, bool fade, string emulate, string runPorcess, string stopProcess)
         {
             this.key = key;
+            this.keyCode = keyCode;
             this.fade = fade;
             this.emulate = emulate;
             this.runPocess = runPorcess;
             this.stopProcess = stopProcess;
+            this.isEmptyClass = false;
+        }
+        public bool isClassEmpty()
+        {
+            return this.isEmptyClass;
         }
     }
 }

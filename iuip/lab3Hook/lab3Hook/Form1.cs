@@ -13,22 +13,37 @@ namespace lab3Hook
 {
     public partial class Form1 : Form
     {
+        private string confButtonOpenText = "Hook manager";
+        private string confButtonCloseText = "Close manager";
+        private string startStopButtonTextStart = "Start";
+        private string startStopButtonTextStop = "Stop";
+        private const int startStopState = 0;
+        private const int openHookManager = 1;
+        private const int createNewHook = 2;
+        private const int editRemoveHook = 3;
+        private int activeState;
+        TypeConverter converter = TypeDescriptor.GetConverter(typeof(Keys));
+        private hookManager hooksManager = new hookManager();
+
         public Form1()
         {
             InitializeComponent();
+            hooksManager.clearHooks();
+            startStopButton.Text = startStopButtonTextStart;
             setStateOfApp(startStopState);
         }
         private void groupBox1_Enter(object sender, EventArgs e)
         {
 
         }
-        private string confButtonOpenText = "Hook manager";
-        private string confButtonCloseText = "Close manager";
-        private const int startStopState = 0;
-        private const int openHookManager = 1;
-        private const int createNewHook = 2;
-        private const int editRemoveHook = 3;
-        private int activeState;
+        private void startHook()
+        {
+            Hook.SetHook();
+        }
+        private void stopHook()
+        {
+            Hook.UnHook();
+        }
         private void setStateOfApp(int state)
         {
             switch (state)
@@ -64,13 +79,7 @@ namespace lab3Hook
                         hookConf.Hide();
                         hooksList.ClearSelected();
                         hooksList.Enabled = false;
-                        createCancelButton.Show();
-                        createCreateButton.Show();
-                        createKeyLabel.Text = "";
-                        createCheckFade.Checked = false;
-                        createEmulateText.Text = "";
-                        createRunProcText.Text = "";
-                        createStopProcText.Text = "";
+                        clearCreateHookGroup();
                         addHookButton.Enabled = false;
                         addHookButton.Show();
                         configButton.Enabled = false;
@@ -83,14 +92,24 @@ namespace lab3Hook
             activeState = state;
         }
 
+        private void clearCreateHookGroup()
+        {
+            createCancelButton.Show();
+            createCreateButton.Show();
+            createKeyLabel.Text = "";
+            createCheckFade.Checked = false;
+            createEmulateText.Text = "";
+            createRunProcText.Text = "";
+            createStopProcText.Text = "";
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
-            Hook.SetHook();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Hook.UnHook();
+            stopHook();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -114,7 +133,49 @@ namespace lab3Hook
 
         private void createCancelButton_Click(object sender, EventArgs e)
         {
+            clearCreateHookGroup();
             setStateOfApp(openHookManager);
+        }
+
+        private void startStopButton_Click(object sender, EventArgs e)
+        {
+            if (startStopButton.Text == startStopButtonTextStart){
+                configButton.Enabled = false;
+                startStopButton.Text = startStopButtonTextStop;
+                startHook();
+            } else {
+                configButton.Enabled = true;
+                startStopButton.Text = startStopButtonTextStart;
+                stopHook();
+            }
+        }
+
+        private void createCreateButton_Click(object sender, EventArgs e)
+        {
+            string label = createKeyLabel.Text.ToUpper();
+            bool fade = createCheckFade.Checked;
+            string emulate = createEmulateText.Text = "";
+            string runProc = createRunProcText.Text = "";
+            string stopProc = createStopProcText.Text = "";
+            if (label.Length != 1)
+            {
+                MessageBox.Show("Label should have a one symbol");
+                return;
+            }
+            Keys key = (Keys)converter.ConvertFromString(label);
+            hookClass hook = new hookClass(label, key.GetHashCode(), fade, emulate, runProc, stopProc);
+            if (hooksManager.isHookWithCodeExist(hook.keyCode))
+            {
+                MessageBox.Show("Hook with this key exists");
+                return;
+            }
+            if (!hooksManager.addNewHook(hook))
+            {
+                MessageBox.Show("Add hook operation failed");
+                return;
+            }
+            setStateOfApp(openHookManager);
+
         }
     }
     class Hook

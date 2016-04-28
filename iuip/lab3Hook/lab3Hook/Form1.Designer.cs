@@ -69,6 +69,7 @@
             this.startStopButton.TabIndex = 0;
             this.startStopButton.Text = "Start";
             this.startStopButton.UseVisualStyleBackColor = true;
+            this.startStopButton.Click += new System.EventHandler(this.startStopButton_Click);
             // 
             // hookGroup
             // 
@@ -112,6 +113,7 @@
             this.createCreateButton.TabIndex = 10;
             this.createCreateButton.Text = "Create";
             this.createCreateButton.UseVisualStyleBackColor = true;
+            this.createCreateButton.Click += new System.EventHandler(this.createCreateButton_Click);
             // 
             // createCancelButton
             // 
