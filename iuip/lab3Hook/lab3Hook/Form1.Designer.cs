@@ -30,6 +30,18 @@
         {
             this.startStopButton = new System.Windows.Forms.Button();
             this.hookGroup = new System.Windows.Forms.GroupBox();
+            this.hookConf = new System.Windows.Forms.GroupBox();
+            this.saveHookConfigButton = new System.Windows.Forms.Button();
+            this.removeHookConfigButton = new System.Windows.Forms.Button();
+            this.hookConfigLabel = new System.Windows.Forms.Label();
+            this.fadeCheck = new System.Windows.Forms.CheckBox();
+            this.stopProcText = new System.Windows.Forms.TextBox();
+            this.runProcText = new System.Windows.Forms.TextBox();
+            this.emulateText = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.createHookGroup = new System.Windows.Forms.GroupBox();
             this.createCreateButton = new System.Windows.Forms.Button();
             this.createCancelButton = new System.Windows.Forms.Button();
@@ -43,21 +55,12 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.hookConf = new System.Windows.Forms.GroupBox();
-            this.fadeCheck = new System.Windows.Forms.CheckBox();
-            this.stopProcText = new System.Windows.Forms.TextBox();
-            this.runProcText = new System.Windows.Forms.TextBox();
-            this.emulateText = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.hooksList = new System.Windows.Forms.ListBox();
             this.addHookButton = new System.Windows.Forms.Button();
             this.configButton = new System.Windows.Forms.Button();
             this.hookGroup.SuspendLayout();
-            this.createHookGroup.SuspendLayout();
             this.hookConf.SuspendLayout();
+            this.createHookGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // startStopButton
@@ -73,8 +76,8 @@
             // 
             // hookGroup
             // 
-            this.hookGroup.Controls.Add(this.createHookGroup);
             this.hookGroup.Controls.Add(this.hookConf);
+            this.hookGroup.Controls.Add(this.createHookGroup);
             this.hookGroup.Controls.Add(this.hooksList);
             this.hookGroup.Location = new System.Drawing.Point(12, 82);
             this.hookGroup.Name = "hookGroup";
@@ -82,6 +85,130 @@
             this.hookGroup.TabIndex = 1;
             this.hookGroup.TabStop = false;
             this.hookGroup.Text = "Hooks";
+            // 
+            // hookConf
+            // 
+            this.hookConf.Controls.Add(this.saveHookConfigButton);
+            this.hookConf.Controls.Add(this.removeHookConfigButton);
+            this.hookConf.Controls.Add(this.hookConfigLabel);
+            this.hookConf.Controls.Add(this.fadeCheck);
+            this.hookConf.Controls.Add(this.stopProcText);
+            this.hookConf.Controls.Add(this.runProcText);
+            this.hookConf.Controls.Add(this.emulateText);
+            this.hookConf.Controls.Add(this.label4);
+            this.hookConf.Controls.Add(this.label3);
+            this.hookConf.Controls.Add(this.label2);
+            this.hookConf.Controls.Add(this.label1);
+            this.hookConf.Location = new System.Drawing.Point(265, 19);
+            this.hookConf.Name = "hookConf";
+            this.hookConf.Size = new System.Drawing.Size(390, 251);
+            this.hookConf.TabIndex = 1;
+            this.hookConf.TabStop = false;
+            this.hookConf.Text = "Hook config";
+            this.hookConf.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // saveHookConfigButton
+            // 
+            this.saveHookConfigButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.saveHookConfigButton.Location = new System.Drawing.Point(206, 186);
+            this.saveHookConfigButton.Name = "saveHookConfigButton";
+            this.saveHookConfigButton.Size = new System.Drawing.Size(121, 42);
+            this.saveHookConfigButton.TabIndex = 9;
+            this.saveHookConfigButton.Text = "Save";
+            this.saveHookConfigButton.UseVisualStyleBackColor = true;
+            // 
+            // removeHookConfigButton
+            // 
+            this.removeHookConfigButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.removeHookConfigButton.Location = new System.Drawing.Point(31, 186);
+            this.removeHookConfigButton.Name = "removeHookConfigButton";
+            this.removeHookConfigButton.Size = new System.Drawing.Size(121, 42);
+            this.removeHookConfigButton.TabIndex = 4;
+            this.removeHookConfigButton.Text = "Remove";
+            this.removeHookConfigButton.UseVisualStyleBackColor = true;
+            // 
+            // hookConfigLabel
+            // 
+            this.hookConfigLabel.AutoSize = true;
+            this.hookConfigLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.hookConfigLabel.Location = new System.Drawing.Point(134, 13);
+            this.hookConfigLabel.Name = "hookConfigLabel";
+            this.hookConfigLabel.Size = new System.Drawing.Size(59, 16);
+            this.hookConfigLabel.TabIndex = 8;
+            this.hookConfigLabel.Text = "label10";
+            // 
+            // fadeCheck
+            // 
+            this.fadeCheck.AutoSize = true;
+            this.fadeCheck.Location = new System.Drawing.Point(137, 36);
+            this.fadeCheck.Name = "fadeCheck";
+            this.fadeCheck.Size = new System.Drawing.Size(15, 14);
+            this.fadeCheck.TabIndex = 7;
+            this.fadeCheck.UseVisualStyleBackColor = true;
+            // 
+            // stopProcText
+            // 
+            this.stopProcText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.stopProcText.Location = new System.Drawing.Point(137, 120);
+            this.stopProcText.Name = "stopProcText";
+            this.stopProcText.Size = new System.Drawing.Size(162, 22);
+            this.stopProcText.TabIndex = 6;
+            // 
+            // runProcText
+            // 
+            this.runProcText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.runProcText.Location = new System.Drawing.Point(137, 92);
+            this.runProcText.Name = "runProcText";
+            this.runProcText.Size = new System.Drawing.Size(162, 22);
+            this.runProcText.TabIndex = 5;
+            // 
+            // emulateText
+            // 
+            this.emulateText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.emulateText.Location = new System.Drawing.Point(137, 62);
+            this.emulateText.Name = "emulateText";
+            this.emulateText.Size = new System.Drawing.Size(162, 22);
+            this.emulateText.TabIndex = 4;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label4.Location = new System.Drawing.Point(6, 124);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(91, 16);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Stop process:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(6, 95);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(87, 16);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Run procces:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(6, 65);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(68, 16);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Emaulate:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(6, 35);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(43, 16);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Fade:";
             // 
             // createHookGroup
             // 
@@ -219,97 +346,6 @@
             this.label8.TabIndex = 0;
             this.label8.Text = "Fade:";
             // 
-            // hookConf
-            // 
-            this.hookConf.Controls.Add(this.fadeCheck);
-            this.hookConf.Controls.Add(this.stopProcText);
-            this.hookConf.Controls.Add(this.runProcText);
-            this.hookConf.Controls.Add(this.emulateText);
-            this.hookConf.Controls.Add(this.label4);
-            this.hookConf.Controls.Add(this.label3);
-            this.hookConf.Controls.Add(this.label2);
-            this.hookConf.Controls.Add(this.label1);
-            this.hookConf.Location = new System.Drawing.Point(265, 19);
-            this.hookConf.Name = "hookConf";
-            this.hookConf.Size = new System.Drawing.Size(390, 251);
-            this.hookConf.TabIndex = 1;
-            this.hookConf.TabStop = false;
-            this.hookConf.Text = "Hook config";
-            this.hookConf.Enter += new System.EventHandler(this.groupBox1_Enter);
-            // 
-            // fadeCheck
-            // 
-            this.fadeCheck.AutoSize = true;
-            this.fadeCheck.Location = new System.Drawing.Point(137, 36);
-            this.fadeCheck.Name = "fadeCheck";
-            this.fadeCheck.Size = new System.Drawing.Size(15, 14);
-            this.fadeCheck.TabIndex = 7;
-            this.fadeCheck.UseVisualStyleBackColor = true;
-            // 
-            // stopProcText
-            // 
-            this.stopProcText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.stopProcText.Location = new System.Drawing.Point(137, 120);
-            this.stopProcText.Name = "stopProcText";
-            this.stopProcText.Size = new System.Drawing.Size(162, 22);
-            this.stopProcText.TabIndex = 6;
-            // 
-            // runProcText
-            // 
-            this.runProcText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.runProcText.Location = new System.Drawing.Point(137, 92);
-            this.runProcText.Name = "runProcText";
-            this.runProcText.Size = new System.Drawing.Size(162, 22);
-            this.runProcText.TabIndex = 5;
-            // 
-            // emulateText
-            // 
-            this.emulateText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.emulateText.Location = new System.Drawing.Point(137, 62);
-            this.emulateText.Name = "emulateText";
-            this.emulateText.Size = new System.Drawing.Size(162, 22);
-            this.emulateText.TabIndex = 4;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(6, 124);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(91, 16);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Stop process:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(6, 95);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(87, 16);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Run procces:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(6, 65);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(68, 16);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Emaulate:";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(6, 35);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(43, 16);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Fade:";
-            // 
             // hooksList
             // 
             this.hooksList.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -319,6 +355,7 @@
             this.hooksList.Name = "hooksList";
             this.hooksList.Size = new System.Drawing.Size(223, 244);
             this.hooksList.TabIndex = 0;
+            this.hooksList.SelectedIndexChanged += new System.EventHandler(this.hooksList_SelectedIndexChanged);
             // 
             // addHookButton
             // 
@@ -357,10 +394,10 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.hookGroup.ResumeLayout(false);
-            this.createHookGroup.ResumeLayout(false);
-            this.createHookGroup.PerformLayout();
             this.hookConf.ResumeLayout(false);
             this.hookConf.PerformLayout();
+            this.createHookGroup.ResumeLayout(false);
+            this.createHookGroup.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -394,6 +431,9 @@
         private System.Windows.Forms.TextBox createKeyLabel;
         private System.Windows.Forms.Button createCreateButton;
         private System.Windows.Forms.Button createCancelButton;
+        private System.Windows.Forms.Label hookConfigLabel;
+        private System.Windows.Forms.Button saveHookConfigButton;
+        private System.Windows.Forms.Button removeHookConfigButton;
     }
 }
 

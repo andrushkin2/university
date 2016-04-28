@@ -76,7 +76,7 @@ namespace lab3Hook
             }
             return false;
         }
-        public IList<hookClass> getHooksList()
+        public List<hookClass> getHooksList()
         {
             return hooks;
         }

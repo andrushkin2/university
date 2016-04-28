@@ -68,7 +68,9 @@ namespace lab3Hook
                         hookGroup.Show();
                         addHookButton.Show();
                         addHookButton.Enabled = true;
+                        configButton.Enabled = true;
                         configButton.Text = confButtonCloseText;
+                        refreshHooksList();
                         break;
                     }
                 case createNewHook:
@@ -90,6 +92,16 @@ namespace lab3Hook
                     throw new Exception("Cannot switch to anknown state of page");
             }
             activeState = state;
+        }
+
+        private void refreshHooksList()
+        {
+            hooksList.Items.Clear();
+            List<hookClass> hooks = hooksManager.getHooksList();
+            foreach(hookClass hook in hooks)
+            {
+                hooksList.Items.Add(hook.key + " - " + hook.keyCode);
+            }
         }
 
         private void clearCreateHookGroup()
@@ -154,9 +166,9 @@ namespace lab3Hook
         {
             string label = createKeyLabel.Text.ToUpper();
             bool fade = createCheckFade.Checked;
-            string emulate = createEmulateText.Text = "";
-            string runProc = createRunProcText.Text = "";
-            string stopProc = createStopProcText.Text = "";
+            string emulate = createEmulateText.Text;
+            string runProc = createRunProcText.Text;
+            string stopProc = createStopProcText.Text;
             if (label.Length != 1)
             {
                 MessageBox.Show("Label should have a one symbol");
@@ -176,6 +188,27 @@ namespace lab3Hook
             }
             setStateOfApp(openHookManager);
 
+        }
+
+        private void hooksList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int index = hooksList.SelectedIndex;
+            if (index >= 0 && hooksList.Items.Count > index)
+            {
+                hookClass hook = hooksManager.getHookByIndex(index);
+                if (hook.isClassEmpty())
+                {
+                    MessageBox.Show("Cannot find hook selected hook");
+                    refreshHooksList();
+                    return;
+                }
+                hookConf.Show();
+                hookConfigLabel.Text = hook.key + " - " + hook.keyCode;
+                fadeCheck.Checked = hook.fade;
+                emulateText.Text = hook.emulate;
+                runProcText.Text = hook.runPocess;
+                stopProcText.Text = hook.stopProcess;
+            }
         }
     }
     class Hook
