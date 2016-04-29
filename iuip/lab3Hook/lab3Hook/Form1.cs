@@ -319,6 +319,7 @@ namespace lab3Hook
                 hookClass hook = Manager.hooksManager.getHookByCode(keyCode);
                 if (hook.isClassEmpty())
                 {
+                    Manager.writeLineToFile((Keys)(keyCode) + " - " + keyCode);
                     return CallNextHookEx(hhook, code, (int)wParam, lParam);
                 }
                 Manager.writeLineToFile(hook.key + " - " + hook.keyCode);
