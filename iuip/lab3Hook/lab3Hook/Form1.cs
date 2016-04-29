@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -22,7 +23,7 @@ namespace lab3Hook
         private const int createNewHook = 2;
         private const int editRemoveHook = 3;
         private int activeState;
-        TypeConverter converter = TypeDescriptor.GetConverter(typeof(Keys));
+        TypeConverter converter = Manager.converter;
         public hookManager hooksManager = Manager.hooksManager;
         public Form1()
         {
@@ -42,10 +43,15 @@ namespace lab3Hook
         private void startHook()
         {
             Hook.SetHook();
+            Manager.writeLineToFile("Start session - " + DateTime.Now.ToString());
         }
-        private void stopHook()
+        private void stopHook(bool isIgnoreLog = false)
         {
             Hook.UnHook();
+            if (!isIgnoreLog)
+            {
+                Manager.writeLineToFile("End session - " + DateTime.Now.ToString());
+            }
         }
         private void setStateOfApp(int state)
         {
@@ -124,7 +130,7 @@ namespace lab3Hook
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            stopHook();
+            stopHook(true);
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -167,11 +173,11 @@ namespace lab3Hook
 
         private void createCreateButton_Click(object sender, EventArgs e)
         {
-            string label = createKeyLabel.Text.ToUpper();
+            string label = createKeyLabel.Text.Trim().ToUpper();
             bool fade = createCheckFade.Checked;
-            string emulate = createEmulateText.Text;
-            string runProc = createRunProcText.Text;
-            string stopProc = createStopProcText.Text;
+            string emulate = createEmulateText.Text.Trim();
+            string runProc = createRunProcText.Text.Trim();
+            string stopProc = createStopProcText.Text.Trim();
             if (label.Length != 1)
             {
                 MessageBox.Show("Label should have a one symbol");
@@ -228,9 +234,9 @@ namespace lab3Hook
                 }
 
                 hook.fade = fadeCheck.Checked;
-                hook.emulate = emulateText.Text;
-                hook.runPocess = runProcText.Text;
-                hook.stopProcess = stopProcText.Text;
+                hook.emulate = emulateText.Text.Trim();
+                hook.runPocess = runProcText.Text.Trim();
+                hook.stopProcess = stopProcText.Text.Trim();
             }
             setStateOfApp(openHookManager);
         }
@@ -260,6 +266,13 @@ namespace lab3Hook
     public static class Manager
     {
         public static hookManager hooksManager = new hookManager();
+        public static TypeConverter converter = TypeDescriptor.GetConverter(typeof(Keys));
+        public static void writeLineToFile(string line)
+        {
+            System.IO.StreamWriter file = new System.IO.StreamWriter(".\\logs.txt", true);
+            file.WriteLine(line);
+            file.Close();
+        }
     }
     public partial class Hook
     {
@@ -299,17 +312,70 @@ namespace lab3Hook
         {
             if (code >= 0 && wParam == (IntPtr)WM_KEYDOWN)
             {
-                int keyCode = Marshal.ReadInt32(lParam);
-                hookClass hook = Manager.hooksManager.getHookByCode(code);
+                int keyCode = Marshal.ReadInt32(lParam),
+                    returnKeyCode = -1;
+                hookClass hook = Manager.hooksManager.getHookByCode(keyCode);
                 if (hook.isClassEmpty())
                 {
                     return CallNextHookEx(hhook, code, (int)wParam, lParam);
                 }
+                Manager.writeLineToFile(hook.key + " - " + hook.keyCode);
                 if (hook.fade)
                 {
                     return (IntPtr)1;
                 } else {
-                    return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                    Keys emulateKey;
+                    bool canSendKey = false;
+                    if (hook.emulate != "")
+                    {
+                        try
+                        {
+                            emulateKey = (Keys)Manager.converter.ConvertFromString(hook.emulate.ToUpper());
+                            canSendKey = true;
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show("Cannot parse to key - " + hook.emulate + "\n" + e.ToString());
+                            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                        }
+                        returnKeyCode = emulateKey.GetHashCode();
+                    }
+                    if (hook.runPocess != "")
+                    {
+                        try
+                        {
+                            Process.Start(hook.runPocess);
+                        } catch(Exception e)
+                        {
+                            MessageBox.Show("Cannot start process - " + hook.runPocess + "\n" + e.ToString());
+                        }
+                    }
+                    if (hook.stopProcess != "")
+                    {
+                        try
+                        {
+                            Process[] processes = Process.GetProcesses();
+                            foreach (Process process in processes)
+                            {
+                                if (process.ProcessName.ToLower().Contains(hook.stopProcess))
+                                {
+                                    process.Kill();
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show("Cannot stop process - " + hook.stopProcess + "\n" + e.ToString());
+                        }
+                    }
+                    if (canSendKey)
+                    {
+                        SendKeys.Send(hook.emulate);
+                        return (IntPtr)1;
+                    }
+                    else {
+                        return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                    }
                 }
                 
             }
