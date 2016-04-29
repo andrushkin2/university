@@ -163,9 +163,11 @@ namespace lab3Hook
             if (startStopButton.Text == startStopButtonTextStart){
                 configButton.Enabled = false;
                 startStopButton.Text = startStopButtonTextStop;
+                this.ShowInTaskbar = false;
                 startHook();
             } else {
                 configButton.Enabled = true;
+                this.ShowInTaskbar = true;
                 startStopButton.Text = startStopButtonTextStart;
                 stopHook();
             }
