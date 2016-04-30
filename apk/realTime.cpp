@@ -1,9 +1,22 @@
-#include <dos.h>
+
 #include <ctype.h>
 #include <stdio.h>
-#include <conio.h>
+
 #include <string.h>
 #include <stdlib.h>
+
+#include <iostream>
+#include <termios.h>
+#include <sys/io.h>
+#include <stdio.h>
+#include <signal.h>
+#include <cstdlib>
+#include <string>
+#include <algorithm>
+#include <sys/types.h>
+#include <unistd.h>
+
+using namespace std;
 
 int msCounter = 0;
 
@@ -21,19 +34,58 @@ void showValue(unsigned char regNum);
 void delay_time(void);
 void wait(void);
 int enablePermissions(bool enable);
-
+int main();
 // variables declaration
 struct sigaction act, oldAct;
 
 
-void main()
+static struct termios old, newTerm;
+
+/* Initialize new terminal i/o settings */
+void initTermios(int echo) 
 {
+  tcgetattr(0, &old); /* grab old terminal i/o settings */
+  newTerm = old; /* make new settings same as old settings */
+  newTerm.c_lflag &= ~ICANON; /* disable buffered i/o */
+  newTerm.c_lflag &= echo ? ECHO : ~ECHO; /* set echo mode */
+  tcsetattr(0, TCSANOW, &newTerm); /* use these new terminal i/o settings now */
+}
+
+/* Restore old terminal i/o settings */
+void resetTermios(void) 
+{
+  tcsetattr(0, TCSANOW, &old);
+}
+
+/* Read 1 character - echo defines echo mode */
+char getch_(int echo) 
+{
+  char ch;
+  initTermios(echo);
+  ch = getchar();
+  resetTermios();
+  return ch;
+}
+
+/* Read 1 character without echo */
+char getch(void) 
+{
+  return getch_(0);
+}
+
+
+int main()
+{
+    //	enable permissions for ports
+	if (enablePermissions(true)) {
+		return 1;
+	}
     char c, value;
-    clrscr();
     printf("Press:\n'1' - Show time\n'2' - Set time\n'3' - Delay time\n'Esc' - quit\n\n");
     while(c != 27)
     {
         c = getch();
+        printf("%c", c);
         switch(c)
         {
             case '1': getTime();break;
@@ -42,12 +94,15 @@ void main()
             case 27: break;
         }
     }
+    cout << "exit";
+    return 0;
 }
 
 void wait(void)
 {
     do    // Ожидание, пока часы заняты
     {
+        cout << "wait bit";
         outb_p(0x0A, 0x70);
     } while( inb_p(0x71) & 0x80 ); // 0x80 = 10000000, 
 // пока 7-й бит - 1, часы заняты
@@ -55,8 +110,10 @@ void wait(void)
 
 void getTime(void)
 {
+    
     unsigned char value;
     wait();
+   
     outb_p(0x04, 0x70); // Текущий час
     value = inb_p(0x71); printf("%d:",BCDToInteger(value)); wait();
     outb_p(0x02, 0x70); // Текущая минута
@@ -155,18 +212,18 @@ void delay_time(void)
 {
     unsigned long delayPeriod;
     unsigned char value;
-    disable();    // Запретить прерывания
+    //disable();    // Запретить прерывания
     // install signal handler
     act.sa_handler = newInt70handler;
     sigemptyset(&act.sa_mask);
     act.sa_flags = 0;
     if (sigaction(SIGALRM, &act, &oldAct) == -1){
         perror("sigaction error");
-        return 1;
+        return;
     };
     //oldInt70h = getvect(0x70);
     //setvect(0x70, newInt70handler);
-    enable();     // Разрешить прерывания
+    //enable();     // Разрешить прерывания
 
     printf("Enter delay time in milliseconds: ");
     scanf("%ld", &delayPeriod);
