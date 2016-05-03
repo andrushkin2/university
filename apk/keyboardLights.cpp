@@ -4,7 +4,6 @@
 #include <iostream>
 #include <sys/io.h>
 #include <stdio.h>
-#include <signal.h>
 #include <cstdlib>
 #include <string>
 #include <algorithm>
@@ -16,17 +15,13 @@ using namespace std;
 //  declarations
 int enablePermissions(bool);
 void runDelayInSeconds(double);
-void actionHandler(int);
 void sendToIndicator(unsigned char);
 void waitAndRunMask(unsigned char);
 void lightShow();
 int main();
 
-// variables declaration
-struct sigaction act, oldAct;
+//  variables declaration
 int isNeedRepeatOperation = 1;   // repeat operation flag
-int isCanExit = 0;   // exit flag
-int isLightsCanShine = 0; // lights turn ON/OFF flag
 
 
 int main()
@@ -35,27 +30,8 @@ int main()
 	if (enablePermissions(true)) {
 		return 1;
 	}
-    
-    // install signal handler
-    act.sa_handler = actionHandler;
-    sigemptyset(&act.sa_mask);
-    act.sa_flags = 0;
-    if (sigaction(SIGINT, &act, &oldAct) == -1){
-        perror("sigaction error");
-        return 1;
-    };
-    //  work with lights until isCanExit flag disabled 
-    while(!isCanExit)
-    {
-        if (isLightsCanShine)
-        {
-            lightShow();
-        }
-    }
-    
-    // restore old signal handler
-    sigaction(SIGINT, &oldAct, 0);
-    
+    //  run lights show
+    lightShow();
     //	disable permissions for ports
 	if (enablePermissions(false)) {
 		return 1;
@@ -65,12 +41,15 @@ int main()
 
 void lightShow()
 {
+    //   ON - all lights
+    sendToIndicator(0x07); 
+    runDelayInSeconds(0.5);
     //   ON - Num Lock light
     sendToIndicator(0x02);
-    runDelayInSeconds(0.15);
+    runDelayInSeconds(0.2);
     //   ON - Caps Lock light
     sendToIndicator(0x04);
-    runDelayInSeconds(0.15);
+    runDelayInSeconds(0.3);
     //   ON - Num Lock and Caps Lock lights
     sendToIndicator(0x6);  
     runDelayInSeconds(0.2);
@@ -80,6 +59,9 @@ void lightShow()
     //   ON - Num Lock and Caps Lock lights
     sendToIndicator(0x06); 
     runDelayInSeconds(0.1);
+    //   ON - all lights
+    sendToIndicator(0x07); 
+    runDelayInSeconds(0.9);
     //   OFF all lights
     sendToIndicator(0x00); 
 
@@ -91,12 +73,13 @@ void waitAndRunMask(unsigned char mask)
     //  wait until command pass
     while (isNeedRepeatOperation)
     {
-        // wait for keyboard buffer enable
+        //  wait for keyboard buffer enable
         while((inb_p(0x0064) & 0x02) != 0x00);
         //  send command with mask
         outb_p(mask, 0x0060);
+        isNeedRepeatOperation = 0;
         //  a small delay
-        runDelayInSeconds(0.5);
+        runDelayInSeconds(0.1);
     }
 }
 
@@ -108,34 +91,6 @@ void sendToIndicator(unsigned char mask)
     waitAndRunMask(mask);
 }
 
-
-void actionHandler(int exitCode){
-    cout << "\nrun";
-    unsigned char value = 0;
-    //  run  old signal handler 
-    oldAct.sa_handler(exitCode);
-    //  get value from 60 port
-    printf("\t%x", value);
-    value = inb_p(0x0060);
-    //  check value
-    switch (value) {
-        //  check is ESC clicked
-        case 0x01:
-            isCanExit = 1;
-            break;
-        //  is we should switch ON/OFF lights
-        case 0x26: 
-            isLightsCanShine = isLightsCanShine == 0 ? 1 : 0;
-        default:
-            break;
-    }
-    //  if command didn't pass -> we should repeat it
-    isNeedRepeatOperation = (value != 0xFA && isLightsCanShine == 1) ? 1 : 0;
-    //  print value of 60 port
-    printf("\t%x", value);
-    //  reset interrupt controller
-    //outb_p(0x20, 0x20);
-}
 
 void runDelayInSeconds(double second) 
 {
