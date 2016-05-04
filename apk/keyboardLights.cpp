@@ -8,9 +8,27 @@
 #include <string>
 #include <algorithm>
 #include <sys/types.h>
+#include <termios.h>
 #include <unistd.h>
 
 using namespace std;
+
+termios stored;
+
+void getch_init() {
+    termios settings;
+
+    tcgetattr(STDIN_FILENO, &stored);   //  get current configs fo console
+    settings = stored;      //  copy confings
+    settings.c_lflag &= ~(ICANON|ECHO);     //  turn off CANON and ECHO mode
+    settings.c_cc[VTIME] = 2;       //  Timer for key press - 0.5 seconds
+    settings.c_cc[VMIN] = 0;        //  Size of wating buffer - 0 seconds
+    tcsetattr(STDIN_FILENO, TCSANOW, &settings);    //  Set new options
+}
+
+void getch_fin() {
+    tcsetattr(STDIN_FILENO, TCSANOW, &stored);      //  Restore an old configs
+}
 
 //  declarations
 int enablePermissions(bool);
@@ -30,8 +48,13 @@ int main()
 	if (enablePermissions(true)) {
 		return 1;
 	}
-    //  run lights show
-    lightShow();
+    getch_init();
+    //  run lights show until 'e' key selected
+    do{
+        lightShow();
+    }
+    while(getchar() != 'e');
+    getch_fin();
     //	disable permissions for ports
 	if (enablePermissions(false)) {
 		return 1;
@@ -43,7 +66,7 @@ void lightShow()
 {
     //   ON - all lights
     sendToIndicator(0x07); 
-    runDelayInSeconds(0.5);
+    runDelayInSeconds(0.1);
     //   ON - Num Lock light
     sendToIndicator(0x02);
     runDelayInSeconds(0.2);
