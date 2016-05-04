@@ -18,6 +18,24 @@
 
 using namespace std;
 
+
+termios stored;
+
+void getch_init() {
+    termios settings;
+
+    tcgetattr(STDIN_FILENO, &stored);   //Получаем текущие настройки терминала
+    settings = stored;      //Копируем их
+    //settings.c_lflag &= ~(ICANON|ECHO);     //Отключаем канонический режим и эхо
+    settings.c_cc[VTIME] = 0;       //Таймаут ожидания ввода - без ожидания
+    settings.c_cc[VMIN] = 1;        //Размер буфера для ожиания - 1 символ
+    tcsetattr(STDIN_FILENO, TCSANOW, &settings);    //Применяем новые настройки
+}
+
+void getch_fin() {
+    tcsetattr(STDIN_FILENO, TCSANOW, &stored);      //Восстанавливаем настройки терминала
+}
+
 int msCounter = 0;
 
 //void interrupt far (*oldInt70h)(void);    // Указатель на старый 
@@ -39,39 +57,7 @@ int main();
 struct sigaction act, oldAct;
 
 
-static struct termios old, newTerm;
 
-/* Initialize new terminal i/o settings */
-void initTermios(int echo) 
-{
-  tcgetattr(0, &old); /* grab old terminal i/o settings */
-  newTerm = old; /* make new settings same as old settings */
-  newTerm.c_lflag &= ~ICANON; /* disable buffered i/o */
-  newTerm.c_lflag &= echo ? ECHO : ~ECHO; /* set echo mode */
-  tcsetattr(0, TCSANOW, &newTerm); /* use these new terminal i/o settings now */
-}
-
-/* Restore old terminal i/o settings */
-void resetTermios(void) 
-{
-  tcsetattr(0, TCSANOW, &old);
-}
-
-/* Read 1 character - echo defines echo mode */
-char getch_(int echo) 
-{
-  char ch;
-  initTermios(echo);
-  ch = getchar();
-  resetTermios();
-  return ch;
-}
-
-/* Read 1 character without echo */
-char getch(void) 
-{
-  return getch_(0);
-}
 
 
 int main()
@@ -80,20 +66,28 @@ int main()
 	if (enablePermissions(true)) {
 		return 1;
 	}
+    getch_init();
     char c, value;
     printf("Press:\n'1' - Show time\n'2' - Set time\n'3' - Delay time\n'Esc' - quit\n\n");
     while(c != 27)
     {
-        c = getch();
-        printf("%c", c);
+        c = getchar();
         switch(c)
         {
-            case '1': getTime();break;
-            case '2': setTime();break;
-            case '3': delay_time();break;
-            case 27: break;
+            case '1': 
+                printf("%c", c);
+                getTime();
+                break;
+            case '2': 
+                setTime();
+                break;
+            case '3': 
+                delay_time();
+                break;
+            default: break;
         }
     }
+    getch_fin();
     cout << "exit";
     return 0;
 }
@@ -102,7 +96,6 @@ void wait(void)
 {
     do    // Ожидание, пока часы заняты
     {
-        cout << "wait bit";
         outb_p(0x0A, 0x70);
     } while( inb_p(0x71) & 0x80 ); // 0x80 = 10000000, 
 // пока 7-й бит - 1, часы заняты
@@ -217,7 +210,7 @@ void delay_time(void)
     act.sa_handler = newInt70handler;
     sigemptyset(&act.sa_mask);
     act.sa_flags = 0;
-    if (sigaction(SIGALRM, &act, &oldAct) == -1){
+    if (sigaction(SIGRTMIN, &act, &oldAct) == -1){
         perror("sigaction error");
         return;
     };
@@ -248,7 +241,7 @@ void delay_time(void)
     printf("\nEnd delay of %d ms\n", msCounter);
     
     // restore old signal handler
-    sigaction(SIGINT, &oldAct, 0);
+    sigaction(SIGRTMIN, &oldAct, 0);
     //setvect(0x70, oldInt70h); // Восстанавливаем старый обработчик
     unfreeze();
 }
@@ -266,11 +259,11 @@ unsigned char IntToBCD (int value)
 int enablePermissions(bool enable)
 {
 	int value = enable ? 1 : 0;
-	if(ioperm(0x0070, 1, value)) {
+	if(ioperm(0x70, 1, value)) {
         perror("Error getting access to timer ports");
         return 1;
     }
-    if(ioperm(0x0071, 1, value)) {
+    if(ioperm(0x71, 1, value)) {
         perror("Error getting access to timer ports");
         return 1;
     }
@@ -279,6 +272,14 @@ int enablePermissions(bool enable)
         return 1;
     }
 	if(ioperm(0xA0, 1, value)) {
+        perror("Error getting access to 80 port");
+        return 1;
+    }
+	if(ioperm(0x0B, 1, value)) {
+        perror("Error getting access to 80 port");
+        return 1;
+    }
+	if(ioperm(0x80, 1, value)) {
         perror("Error getting access to 80 port");
         return 1;
     }
