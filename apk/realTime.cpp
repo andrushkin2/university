@@ -207,43 +207,48 @@ void delay_time(void)
     unsigned char value;
     //disable();    // Запретить прерывания
     // install signal handler
-    act.sa_handler = newInt70handler;
-    sigemptyset(&act.sa_mask);
-    act.sa_flags = 0;
-    if (sigaction(SIGRTMIN, &act, &oldAct) == -1){
-        perror("sigaction error");
-        return;
-    };
+    //act.sa_handler = newInt70handler;
+    //sigemptyset(&act.sa_mask);
+    //act.sa_flags = 0;
+    //if (sigaction(SIGRTMIN, &act, &oldAct) == -1){
+        //perror("sigaction error");
+        //return;
+    //};
     //oldInt70h = getvect(0x70);
     //setvect(0x70, newInt70handler);
     //enable();     // Разрешить прерывания
 
     printf("Enter delay time in milliseconds: ");
     scanf("%ld", &delayPeriod);
-    printf("Delaying ...");
-
+    printf("\nBefore delay: ");
+    getTime();
+    printf("\nDelaying ...");
+    freeze();
     // Размаскирование линии сигнала запроса от ЧРВ
-    value = inb_p(0xA1);
-    outb_p(value & 0xFE, 0xA1);// 0xFE = 11111110, бит 0 в 0, 
+    //value = inb_p(0xA1);
+    //outb_p(value & 0xFE, 0xA1);// 0xFE = 11111110, бит 0 в 0, 
   // чтобы разрешить прерывания от ЧРВ
 
     // Включение периодического прерывания
-    outb_p(0x0B, 0x70);  // Выбираем регистр B
-    value = inb_p(0x0B); // Читаем содержимое регистра B
+    //outb_p(0x0B, 0x70);  // Выбираем регистр B
+    //value = inb_p(0x0B); // Читаем содержимое регистра B
 
-    outb_p(0x0B, 0x70);  // Выбираем регистр B
-    outb_p(value|0x40, 0x71); // 0x40 = 01000000, 
+    //outb_p(0x0B, 0x70);  // Выбираем регистр B
+    //outb_p(value|0x40, 0x71); // 0x40 = 01000000, 
  // 6-й бит регистра B устанавливаем в 1
 
-    msCounter = 0;
-    while(msCounter != delayPeriod); // Задержка на заданное 
+    //msCounter = 0;
+    //while(msCounter != delayPeriod); // Задержка на заданное 
   // кол-во миллисекунд
+	usleep(delayPeriod * 1000);
     printf("\nEnd delay of %d ms\n", msCounter);
     
     // restore old signal handler
-    sigaction(SIGRTMIN, &oldAct, 0);
+    //sigaction(SIGRTMIN, &oldAct, 0);
     //setvect(0x70, oldInt70h); // Восстанавливаем старый обработчик
     unfreeze();
+    printf("\nBefore delay: ");
+    getTime();
 }
 
 int BCDToInteger (int bcd)
