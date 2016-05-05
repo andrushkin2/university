@@ -18,47 +18,34 @@
 
 using namespace std;
 
-
 termios stored;
-
-void getch_init() {
+//  set new console configs
+void getchInitialization() {
     termios settings;
-
-    tcgetattr(STDIN_FILENO, &stored);   //Получаем текущие настройки терминала
-    settings = stored;      //Копируем их
-    //settings.c_lflag &= ~(ICANON|ECHO);     //Отключаем канонический режим и эхо
-    settings.c_cc[VTIME] = 0;       //Таймаут ожидания ввода - без ожидания
-    settings.c_cc[VMIN] = 1;        //Размер буфера для ожиания - 1 символ
-    tcsetattr(STDIN_FILENO, TCSANOW, &settings);    //Применяем новые настройки
+    tcgetattr(STDIN_FILENO, &stored);   //  get current console config
+    settings = stored;                  //  copy the confings
+    settings.c_cc[VTIME] = 0;           //  key press time OFF
+    settings.c_cc[VMIN] = 1;            //  wait for key press count 1
+    tcsetattr(STDIN_FILENO, TCSANOW, &settings);    //set new configs
 }
-
-void getch_fin() {
-    tcsetattr(STDIN_FILENO, TCSANOW, &stored);      //Восстанавливаем настройки терминала
+//  restore console configs
+void getchRestore() {
+    tcsetattr(STDIN_FILENO, TCSANOW, &stored);
 }
-
-int msCounter = 0;
-
-//void interrupt far (*oldInt70h)(void);    // Указатель на старый 
- // обработчик прерывания
-void newInt70handler(int);
-
-void freeze(void);
-void unfreeze(void);
-int BCDToInteger(int bcd);
-unsigned char IntToBCD(int value);
+//  function declarations
+void freezeTimeUpdate(void);
+void unfreezeTimeUpdate(void);
 void getTime(void);
 void setTime(void);
-void showValue(unsigned char regNum);
-void delay_time(void);
-void wait(void);
-int enablePermissions(bool enable);
+void showValue(unsigned char);
+void delayRTC(void);
+void waitForTimeBusy(void);
+void setValueToPort(unsigned char, int);
+unsigned char intToBcdCode(int);
+unsigned char getValueFromPort(unsigned char);
+int bcdCodeToInt(int);
+int enablePermissions(bool);
 int main();
-// variables declaration
-struct sigaction act, oldAct;
-
-
-
-
 
 int main()
 {
@@ -66,201 +53,186 @@ int main()
 	if (enablePermissions(true)) {
 		return 1;
 	}
-    getch_init();
-    char c, value;
-    printf("Press:\n'1' - Show time\n'2' - Set time\n'3' - Delay time\n'Esc' - quit\n\n");
-    while(c != 27)
+    getchInitialization();
+    
+    char c;
+    while(c != '4')
     {
+        printf("Menu:\n\t1) Print time\n\t2) Set new time\n\t3) Delay for RTC\n\t4) EXIT\n\n");
         c = getchar();
         switch(c)
         {
             case '1': 
-                printf("%c", c);
                 getTime();
                 break;
             case '2': 
                 setTime();
                 break;
             case '3': 
-                delay_time();
+                delayRTC();
                 break;
             default: break;
         }
     }
-    getch_fin();
-    cout << "exit";
+    getchRestore();
     return 0;
 }
 
-void wait(void)
+void waitForTimeBusy(void)
 {
-    do    // Ожидание, пока часы заняты
-    {
+    //  use polling - waiting for clock enabled
+    do {
         outb_p(0x0A, 0x70);
-    } while( inb_p(0x71) & 0x80 ); // 0x80 = 10000000, 
-// пока 7-й бит - 1, часы заняты
+    } while(inb_p(0x71) & 0x80); // until 7's bit = 1, clock is busy
+}
+
+unsigned char getValueFromPort(unsigned char port)
+{
+    //  waiting for clock enabled
+    waitForTimeBusy();
+    //  send command to port
+    outb_p(port, 0x70);
+    //  return value
+    return inb_p(0x71);
 }
 
 void getTime(void)
 {
-    
-    unsigned char value;
-    wait();
-   
-    outb_p(0x04, 0x70); // Текущий час
-    value = inb_p(0x71); printf("%d:",BCDToInteger(value)); wait();
-    outb_p(0x02, 0x70); // Текущая минута
-    value = inb_p(0x71); printf("%d:",BCDToInteger(value)); wait();
-    outb_p(0x00, 0x70); // Текущая секунда
-    value = inb_p(0x71); printf("%d   ",BCDToInteger(value)); wait();
-    outb_p(0x07, 0x70); // Текущий день месяца
-    value = inb_p(0x71); printf("%d.",BCDToInteger(value)); wait();
-    outb_p(0x08, 0x70); // Текущий месяц
-    value = inb_p(0x71); printf("%d.",BCDToInteger(value)); wait();
-    outb_p(0x09, 0x70); // Текущий год
-    value = inb_p(0x71); printf("%d   ",BCDToInteger(value)); wait();
-    outb_p(0x06, 0x70); // Текущий день недели
-    value = inb_p(0x71);
-    switch(BCDToInteger(value))
+    //  get current year
+    printf("\n%d-", bcdCodeToInt(getValueFromPort(0x09)));
+    //  get current month
+    printf("\n%d-", bcdCodeToInt(getValueFromPort(0x08)));
+    //  get current date
+    printf("\n%d\s\s", bcdCodeToInt(getValueFromPort(0x07)));
+    //  get current hours
+    printf("\n%d:", bcdCodeToInt(getValueFromPort(0x04)));
+    //  get current minutes
+    printf("\n%d:", bcdCodeToInt(getValueFromPort(0x02)));
+    //  get current seconds
+    printf("\n%d\s\s", bcdCodeToInt(getValueFromPort(0x00)));
+    //  get week day name
+    switch(bcdCodeToInt(getValueFromPort(0x00)))
     {
-        case 2: printf("Monday\n"); break;
-        case 3: printf("Tuesday\n"); break;
-        case 4: printf("Wednesday\n"); break;
-        case 5: printf("Thursday\n"); break;
-        case 6: printf("Friday\n"); break;
-        case 7: printf("Saturday\n"); break;
-        case 1: printf("Sunday\n"); break;
-        default: printf("Day of week is not set\n"); break;
+        case 1: printf("Sunday"); break;
+        case 2: printf("Monday"); break;
+        case 3: printf("Tuesday"); break;
+        case 4: printf("Wednesday"); break;
+        case 5: printf("Thursday"); break;
+        case 6: printf("Friday"); break;
+        case 7: printf("Saturday"); break;
+        default: printf(""); break;
     }
+    printf("\n");
+}
+
+void setValueToPort(unsigned char port, int value)
+{
+    //  send command to port
+    outb_p(port, 0x70);
+    //  set value to the port
+    outb_p(intToBcdCode(value), 0x71);
 }
 
 void setTime(void)
 {
     int value;
-    freeze();     // Запретить обновление часов
-    
-    printf("Enter hour: "); scanf("%d", &value);
-    outb_p(0x04, 0x70);
-    outb_p(IntToBCD(value), 0x71); // Значение в порт 71h в BCD-формате
-    printf("Enter minute: "); scanf("%d", &value);
-    outb_p(0x02, 0x70);
-    outb_p(IntToBCD(value), 0x71);
-    printf("Enter second: "); scanf("%d", &value);
-    outb_p(0x00, 0x70);
-    outb_p(IntToBCD(value), 0x71);
-    printf("Enter week day number: "); scanf("%d", &value);
-    outb_p(0x06, 0x70);
-    outb_p(IntToBCD(value), 0x71);
-    printf("Enter day of month: "); scanf("%d", &value);
-    outb_p(0x07, 0x70);
-    outb_p(IntToBCD(value), 0x71);
-    printf("Enter mounth: "); scanf("%d", &value);
-    outb_p(0x08, 0x70);
-    outb_p(IntToBCD(value), 0x71);
-    printf("Enter year: "); scanf("%d", &value);
-    outb_p(0x09, 0x70);
-    outb_p(IntToBCD(value), 0x71);
-    unfreeze(); // Разрешить обновление часов
+    //  disable time update
+    freezeTimeUpdate();
+    //  set year
+    printf("\nEnter year: "); 
+    scanf("%d", &value);
+    setValueToPort(0x09, value);
+    //  set month
+    printf("\nEnter month(1-12): "); 
+    scanf("%d", &value);
+    setValueToPort(0x08, value);
+    //  set date
+    printf("\nEnter date: "); 
+    scanf("%d", &value);
+    setValueToPort(0x07, value);
+    //  set hours
+    printf("\nEnter hours(0-23): "); 
+    scanf("%d", &value);
+    setValueToPort(0x04, value);
+    //  set minutes
+    printf("\nEnter minutes: "); 
+    scanf("%d", &value);
+    setValueToPort(0x02, value);
+    //  set seconds
+    printf("\nEnter seconds: "); 
+    scanf("%d", &value);
+    setValueToPort(0x00, value);
+    //  set week day number
+    printf("\nEnter week day number: "); 
+    scanf("%d", &value);
+    setValueToPort(0x06, value);
+    //  enable time update
+    unfreezeTimeUpdate();
 }
 
-// Запретить обновление часов
-void freeze(void)
+//  disable time update
+void freezeTimeUpdate(void)
 {
     unsigned char value;
-    wait();  // Ожидание, пока часы заняты
-
+    //  wating for clock isn't busy
+    waitForTimeBusy();
     outb_p(0x0B, 0x70);
-    value = inb_p(0x71); // читаем регистр состояния B
-    value|=0x80;  // Заменяем 7-й бит на 1 для запрещения обновления часов
+    //  read register state
+    value = inb_p(0x71);
+    //  replace 7's bit with '1' to disable time update
+    value |= 0x80;
     outb_p(0x0B, 0x70);
-    outb_p(value, 0x71); // Записываем новое значение в регистр B, 
-  // обновление часов запрещено
+    //  set calculated value to the time port 
+    outb_p(value, 0x71);
 }
-
-void unfreeze(void)
+//  enable time update
+void unfreezeTimeUpdate(void)
 {
     unsigned char value;
-    wait();  // Ожидание, пока часы заняты
+    //  wating for clock isn't busy
+    waitForTimeBusy();
     outb_p(0x0B, 0x70);
-    value = inb_p(0x71);  // читаем регистр состояния B
-    value-=0x80;        // Заменяем 7-й бит на 0 
-// для разрешения обновления часов
+    //  read register state
+    value = inb_p(0x71);
+    //  replace 7's bit with '0' to enable time update
+    value -= 0x80;
     outb_p(0x0B, 0x70);
-    outb_p(value, 0x71); // Записываем новое значение в регистр B, 
-  // обновление часов разрешено
+    //  set calculated value to the time port 
+    outb_p(value, 0x71);
 }
 
-void newInt70handler(int exitCode)
+void delayRTC(void)
 {
-    msCounter++;     // Счётчик милисекунд
-    outb_p(0x0C, 0x70); // Если регистр C не будет прочитан после IRQ 8,
-    inb_p(0x71);       // тогда прерывание не случится снова
-    outb_p(0x20, 0x20); // Посылаем контроллеру прерываний (master) 
-// сигнал EOI (end of interrupt)
-    outb_p(0x20, 0xA0); // Посылаем второму контроллеру прерываний (slave) 
-// сигнал EOI (end of interrupt)
-}
-
-void delay_time(void)
-{
-    unsigned long delayPeriod;
-    unsigned char value;
-    //disable();    // Запретить прерывания
-    // install signal handler
-    //act.sa_handler = newInt70handler;
-    //sigemptyset(&act.sa_mask);
-    //act.sa_flags = 0;
-    //if (sigaction(SIGRTMIN, &act, &oldAct) == -1){
-        //perror("sigaction error");
-        //return;
-    //};
-    //oldInt70h = getvect(0x70);
-    //setvect(0x70, newInt70handler);
-    //enable();     // Разрешить прерывания
-
+    unsigned long delayInMilliseconds;
+    //  get time for delay in milliseconds
     printf("Enter delay time in milliseconds: ");
-    scanf("%ld", &delayPeriod);
+    scanf("%ld", &delayInMilliseconds);
+    //  print current dateTime value 
     printf("\nBefore delay: ");
     getTime();
     printf("\nDelaying ...");
-    freeze();
-    // Размаскирование линии сигнала запроса от ЧРВ
-    //value = inb_p(0xA1);
-    //outb_p(value & 0xFE, 0xA1);// 0xFE = 11111110, бит 0 в 0, 
-  // чтобы разрешить прерывания от ЧРВ
-
-    // Включение периодического прерывания
-    //outb_p(0x0B, 0x70);  // Выбираем регистр B
-    //value = inb_p(0x0B); // Читаем содержимое регистра B
-
-    //outb_p(0x0B, 0x70);  // Выбираем регистр B
-    //outb_p(value|0x40, 0x71); // 0x40 = 01000000, 
- // 6-й бит регистра B устанавливаем в 1
-
-    //msCounter = 0;
-    //while(msCounter != delayPeriod); // Задержка на заданное 
-  // кол-во миллисекунд
-	usleep(delayPeriod * 1000);
-    printf("\nEnd delay of %d ms\n", msCounter);
-    
-    // restore old signal handler
-    //sigaction(SIGRTMIN, &oldAct, 0);
-    //setvect(0x70, oldInt70h); // Восстанавливаем старый обработчик
-    unfreeze();
-    printf("\nBefore delay: ");
+    //  disable time update
+    freezeTimeUpdate();
+    //  run delay in milliseconds
+	usleep(delayInMilliseconds * 1000);
+    printf("\nEnd delay of %d ms\n", delayInMilliseconds);
+    //  enable time update
+    unfreezeTimeUpdate();
+    //  print current dateTime after delay
+    printf("\Time after delay: ");
     getTime();
 }
-
-int BCDToInteger (int bcd)
+//  function for converting BCD code to integer
+int bcdCodeToInt (int bcdCode)
 {
-    return bcd % 16 + bcd / 16 * 10;
+    return bcdCode % 16 + bcdCode / 16 * 10;
 }
-
-unsigned char IntToBCD (int value)
+//  function for converting integer value to BCD code
+unsigned char intToBcdCode (int value)
 {
-    return (unsigned char)((value/10)<<4)|(value%10);
+    return (unsigned char)((value / 10) << 4) | (value % 10);
 }
-
+//  function for enable/disable permissions
 int enablePermissions(bool enable)
 {
 	int value = enable ? 1 : 0;
