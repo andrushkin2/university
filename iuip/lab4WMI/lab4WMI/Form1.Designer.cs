@@ -30,12 +30,13 @@
         {
             this.tree = new System.Windows.Forms.TreeView();
             this.infoGroup = new System.Windows.Forms.GroupBox();
-            this.captionLabel = new System.Windows.Forms.Label();
-            this.captionText = new System.Windows.Forms.Label();
-            this.descrText = new System.Windows.Forms.Label();
-            this.labelDescr = new System.Windows.Forms.Label();
             this.manufactText = new System.Windows.Forms.Label();
             this.manufactLabel = new System.Windows.Forms.Label();
+            this.descrText = new System.Windows.Forms.Label();
+            this.labelDescr = new System.Windows.Forms.Label();
+            this.captionText = new System.Windows.Forms.Label();
+            this.captionLabel = new System.Windows.Forms.Label();
+            this.disableButton = new System.Windows.Forms.Button();
             this.infoGroup.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,6 +50,7 @@
             // 
             // infoGroup
             // 
+            this.infoGroup.Controls.Add(this.disableButton);
             this.infoGroup.Controls.Add(this.manufactText);
             this.infoGroup.Controls.Add(this.manufactLabel);
             this.infoGroup.Controls.Add(this.descrText);
@@ -62,46 +64,6 @@
             this.infoGroup.TabStop = false;
             this.infoGroup.Text = "Info";
             this.infoGroup.Visible = false;
-            // 
-            // captionLabel
-            // 
-            this.captionLabel.AutoSize = true;
-            this.captionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.captionLabel.Location = new System.Drawing.Point(22, 16);
-            this.captionLabel.Name = "captionLabel";
-            this.captionLabel.Size = new System.Drawing.Size(57, 16);
-            this.captionLabel.TabIndex = 0;
-            this.captionLabel.Text = "Caption:";
-            // 
-            // captionText
-            // 
-            this.captionText.AutoSize = true;
-            this.captionText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.captionText.Location = new System.Drawing.Point(22, 41);
-            this.captionText.Name = "captionText";
-            this.captionText.Size = new System.Drawing.Size(72, 16);
-            this.captionText.TabIndex = 1;
-            this.captionText.Text = "captiontext";
-            // 
-            // descrText
-            // 
-            this.descrText.AutoSize = true;
-            this.descrText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.descrText.Location = new System.Drawing.Point(22, 105);
-            this.descrText.Name = "descrText";
-            this.descrText.Size = new System.Drawing.Size(62, 16);
-            this.descrText.TabIndex = 3;
-            this.descrText.Text = "descrtext";
-            // 
-            // labelDescr
-            // 
-            this.labelDescr.AutoSize = true;
-            this.labelDescr.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelDescr.Location = new System.Drawing.Point(22, 80);
-            this.labelDescr.Name = "labelDescr";
-            this.labelDescr.Size = new System.Drawing.Size(79, 16);
-            this.labelDescr.TabIndex = 2;
-            this.labelDescr.Text = "Description:";
             // 
             // manufactText
             // 
@@ -123,6 +85,57 @@
             this.manufactLabel.TabIndex = 4;
             this.manufactLabel.Text = "Manufacturer:";
             // 
+            // descrText
+            // 
+            this.descrText.AutoSize = true;
+            this.descrText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.descrText.Location = new System.Drawing.Point(22, 105);
+            this.descrText.Name = "descrText";
+            this.descrText.Size = new System.Drawing.Size(62, 16);
+            this.descrText.TabIndex = 3;
+            this.descrText.Text = "descrtext";
+            // 
+            // labelDescr
+            // 
+            this.labelDescr.AutoSize = true;
+            this.labelDescr.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelDescr.Location = new System.Drawing.Point(22, 80);
+            this.labelDescr.Name = "labelDescr";
+            this.labelDescr.Size = new System.Drawing.Size(79, 16);
+            this.labelDescr.TabIndex = 2;
+            this.labelDescr.Text = "Description:";
+            // 
+            // captionText
+            // 
+            this.captionText.AutoSize = true;
+            this.captionText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.captionText.Location = new System.Drawing.Point(22, 41);
+            this.captionText.Name = "captionText";
+            this.captionText.Size = new System.Drawing.Size(72, 16);
+            this.captionText.TabIndex = 1;
+            this.captionText.Text = "captiontext";
+            // 
+            // captionLabel
+            // 
+            this.captionLabel.AutoSize = true;
+            this.captionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.captionLabel.Location = new System.Drawing.Point(22, 16);
+            this.captionLabel.Name = "captionLabel";
+            this.captionLabel.Size = new System.Drawing.Size(57, 16);
+            this.captionLabel.TabIndex = 0;
+            this.captionLabel.Text = "Caption:";
+            // 
+            // disableButton
+            // 
+            this.disableButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.disableButton.Location = new System.Drawing.Point(25, 219);
+            this.disableButton.Name = "disableButton";
+            this.disableButton.Size = new System.Drawing.Size(91, 34);
+            this.disableButton.TabIndex = 6;
+            this.disableButton.Text = "Disable";
+            this.disableButton.UseVisualStyleBackColor = true;
+            this.disableButton.Click += new System.EventHandler(this.disableButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -131,7 +144,7 @@
             this.Controls.Add(this.infoGroup);
             this.Controls.Add(this.tree);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Device Manager";
             this.infoGroup.ResumeLayout(false);
             this.infoGroup.PerformLayout();
             this.ResumeLayout(false);
@@ -148,6 +161,7 @@
         private System.Windows.Forms.Label labelDescr;
         private System.Windows.Forms.Label captionText;
         private System.Windows.Forms.Label captionLabel;
+        private System.Windows.Forms.Button disableButton;
     }
 }
 

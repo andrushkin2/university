@@ -29,10 +29,6 @@ namespace lab4WMI
             {
                 foreach (ManagementObject item in managementSearcher.Get())
                 {
-                    if (item.Properties.Count < 3)
-                    {
-                        int a = item.Properties.Count;
-                    }
                     try
                     {
                         resultList.Add(new EntityItem(item[this.Caption].ToString(), item[this.Description].ToString(), item[this.Manufacturer].ToString()));

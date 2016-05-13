@@ -89,5 +89,10 @@ namespace lab4WMI
                 infoGroup.Visible = false;
             }
         }
+
+        private void disableButton_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Device  successfully disabled");
+        }
     }
 }
