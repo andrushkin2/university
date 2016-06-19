@@ -13,36 +13,16 @@ namespace lab4WMI
     public partial class Form1 : Form
     {
         private Menu menu = new Menu();
-        MenuObject[] menuObjects = {
-            //new MenuObject("PnP", new string[]{ WMIEntityName.PlugAndPlay }),
-            new MenuObject("System Enclosure", new string[]{ WMIEntityName.SystemEnclosure }),
-            new MenuObject("System board", new string[]{ WMIEntityName.BaseBoard, WMIEntityName.MotherboardDevice, WMIEntityName.MotherboardOnBoardDevice, WMIEntityName.MotherboardBus, WMIEntityName.SystemSlot }),
-            new MenuObject("Processors", new string[]{ WMIEntityName.Processor, WMIEntityName.CacheMemory }),
-            new MenuObject("Memory", new string[]{ WMIEntityName.PhysicalMemory, WMIEntityName.MemoryDevice, WMIEntityName.MemoryArray, WMIEntityName.PhysicalMemoryArray, WMIEntityName.DMAChannel }),
-            new MenuObject("Ports", new string[]{ WMIEntityName.PortConnector, WMIEntityName.SerialPort }),
-            new MenuObject("Keyboard", new string[]{ WMIEntityName.Keyboard }),
-            new MenuObject("Mouse", new string[]{ WMIEntityName.PointingDevice }),
-            new MenuObject("Audio", new string[]{ WMIEntityName.SoundDevice }),
-            new MenuObject("Video", new string[]{ WMIEntityName.VideoController, WMIEntityName.CIMVideoControllerResolution }),
-            new MenuObject("Network", new string[]{ WMIEntityName.NetworkAdapter, WMIEntityName.NetworkAdapterConfiguration }),
-            new MenuObject("Monitor", new string[]{ WMIEntityName.DesktopMonitor }),
-            new MenuObject("Floppy drive", new string[]{ WMIEntityName.FloppyDrive }),
-            new MenuObject("Disk drives", new string[]{ WMIEntityName.DiskDrive }),
-            new MenuObject("CD-ROM", new string[]{ WMIEntityName.CDROMDrive })
-        };
         public Form1()
         {
             InitializeComponent();
             initMenu();
+            
             updateTree();
         }
         private void initMenu()
         {
             menu = new Menu();
-            for (int i = 0; i < menuObjects.Length; i++)
-            {
-                menu.addMenuItem(menuObjects[i]);
-            }
         }
         private void updateTree()
         {
@@ -70,7 +50,7 @@ namespace lab4WMI
                     return;
                 }
                 captionText.Text = item.Caption;
-                descrText.Text = item.Description;
+                driverText.Text = item.isInstallDrivers;
                 if (item.Manufacturer != "")
                 {
                     manufactText.Text = item.Manufacturer;

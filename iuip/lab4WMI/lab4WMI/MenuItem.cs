@@ -9,36 +9,33 @@ namespace lab4WMI
     public class MenuItem
     {
         public string menuName;
-        private string[] childNames;
         private bool isEmpty = true;
-        private List<Searcher> searcherList;
+        private List<EntityItem> entities = new List<EntityItem>();
         public MenuItem()
         {
             this.isEmpty = true;
         }
-        public MenuItem(string menuName, string [] childNames)
+        public MenuItem(string menuName, EntityItem item)
         {
             this.menuName = menuName;
-            this.childNames = childNames;
-            searcherList = new List<Searcher>();
-            for (int i = 0; i < this.childNames.Length; i++)
-            {
-                searcherList.Add(new Searcher(this.childNames[i]));
-            }
+            entities = new List<EntityItem>();
+            addItem(item);
             this.isEmpty = false;
         }
         public bool isEmptyClass()
         {
             return this.isEmpty;
         }
+        public void addItem(EntityItem newItem)
+        {
+            if (!newItem.isEmptyClass())
+            {
+                entities.Add(newItem);
+            }
+        }
         public List<EntityItem> getMenuItems()
         {
-            List<EntityItem> items = new List<EntityItem>();
-            foreach (Searcher item in searcherList)
-            {
-                items.AddRange(item.searchItems());
-            }
-            return items;
+            return entities;
         }
         public EntityItem getMenuItemByCaption(string name)
         {

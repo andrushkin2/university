@@ -6,26 +6,32 @@ using System.Threading.Tasks;
 
 namespace lab4WMI
 {
-    class Menu
+    public class Menu
     {
         private List<MenuItem> menuItems = new List<MenuItem>();
-        public bool addMenuItem(MenuObject menuObj)
+        public Menu()
         {
-            if (menuObj.menuName == "" || menuObj.menuItems.Length < 1)
+            int length, i;
+            menuItems.Clear();
+            List<string> namesList = new List<string>();
+            List<string> idList = new List<string>();
+            List<string> mfgList = new List<string>();
+            List<string> typesList = new List<string>();
+            List<string> isInstallList = new List<string>();
+            DeviceInfo.EnumerateDevices(namesList, idList, mfgList, typesList, isInstallList);
+            length = namesList.Count();
+            for (i = 0; i < length; i++)
             {
-                return false;
+                EntityItem item = new EntityItem(namesList[i], "", mfgList[i], idList[i], typesList[i], isInstallList[i]);
+                MenuItem mItem = getMenuItemByName(item.type);
+                if (mItem.isEmptyClass())
+                {
+                    menuItems.Add(new MenuItem(item.type, item));
+                } else
+                {
+                    mItem.addItem(item);
+                }
             }
-            menuItems.Add(new MenuItem(menuObj.menuName, menuObj.menuItems));
-            return true;
-        }
-        public bool addMenuItem(string menuName, string[] itemNames)
-        {
-            if (menuName == "" || itemNames.Length < 1)
-            {
-                return false;
-            }
-            menuItems.Add(new MenuItem(menuName, itemNames));
-            return true;
         }
         public MenuItem getMenuItemByName(string menuName)
         {
