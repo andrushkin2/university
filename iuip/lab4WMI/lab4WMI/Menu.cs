@@ -18,18 +18,27 @@ namespace lab4WMI
             List<string> mfgList = new List<string>();
             List<string> typesList = new List<string>();
             List<string> isInstallList = new List<string>();
-            DeviceInfo.EnumerateDevices(namesList, idList, mfgList, typesList, isInstallList);
+            List<string> classGuids = new List<string>();
+            List<string> friendName = new List<string>();
+            List<string> isInstall = new List<string>();
+            List<string> location = new List<string>();
+            List<string> hardware = new List<string>();
+            DeviceInfo.EnumerateDevices(namesList, idList, mfgList, typesList, isInstallList, classGuids, friendName, isInstall, location, hardware);
             length = namesList.Count();
             for (i = 0; i < length; i++)
             {
-                EntityItem item = new EntityItem(namesList[i], "", mfgList[i], idList[i], typesList[i], isInstallList[i]);
+                EntityItem item = new EntityItem(namesList[i], "", mfgList[i], idList[i], typesList[i], isInstallList[i], classGuids[i], friendName[i], isInstall[i], location[i], hardware[i]);
                 MenuItem mItem = getMenuItemByName(item.type);
                 if (mItem.isEmptyClass())
                 {
                     menuItems.Add(new MenuItem(item.type, item));
                 } else
                 {
-                    mItem.addItem(item);
+                    EntityItem tempItem = getEntityItemInMenuItem(item.type, item.Caption);
+                    if (tempItem.isEmptyClass() && item.isInstallDrivers != tempItem.isInstallDrivers)
+                    {
+                        mItem.addItem(item);
+                    }
                 }
             }
         }

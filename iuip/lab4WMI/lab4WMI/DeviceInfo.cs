@@ -198,7 +198,8 @@ namespace lab4WMI
         /// <param name="ClassName"></param>
         /// <param name="DeviceName"></param>
         /// <returns></returns>
-        public static int EnumerateDevices(List<string> NameList, List<string> IDList, List<string> MfgList, List<string> TypeList, List<string> IsInstallDriversList)
+        public static int EnumerateDevices(List<string> NameList, List<string> IDList, List<string> MfgList, List<string> TypeList, 
+            List<string> IsInstallDriversList, List<string> classGuids, List<string> friendName, List<string> isInstallDevices, List<string> locationList, List<string> hardWareId)
         {
             Guid myGUID = System.Guid.Empty;
             IntPtr hDevInfo = SetupDiGetClassDevsA(ref myGUID, 0, IntPtr.Zero, DIGCF_ALLCLASSES);
@@ -228,11 +229,23 @@ namespace lab4WMI
                 StringBuilder DeviceType = new StringBuilder("");
                 //The device type
                 StringBuilder IsInstallDrivers = new StringBuilder("");
+                //The device GUID class
+                StringBuilder ClassGIUD = new StringBuilder("");
+                //The device fiendlyName
+                StringBuilder friendlyName = new StringBuilder("");
+                //The install state
+                StringBuilder isInstall = new StringBuilder("");
+                //The hardware id
+                StringBuilder hardware = new StringBuilder("");
                 DeviceName.Capacity = MAX_DEV_LEN;
+                hardware.Capacity = MAX_DEV_LEN;
                 DeviceID.Capacity = MAX_DEV_LEN;
                 DeviceType.Capacity = MAX_DEV_LEN;
                 Mfg.Capacity = MAX_DEV_LEN;
                 IsInstallDrivers.Capacity = MAX_DEV_LEN;
+                ClassGIUD.Capacity = MAX_DEV_LEN;
+                friendlyName.Capacity = MAX_DEV_LEN;
+                isInstall.Capacity = MAX_DEV_LEN;
                 bool resName = SetupDiGetDeviceRegistryPropertyA(hDevInfo, DeviceInfoData, SPDRP_DEVICEDESC, 0, DeviceName, MAX_DEV_LEN, IntPtr.Zero);
                 if (!resName)
                 {
@@ -253,7 +266,30 @@ namespace lab4WMI
                     //Device ID unknown
                     DeviceID = new StringBuilder("");
                 }
-
+                //SPDRP_CLASSGUID
+                if (!SetupDiGetDeviceRegistryPropertyA(hDevInfo,
+                 DeviceInfoData, SPDRP_CLASSGUID, 0, ClassGIUD, MAX_DEV_LEN, IntPtr.Zero))
+                {
+                    ClassGIUD = new StringBuilder("");
+                }
+                //SPDRP_FRIENDLYNAME
+                if (!SetupDiGetDeviceRegistryPropertyA(hDevInfo,
+                 DeviceInfoData, SPDRP_FRIENDLYNAME, 0, friendlyName, MAX_DEV_LEN, IntPtr.Zero))
+                {
+                    friendlyName = new StringBuilder("");
+                }
+                //SPDRP_INSTALL_STATE
+                if (!SetupDiGetDeviceRegistryPropertyA(hDevInfo,
+                 DeviceInfoData, SPDRP_INSTALL_STATE, 0, isInstall, MAX_DEV_LEN, IntPtr.Zero))
+                {
+                    isInstall = new StringBuilder("");
+                }
+                //SPDRP_HARDWAREID
+                if (!SetupDiGetDeviceRegistryPropertyA(hDevInfo,
+                DeviceInfoData, SPDRP_HARDWAREID, 0, hardware, MAX_DEV_LEN, IntPtr.Zero))
+                {
+                    hardware = new StringBuilder("");
+                }
                 //Equipment supplier
                 bool resMfg = SetupDiGetDeviceRegistryPropertyA(hDevInfo,
                  DeviceInfoData, SPDRP_MFG, 0, Mfg, MAX_DEV_LEN, IntPtr.Zero);
@@ -266,7 +302,7 @@ namespace lab4WMI
                 StringBuilder location = new StringBuilder("");
                 location.Capacity = MAX_DEV_LEN;
                 if (!SetupDiGetDeviceRegistryPropertyA(hDevInfo,
-                 DeviceInfoData, SPDRP_INSTALL_STATE, 0, location, MAX_DEV_LEN, IntPtr.Zero))
+                 DeviceInfoData, SPDRP_LOCATION_PATHS, 0, location, MAX_DEV_LEN, IntPtr.Zero))
                 {
                     location = new StringBuilder("");
                 }
@@ -286,7 +322,11 @@ namespace lab4WMI
                     IDList.Add(DeviceID.ToString());
                     MfgList.Add(Mfg.ToString());
                     IsInstallDriversList.Add(IsInstallDrivers.ToString());
-
+                    classGuids.Add(ClassGIUD.ToString());
+                    locationList.Add(location.ToString());
+                    friendName.Add(friendlyName.ToString());
+                    isInstallDevices.Add(isInstall.ToString());
+                    hardWareId.Add(hardware.ToString());
                 }
             }
             //The release of the current device memory

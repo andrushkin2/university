@@ -49,19 +49,36 @@ namespace lab4WMI
                 {
                     return;
                 }
-                captionText.Text = item.Caption;
-                driverText.Text = item.isInstallDrivers;
+                outputBox.Clear();
+                outputBox.Text += "Caption:\r\n\t" + item.Caption + "\r\n";
+                if (item.friendName != "" && item.friendName != item.Caption)
+                {
+                    outputBox.Text += "Friedly name:\r\n\t" + item.friendName + "\r\n";
+                }
                 if (item.Manufacturer != "")
                 {
-                    manufactText.Text = item.Manufacturer;
-                    manufactText.Visible = true;
-                    manufactLabel.Visible = true;
-                } else
-                {
-                    manufactText.Visible = false;
-                    manufactLabel.Visible = false;
+                    outputBox.Text += "Manufacturer:\r\n\t" + item.Manufacturer + "\r\n";
                 }
-               
+                if (item.Description != "")
+                {
+                    outputBox.Text += "Description:\r\n\t" + item.Description + "\r\n";
+                }
+                if (item.isInstall != "")
+                {
+                    outputBox.Text += "Is install:\r\n\t" + item.isInstall + "\r\n";
+                }
+                if (item.isInstallDrivers != "")
+                {
+                    outputBox.Text += "Is install drivers:\r\n\t" + item.isInstallDrivers + "\r\n";
+                }
+                if (item.location != "")
+                {
+                    outputBox.Text += "Location info:\r\n\t" + item.location + "\r\n";
+                }
+                if (item.hardwareId != "")
+                {
+                    outputBox.Text += "Hardware ID:\r\n\t" + item.hardwareId + "\r\n";
+                }
                 infoGroup.Visible = true;
 
             } else

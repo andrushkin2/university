@@ -9,11 +9,16 @@ namespace lab4WMI
     public class EntityItem
     {
         public string Caption;
+        public string friendName;
         public string Description;
         public string id;
         public string isInstallDrivers;
         public string type;
+        public string classGuid;
         public string Manufacturer;
+        public string isInstall;
+        public string location;
+        public string hardwareId;
         private bool isEmpty = true;
         public EntityItem()
         {
@@ -26,7 +31,9 @@ namespace lab4WMI
             this.Manufacturer = Manufacturer.Trim();
             this.isEmpty = false;
         }
-        public EntityItem(string Caption, string Description, string Manufacturer, string id, string type, string isInstallDriver)
+        public EntityItem(string Caption, string Description, string Manufacturer, 
+            string id, string type, string isInstallDriver, string classGuid, 
+            string friendName, string inInstall, string location, string hardware)
         {
             this.Caption = Caption;
             this.Description = Description;
@@ -34,6 +41,11 @@ namespace lab4WMI
             this.id = id;
             this.type = type;
             this.isInstallDrivers = isInstallDriver;
+            this.classGuid = classGuid;
+            this.friendName = friendName;
+            this.isInstall = inInstall;
+            this.location = location;
+            this.hardwareId = hardware;
             this.isEmpty = false;
         }
         public bool isEmptyClass()
