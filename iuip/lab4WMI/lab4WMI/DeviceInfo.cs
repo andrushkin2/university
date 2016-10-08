@@ -55,7 +55,7 @@ namespace lab4WMI
         private const int SPDRP_MAXIMUM_PROPERTY = (0x00000025);// Upper bound on ordinals
 
         [StructLayout(LayoutKind.Sequential)]
-        private class SP_DEVINFO_DATA
+        public class SP_DEVINFO_DATA
         {
             public int cbSize;
             public Guid ClassGuid;
@@ -87,111 +87,7 @@ namespace lab4WMI
         /// <param name="ClassName"></param>
         /// <param name="DeviceName"></param>
         /// <returns></returns>
-        public static int EnumerateDevices(UInt32 DeviceIndex, string ClassName, StringBuilder DeviceName, StringBuilder DeviceID, StringBuilder Mfg, StringBuilder IsInstallDrivers)
-        {
-            UInt32 RequiredSize = 0;
-            Guid guid = Guid.Empty;
-            Guid[] guids = new Guid[1];
-            IntPtr NewDeviceInfoSet;
-            SP_DEVINFO_DATA DeviceInfoData = new SP_DEVINFO_DATA();
-
-
-            bool res = SetupDiClassGuidsFromNameA(ClassName, ref guids[0], RequiredSize, ref RequiredSize);
-            if (RequiredSize == 0)
-            {
-                //Type is not correct
-                DeviceName = new StringBuilder("");
-                return -2;
-            }
-
-            if (!res)
-            {
-                guids = new Guid[RequiredSize];
-                res = SetupDiClassGuidsFromNameA(ClassName, ref guids[0], RequiredSize, ref RequiredSize);
-
-                if (!res || RequiredSize == 0)
-                {
-                    //Type is not correct
-                    DeviceName = new StringBuilder("");
-                    return -2;
-                }
-            }
-
-            //Obtaining equipment information by type
-            NewDeviceInfoSet = SetupDiGetClassDevsA(ref guids[0], 0, IntPtr.Zero, DIGCF_PRESENT);
-            if (NewDeviceInfoSet.ToInt32() == -1)
-            {
-                //The device is not available
-                DeviceName = new StringBuilder("");
-                return -3;
-            }
-
-            DeviceInfoData.cbSize = 28;
-            //The normal state
-            DeviceInfoData.DevInst = 0;
-            DeviceInfoData.ClassGuid = System.Guid.Empty;
-            DeviceInfoData.Reserved = 0;
-
-            res = SetupDiEnumDeviceInfo(NewDeviceInfoSet,
-                   DeviceIndex, DeviceInfoData);
-            if (!res)
-            {
-                //No equipment
-                SetupDiDestroyDeviceInfoList(NewDeviceInfoSet);
-                DeviceName = new StringBuilder("");
-                return -1;
-            }
-
-
-
-            DeviceName.Capacity = MAX_DEV_LEN;
-            DeviceID.Capacity = MAX_DEV_LEN;
-            Mfg.Capacity = MAX_DEV_LEN;
-            IsInstallDrivers.Capacity = MAX_DEV_LEN;
-            if (!SetupDiGetDeviceRegistryPropertyA(NewDeviceInfoSet, DeviceInfoData,
-            SPDRP_FRIENDLYNAME, 0, DeviceName, MAX_DEV_LEN, IntPtr.Zero))
-            {
-                res = SetupDiGetDeviceRegistryPropertyA(NewDeviceInfoSet,
-                 DeviceInfoData, SPDRP_DEVICEDESC, 0, DeviceName, MAX_DEV_LEN, IntPtr.Zero);
-                if (!res)
-                {
-                    //Type is not correct
-                    SetupDiDestroyDeviceInfoList(NewDeviceInfoSet);
-                    DeviceName = new StringBuilder("");
-                    return -4;
-                }
-            }
-            //Device ID
-            bool resHardwareID = SetupDiGetDeviceRegistryPropertyA(NewDeviceInfoSet,
-             DeviceInfoData, SPDRP_HARDWAREID, 0, DeviceID, MAX_DEV_LEN, IntPtr.Zero);
-            if (!resHardwareID)
-            {
-                //Device ID unknown
-                DeviceID = new StringBuilder("");
-                DeviceID.Append("Unknown");
-            }
-            //Equipment supplier
-            bool resMfg = SetupDiGetDeviceRegistryPropertyA(NewDeviceInfoSet,
-             DeviceInfoData, SPDRP_MFG, 0, Mfg, MAX_DEV_LEN, IntPtr.Zero);
-            if (!resMfg)
-            {
-                //The equipment supplier of unknown
-                Mfg = new StringBuilder("");
-                Mfg.Append("Unknown");
-            }
-            //Whether the device driver installation
-            bool resIsInstallDrivers = SetupDiGetDeviceRegistryPropertyA(NewDeviceInfoSet,
-             DeviceInfoData, SPDRP_DRIVER, 0, IsInstallDrivers, MAX_DEV_LEN, IntPtr.Zero);
-            if (!resIsInstallDrivers)
-            {
-                //Whether the device driver installation
-                IsInstallDrivers = new StringBuilder("");
-            }
-            //The release of the current device memory
-            SetupDiDestroyDeviceInfoList(NewDeviceInfoSet);
-            return 0;
-        }
-        /// <summary>
+       /// <summary>
         /// To obtain the unknown device information
         /// </summary>
         /// <param name="DeviceIndex"></param>
@@ -199,7 +95,8 @@ namespace lab4WMI
         /// <param name="DeviceName"></param>
         /// <returns></returns>
         public static int EnumerateDevices(List<string> NameList, List<string> IDList, List<string> MfgList, List<string> TypeList, 
-            List<string> IsInstallDriversList, List<string> classGuids, List<string> friendName, List<string> isInstallDevices, List<string> locationList, List<string> hardWareId)
+            List<string> IsInstallDriversList, List<string> classGuids, List<string> friendName, List<string> isInstallDevices, 
+            List<string> locationList, List<string> hardWareId, List<DeviceInfo.SP_DEVINFO_DATA> data)
         {
             Guid myGUID = System.Guid.Empty;
             IntPtr hDevInfo = SetupDiGetClassDevsA(ref myGUID, 0, IntPtr.Zero, DIGCF_ALLCLASSES);
@@ -327,6 +224,7 @@ namespace lab4WMI
                     friendName.Add(friendlyName.ToString());
                     isInstallDevices.Add(isInstall.ToString());
                     hardWareId.Add(hardware.ToString());
+                    data.Add(DeviceInfoData);
                 }
             }
             //The release of the current device memory

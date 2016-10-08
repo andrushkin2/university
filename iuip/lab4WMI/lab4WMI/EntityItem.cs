@@ -18,6 +18,7 @@ namespace lab4WMI
         public string Manufacturer;
         public string isInstall;
         public string location;
+        public DeviceInfo.SP_DEVINFO_DATA data;
         public string hardwareId;
         private bool isEmpty = true;
         public EntityItem()
@@ -33,7 +34,7 @@ namespace lab4WMI
         }
         public EntityItem(string Caption, string Description, string Manufacturer, 
             string id, string type, string isInstallDriver, string classGuid, 
-            string friendName, string inInstall, string location, string hardware)
+            string friendName, string inInstall, string location, string hardware, DeviceInfo.SP_DEVINFO_DATA data)
         {
             this.Caption = Caption;
             this.Description = Description;
@@ -45,6 +46,7 @@ namespace lab4WMI
             this.friendName = friendName;
             this.isInstall = inInstall;
             this.location = location;
+            this.data = data;
             this.hardwareId = hardware;
             this.isEmpty = false;
         }

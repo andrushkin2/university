@@ -23,11 +23,12 @@ namespace lab4WMI
             List<string> isInstall = new List<string>();
             List<string> location = new List<string>();
             List<string> hardware = new List<string>();
-            DeviceInfo.EnumerateDevices(namesList, idList, mfgList, typesList, isInstallList, classGuids, friendName, isInstall, location, hardware);
+            List<DeviceInfo.SP_DEVINFO_DATA> data = new List<DeviceInfo.SP_DEVINFO_DATA>();
+            DeviceInfo.EnumerateDevices(namesList, idList, mfgList, typesList, isInstallList, classGuids, friendName, isInstall, location, hardware, data);
             length = namesList.Count();
             for (i = 0; i < length; i++)
             {
-                EntityItem item = new EntityItem(namesList[i], "", mfgList[i], idList[i], typesList[i], isInstallList[i], classGuids[i], friendName[i], isInstall[i], location[i], hardware[i]);
+                EntityItem item = new EntityItem(namesList[i], "", mfgList[i], idList[i], typesList[i], isInstallList[i], classGuids[i], friendName[i], isInstall[i], location[i], hardware[i], data[i]);
                 MenuItem mItem = getMenuItemByName(item.type);
                 if (mItem.isEmptyClass())
                 {

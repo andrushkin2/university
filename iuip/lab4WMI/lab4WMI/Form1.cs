@@ -90,6 +90,16 @@ namespace lab4WMI
         private void disableButton_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Device  successfully disabled");
+            TreeNode selectedItem = tree.SelectedNode;
+            if (selectedItem.Parent != null)
+            {
+                EntityItem item = menu.getEntityItemInMenuItem(selectedItem.Parent.Text, selectedItem.Text);
+                if (item.isEmptyClass())
+                {
+                    return;
+                }
+                //bool res = Diactivate.DisableDevice(item.data, false);
+            }
         }
     }
 }

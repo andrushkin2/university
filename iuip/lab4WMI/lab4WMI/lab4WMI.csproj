@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DeviceClasses.cs" />
     <Compile Include="DeviceInfo.cs" />
     <Compile Include="EntityItem.cs" />
     <Compile Include="Form1.cs">
