@@ -1,0 +1,26 @@
+
+.button {
+    -fx-background-color: #0b4b77;
+    /*-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 1, 2, 4, 1);*/
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-border-color: transparent;
+    -fx-border-radius: 0px 0px 0px 0px;
+    -fx-min-height: 40px;
+    -fx-min-width: 200px;
+    -fx-font-size: 16px;
+
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+.button:hover {
+    -fx-background-color: #0b6492;
+}
+.button:pressed {
+    -fx-background-color: #0b6492;
+    -fx-effect: dropshadow( three-pass-box, rgba(0,0,0,0.6), 1, 0.0, 0, 1 );
+    -fx-font-size: 14px;
+}
