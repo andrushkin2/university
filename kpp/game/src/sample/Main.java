@@ -1,28 +1,19 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ToolBar;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+
 
 public class Main extends Application {
     private final double width = 500;
     private final double height = 500;
     private void setDefaultConfig(Pane grid) {
+        grid.setLayoutX(0);
         grid.setMinSize(this.width, this.height);
         grid.setMaxSize(this.width, this.height);
-       /* grid.setPrefWidth(this.width);
-        grid.setPrefHeight(this.height);
-        grid.setPrefSize(this.width, this.height);*/
         grid.getStyleClass().add("main_container");
     }
     private void setDefaultConfig(Stage primaryStage) {
@@ -46,6 +37,8 @@ public class Main extends Application {
         sample.Button button = new sample.Button("Menu");
         button.setOnAction(event -> this.menu.show());
         root.getChildren().add(button);
+
+        new Table(root);
         primaryStage.setTitle("2048");
         primaryStage.setScene(mainScene);
         primaryStage.show();

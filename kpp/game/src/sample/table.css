@@ -1,0 +1,13 @@
+
+.tableGrid {
+    -fx-background-color: #bbada0;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+.tableGrid .emptyItem {
+    -fx-background-color: rgba(238, 228, 218, 0.35);
+    -fx-border-radius: 5px;
+    -fx-border-width: 1px;
+    -fx-border-color: #bbada0;
+    -fx-border-style: solid;
+}
