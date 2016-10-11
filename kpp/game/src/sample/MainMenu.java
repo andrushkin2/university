@@ -1,43 +1,45 @@
 package sample;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.layout.Pane;
+
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 /**
- * Created by User on 10/8/2016.
+ * Created by kosiak_man on 11.10.16.
  */
-public class Menu {
+public class MainMenu {
     private DialogShield shield;
-    private ArrayList<sample.Button> buttons;
+    private ArrayList<Button> buttons;
     private sample.Button newGameButton;
     private sample.Button exit;
-    private sample.Button pause;
+    private sample.Button donate;
     private sample.Button addButton(String text) {
         sample.Button button = new Button(text);
         this.shield.appendChild(button);
         return button;
     }
-    Menu(Pane parent, boolean fillParent) {
-        this(parent);
+    MainMenu(Pane parent, EventHandler<javafx.event.ActionEvent> value, boolean fillParent) {
+        this(parent, value);
         if (fillParent) {
             this.shield.fillParent();
         }
     }
-    Menu(Pane parent) {
+    MainMenu(Pane parent, EventHandler<javafx.event.ActionEvent> value) {
         this.shield = new DialogShield(parent);
-        this.pause = this.addButton("Continue");
+        this.donate = this.addButton("Donate");
         this.newGameButton = this.addButton("New game");
         this.exit = this.addButton("Exit");
 
-        this.pause.setOnAction(event -> {
-            this.pause.setVisible(false);
-            this.pause.maxHeight(0);
+        this.newGameButton.setOnAction(value);
+        this.donate.setOnAction(event -> {
+            this.donate.setText("Donate :)");
         });
         this.exit.setOnAction(event -> {
             Platform.exit();
         });
-        this.hide();
     }
     public void show() {
         this.shield.show();

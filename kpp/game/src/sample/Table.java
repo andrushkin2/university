@@ -14,7 +14,7 @@ public class Table {
     private final String tableClassName = "tableGrid";
     Table(Pane parent) {
         this.grid = new GridPane();
-        this.grid.setMaxSize(410, 410);
+        this.grid.setMaxSize(390, 410);
         parent.getChildren().add(this.grid);
         this.grid.getStylesheets().add("sample/table.css");
         this.grid.getStyleClass().add(this.tableClassName);
@@ -33,6 +33,14 @@ public class Table {
                 this.grid.add(empty, j, i);
             }
         }
+        this.hide();
     }
-
+    public void show() {
+        this.grid.setVisible(true);
+        this.grid.toFront();
+    }
+    public void hide() {
+        this.grid.toBack();
+        this.grid.setVisible(false);
+    }
 }

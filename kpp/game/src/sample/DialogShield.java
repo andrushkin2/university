@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox;
  * Created by User on 10/8/2016.
  */
 public class DialogShield {
-    private VBox pane;
+    protected VBox pane;
     private Pane parentPane;
     private final String paneClass = "dialogShield";
     DialogShield(Pane parentElement, boolean fillParent) {

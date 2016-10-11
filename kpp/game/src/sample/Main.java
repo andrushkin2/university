@@ -1,6 +1,8 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
@@ -25,18 +27,23 @@ public class Main extends Application {
         primaryStage.setFullScreen(false);
     }
     private Menu menu;
+    private MainMenu mainMenu;
+    private BackendTable table;
     @Override
     public void start(Stage primaryStage) throws Exception{
         this.setDefaultConfig(primaryStage);
         Pane root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         this.setDefaultConfig((root));
         Scene mainScene = new Scene(root);
+        this.table = new BackendTable(root);
+        this.table.hide();
         mainScene.getStylesheets().add("sample/styles.css");
         this.menu = new Menu(root, true);
         this.menu.hide();
-        sample.Button button = new sample.Button("Menu");
-        button.setOnAction(event -> this.menu.show());
-        root.getChildren().add(button);
+        this.mainMenu = new MainMenu(root, event -> {
+            this.mainMenu.hide();
+            this.table.show();
+        });
 
         new Table(root);
         primaryStage.setTitle("2048");
