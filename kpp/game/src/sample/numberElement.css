@@ -1,0 +1,11 @@
+.numberElement {
+    -fx-background-color: #eee4da;
+    -fx-font-weight: bold;
+    -fx-font-size: 55px;
+    -fx-opacity: 0;
+}
+
+.numberElement .innerText {
+    -fx-fill: #776e65;
+
+}

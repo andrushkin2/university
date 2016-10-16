@@ -28,14 +28,14 @@ public class Main extends Application {
     }
     private Menu menu;
     private MainMenu mainMenu;
-    private BackendTable table;
+    private GamePane table;
     @Override
     public void start(Stage primaryStage) throws Exception{
         this.setDefaultConfig(primaryStage);
         Pane root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         this.setDefaultConfig((root));
         Scene mainScene = new Scene(root);
-        this.table = new BackendTable(root);
+        this.table = new GamePane(root);
         this.table.hide();
         mainScene.getStylesheets().add("sample/styles.css");
         this.menu = new Menu(root, true);

@@ -12,3 +12,7 @@
     -fx-alignment: center;
     -fx-padding: 10px;
 }
+
+.main_container .absolutePane {
+    -fx-background-color: transparent;
+}
