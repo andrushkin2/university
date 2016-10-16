@@ -31,6 +31,7 @@ public class Table {
                 empty.setPadding(new Insets(10));
                 empty.getStyleClass().add("emptyItem");
                 this.grid.add(empty, j, i);
+                empty.getLocalToParentTransform();
             }
         }
         this.hide();
