@@ -9,8 +9,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import javax.swing.text.Position;
-
 /**
  * Created by User on 10/16/2016.
  */
@@ -19,8 +17,10 @@ public class NumberElement {
     private final String elementClassName = "numberElement";
     private final String innerTextClassName = "innerText";
     protected GridPane element;
+    private  sample.Position position;
     private Text innerText;
-    NumberElement(Pane parent) {
+    private int value;
+    NumberElement(Pane parent, sample.Position position, int value) {
         this.element = new GridPane();
         this.element.setLayoutX(55);
         this.element.setLayoutY(55);
@@ -29,21 +29,44 @@ public class NumberElement {
         this.element.getStyleClass().add(this.elementClassName);
         this.element.setMinSize(this.size, this.size);
         this.element.setMaxSize(this.size, this.size);
-        this.innerText = new Text();
+        this.value = value;
+        this.innerText = new Text(String.valueOf(this.value));
         this.innerText.getStyleClass().add(this.innerTextClassName);
         this.element.add(this.innerText, 0, 0);
+        this.setPosition(position);
         parent.getChildren().add(this.element);
+        this.element.setOpacity(0);
         new Timeline(
                 new KeyFrame(Duration.millis(300), new KeyValue(this.element.opacityProperty(), 1))
         ).play();
     }
-    public void setPosition(Double posX, Double posY) {
-        new Timeline(
-                new KeyFrame(Duration.millis(300), new KeyValue(this.element.translateXProperty(), posX)),
-                new KeyFrame(Duration.millis(300), new KeyValue(this.element.translateYProperty(), posY))
-        ).play();
+    private Double getTranslatePosition(int value) {
+        return value * 100.0;
     }
-    public void setText(String text) {
-        this.innerText.setText(text);
+    public sample.Position getPosition() {
+        return this.position;
+    }
+    public void setPosition(sample.Position pos) {
+        this.position = pos;
+        this.element.setTranslateX(this.getTranslatePosition(this.position.j));
+        this.element.setTranslateY(this.getTranslatePosition(this.position.i));
+    }
+    public void setPosition(sample.Position pos, boolean useAnimation) {
+        if (useAnimation) {
+            this.position = pos;
+            new Timeline(
+                    new KeyFrame(Duration.millis(300), new KeyValue(this.element.translateXProperty(), this.getTranslatePosition(this.position.j))),
+                    new KeyFrame(Duration.millis(300), new KeyValue(this.element.translateYProperty(), this.getTranslatePosition(this.position.i)))
+            ).play();
+        } else {
+            this.setPosition(pos);
+        }
+    }
+    public void setValue(int value) {
+        this.value = value;
+        this.innerText.setText(String.valueOf(this.value));
+    }
+    public int getValue() {
+        return this.value;
     }
 }

@@ -43,6 +43,7 @@ public class Main extends Application {
         this.mainMenu = new MainMenu(root, event -> {
             this.mainMenu.hide();
             this.table.show();
+            this.table.startNewGame();
         });
 
         new Table(root);

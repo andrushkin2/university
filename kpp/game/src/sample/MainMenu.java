@@ -27,13 +27,13 @@ public class MainMenu {
             this.shield.fillParent();
         }
     }
-    MainMenu(Pane parent, EventHandler<javafx.event.ActionEvent> value) {
+    MainMenu(Pane parent, EventHandler<javafx.event.ActionEvent> newGameEvent) {
         this.shield = new DialogShield(parent);
         this.donate = this.addButton("Donate");
         this.newGameButton = this.addButton("New game");
         this.exit = this.addButton("Exit");
 
-        this.newGameButton.setOnAction(value);
+        this.newGameButton.setOnAction(newGameEvent);
         this.donate.setOnAction(event -> {
             this.donate.setText("Donate :)");
         });
