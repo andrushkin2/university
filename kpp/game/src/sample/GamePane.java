@@ -78,4 +78,25 @@ public class GamePane extends Pane {
         this.toBack();
         this.setVisible(false);
     }
+    private ArrayList<NumberElement> getElementsByJ(int columnNumber) {
+        ArrayList<NumberElement> elementsByJ = new ArrayList<>();
+        this.elements.forEach(element -> {
+            Position pos = element.getPosition();
+            if (pos.j == columnNumber) {
+                elementsByJ.add(element);
+            }
+        });
+        elementsByJ.sort((o1, o2) -> {
+            return o1.getPosition().i - o2.getPosition().i;
+        });
+        return elementsByJ;
+    }
+    private void slideDown() {
+        ArrayList<NumberElement> elems;
+        int i, len = 4;
+        for (i = 0; i < len; i++) {
+            elems = this.getElementsByJ(i);
+            
+        }
+    }
 }

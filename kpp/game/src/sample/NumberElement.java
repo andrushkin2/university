@@ -3,6 +3,8 @@ package sample;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -61,6 +63,15 @@ public class NumberElement {
         } else {
             this.setPosition(pos);
         }
+    }
+    public void setPosition(sample.Position pos, EventHandler<ActionEvent> onAnimationEnd) {
+        this.position = pos;
+        Timeline animation = new Timeline(
+            new KeyFrame(Duration.millis(300), new KeyValue(this.element.translateXProperty(), this.getTranslatePosition(this.position.j))),
+            new KeyFrame(Duration.millis(300), new KeyValue(this.element.translateYProperty(), this.getTranslatePosition(this.position.i)))
+        );
+        animation.setOnFinished(onAnimationEnd);
+        animation.play();
     }
     public void setValue(int value) {
         this.value = value;
