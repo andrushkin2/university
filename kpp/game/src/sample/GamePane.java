@@ -83,6 +83,8 @@ public class GamePane extends Pane {
         switch (eventName) {
             case "up": this.slideUp(); this.addElement(); break;
             case "down": this.slideDown(); this.addElement(); break;
+            case "left": this.slideLeft(); this.addElement(); break;
+            case "right": this.slideRight(); this.addElement(); break;
         }
     }
     private ArrayList<NumberElement> getElementsByJ(int columnNumber) {
@@ -93,7 +95,16 @@ public class GamePane extends Pane {
                 elementsByJ.add(element);
             }
         });
-        elementsByJ.sort((o1, o2) -> o1.getPosition().i - o2.getPosition().i);
+        return elementsByJ;
+    }
+    private ArrayList<NumberElement> getElementsByI(int rowNumber) {
+        ArrayList<NumberElement> elementsByJ = new ArrayList<>();
+        this.elements.forEach(element -> {
+            Position pos = element.getPosition();
+            if (pos.i == rowNumber) {
+                elementsByJ.add(element);
+            }
+        });
         return elementsByJ;
     }
     private void slideDown() {
@@ -112,6 +123,22 @@ public class GamePane extends Pane {
             this.findActionDownAndUp(0, elems, 4, 1);
         }
     }
+    private void slideLeft() {
+        ArrayList<NumberElement> elems;
+        int i, len = 4;
+        for (i = 0; i < len; i++) {
+            elems = this.getElementsByI(i);
+            this.findActionLeftAndRight(0, elems, 4, 1);
+        }
+    }
+    private void slideRight() {
+        ArrayList<NumberElement> elems;
+        int i, len = 4;
+        for (i = 0; i < len; i++) {
+            elems = this.getElementsByI(i);
+            this.findActionLeftAndRight(3, elems, -1, 1);
+        }
+    }
     private NumberElement getElementWithIndexI(int index, ArrayList<NumberElement> elems) {
         int i, len = elems.size();
         NumberElement elem;
@@ -119,6 +146,18 @@ public class GamePane extends Pane {
         for (i = 0; i < len; i++) {
             elem = elems.get(i);
             if (elem.getPosition().i == index) {
+                return elem;
+            }
+        }
+        return new NumberElement();
+    }
+    private NumberElement getElementWithIndexJ(int index, ArrayList<NumberElement> elems) {
+        int i, len = elems.size();
+        NumberElement elem;
+
+        for (i = 0; i < len; i++) {
+            elem = elems.get(i);
+            if (elem.getPosition().j == index) {
                 return elem;
             }
         }
@@ -151,6 +190,7 @@ public class GamePane extends Pane {
                         nextElement.setValue(nextElement.getValue() * 2);
                         // remove current element for array of elements and call this function again for the next rect
                         elems.remove(currElement);
+                        this.elements.remove(currElement);
                         this.findActionDownAndUp(currentIndexI + increment, elems, minIndex, increment);
                         return;
                     } else {
@@ -175,6 +215,66 @@ public class GamePane extends Pane {
                 if (nextElement.isReal) {
                     nextElement.setPosition(new Position(currentIndexI, nextElement.getPosition().j), true);
                     this.findActionDownAndUp(currentIndexI + increment, elems, minIndex, increment);
+                    return;
+                }
+                indexOfNextElement += increment;
+            }
+            // if nothing to move -> return
+            return;
+        }
+    }
+    private void findActionLeftAndRight(int currentIndexJ, ArrayList<NumberElement> elems, int minIndex, int increment) {
+        NumberElement currElement, nextElement;
+        int indexOfNextElement;
+        // if current index is last(function on the top element) or if we have empty array of elements -> GET OUT OF HERE
+        if (currentIndexJ == minIndex || elems.size() == 0) {
+            return;
+        }
+        // get element by current index
+        currElement = this.getElementWithIndexJ(currentIndexJ, elems);
+
+        indexOfNextElement = currentIndexJ + increment;
+        if (currElement.isReal) {
+            // if current element is REAL
+            while (indexOfNextElement != minIndex) {
+                nextElement = this.getElementWithIndexJ(indexOfNextElement, elems);
+                // if found element is REAL
+                if (nextElement.isReal) {
+                    // if elements have equal values
+                    if (nextElement.getValue() == currElement.getValue()) {
+                        // move found element to current element's position
+                        nextElement.setPosition(new Position(nextElement.getPosition().i, currentIndexJ), event -> {
+                            // after moving found element -> update it value and remove current element from node
+                            this.numbersPane.removeChild(currElement.element);
+                        });
+                        nextElement.setValue(nextElement.getValue() * 2);
+                        // remove current element for array of elements and call this function again for the next rect
+                        elems.remove(currElement);
+                        this.elements.remove(currElement);
+                        this.findActionLeftAndRight(currentIndexJ + increment, elems, minIndex, increment);
+                        return;
+                    } else {
+                        // if found element position doesn't equal with nearest of current element
+                        if (nextElement.getPosition().j != currentIndexJ + increment) {
+                            // move found element to nearest rect with current element
+                            nextElement.setPosition(new Position(nextElement.getPosition().i, currentIndexJ + increment), true);
+                        }
+                        // call this function again for the next rect
+                        this.findActionLeftAndRight(currentIndexJ + increment, elems, minIndex, increment);
+                        return;
+                    }
+                }
+                indexOfNextElement += increment;
+            }
+            // if nothing to move -> return
+            return;
+        } else {
+            // if current element is FAKE
+            while(indexOfNextElement != minIndex) {
+                nextElement = this.getElementWithIndexI(indexOfNextElement, elems);
+                if (nextElement.isReal) {
+                    nextElement.setPosition(new Position(nextElement.getPosition().i, currentIndexJ), true);
+                    this.findActionLeftAndRight(currentIndexJ + increment, elems, minIndex, increment);
                     return;
                 }
                 indexOfNextElement += increment;

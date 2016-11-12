@@ -43,6 +43,12 @@ public class Main extends Application {
             if (code.equals(KeyCode.UP)) {
                 this.table.moveEvent("up");
             }
+            if (code.equals(KeyCode.LEFT)) {
+                this.table.moveEvent("left");
+            }
+            if (code.equals(KeyCode.RIGHT)) {
+                this.table.moveEvent("right");
+            }
         };
         Pane root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         this.setDefaultConfig((root));
