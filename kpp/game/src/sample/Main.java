@@ -5,6 +5,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -29,9 +31,19 @@ public class Main extends Application {
     private Menu menu;
     private MainMenu mainMenu;
     private GamePane table;
+    private EventHandler<KeyEvent> keyPress;
     @Override
     public void start(Stage primaryStage) throws Exception{
         this.setDefaultConfig(primaryStage);
+        this.keyPress = event -> {
+            KeyCode code = event.getCode();
+            if (code.equals(KeyCode.DOWN)) {
+                this.table.moveEvent("down");
+            }
+            if (code.equals(KeyCode.UP)) {
+                this.table.moveEvent("up");
+            }
+        };
         Pane root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         this.setDefaultConfig((root));
         Scene mainScene = new Scene(root);
@@ -45,7 +57,7 @@ public class Main extends Application {
             this.table.show();
             this.table.startNewGame();
         });
-
+        mainScene.setOnKeyReleased(this.keyPress);
         new Table(root);
         primaryStage.setTitle("2048");
         primaryStage.setScene(mainScene);

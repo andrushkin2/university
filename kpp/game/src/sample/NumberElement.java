@@ -21,8 +21,10 @@ public class NumberElement {
     protected GridPane element;
     private  sample.Position position;
     private Text innerText;
+    public boolean isReal = false;
     private int value;
     NumberElement(Pane parent, sample.Position position, int value) {
+        this.isReal = true;
         this.element = new GridPane();
         this.element.setLayoutX(55);
         this.element.setLayoutY(55);
@@ -41,6 +43,9 @@ public class NumberElement {
         new Timeline(
                 new KeyFrame(Duration.millis(300), new KeyValue(this.element.opacityProperty(), 1))
         ).play();
+    }
+    NumberElement() {
+        this.isReal = false;
     }
     private Double getTranslatePosition(int value) {
         return value * 100.0;
