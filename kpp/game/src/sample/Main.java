@@ -62,8 +62,8 @@ public class Main extends Application {
             this.mainMenu.hide();
             this.table.show();
             this.table.startNewGame();
+            mainScene.setOnKeyReleased(this.keyPress);
         });
-        mainScene.setOnKeyReleased(this.keyPress);
         new Table(root);
         primaryStage.setTitle("2048");
         primaryStage.setScene(mainScene);

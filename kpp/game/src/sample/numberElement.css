@@ -2,10 +2,83 @@
     -fx-background-color: #eee4da;
     -fx-font-weight: bold;
     -fx-font-size: 55px;
-    -fx-opacity: 0;
 }
 
 .numberElement .innerText {
     -fx-fill: #776e65;
+}
 
+.numberElement.class4 {
+    -fx-background-color: rgb(236, 224,203);
+}
+.numberElement.class4 .innerText {
+    -fx-fill: rgb(117, 109, 102);
+}
+
+.numberElement.class8 {
+    -fx-background-color: #f2b179;
+}
+.numberElement.class8 .innerText {
+    -fx-fill: rgb(248, 246, 242);
+}
+
+.numberElement.class16 {
+    -fx-background-color: rgb(243, 149,106);
+}
+.numberElement.class16 .innerText {
+    -fx-fill: rgb(248, 246, 242);
+}
+
+.numberElement.class32 {
+    -fx-background-color: #f57c5f;
+}
+.numberElement.class32 .innerText {
+    -fx-fill: rgb(248, 246, 242);
+}
+
+.numberElement.class64 {
+    -fx-background-color: #f65d3b;
+}
+.numberElement.class64 .innerText {
+    -fx-fill: rgb(248, 246, 242);
+}
+
+.numberElement.class128 {
+    -fx-background-color: #edce71;
+    -fx-font-size: 50px;
+}
+.numberElement.class128 .innerText {
+    -fx-fill: rgb(248, 246, 242);
+}
+
+.numberElement.class256 {
+    -fx-background-color: #edcc63;
+    -fx-font-size: 50px;
+}
+.numberElement.class256 .innerText {
+    -fx-fill: rgb(248, 246, 242);
+}
+
+.numberElement.class512 {
+    -fx-background-color: #ecc850;
+    -fx-font-size: 50px;
+}
+.numberElement.class512 .innerText {
+    -fx-fill: rgb(248, 246, 242);
+}
+
+.numberElement.class1024 {
+    -fx-background-color: #edc53f;
+    -fx-font-size: 35px;
+}
+.numberElement.class1024 .innerText {
+    -fx-fill: rgb(248, 246, 242);
+}
+
+.numberElement.class2048 {
+    -fx-background-color: #eec22e;
+    -fx-font-size: 35px;
+}
+.numberElement.class2048 .innerText {
+    -fx-fill: rgb(248, 246, 242);
 }

@@ -58,7 +58,7 @@ public class GamePane extends Pane {
         return this.getRandomPosition(this.getEmptyCells());
     }
     private void addElement() {
-        NumberElement elem = new NumberElement(this.numbersPane, this.getFreePosition(), 2);
+        NumberElement elem = new NumberElement(this.numbersPane, this.getFreePosition(), 1024);
         this.elements.add(elem);
     }
     private void setSize(Double width, Double height) {
@@ -136,7 +136,7 @@ public class GamePane extends Pane {
         int i, len = 4;
         for (i = 0; i < len; i++) {
             elems = this.getElementsByI(i);
-            this.findActionLeftAndRight(3, elems, -1, 1);
+            this.findActionLeftAndRight(3, elems, -1, -1);
         }
     }
     private NumberElement getElementWithIndexI(int index, ArrayList<NumberElement> elems) {
@@ -271,7 +271,7 @@ public class GamePane extends Pane {
         } else {
             // if current element is FAKE
             while(indexOfNextElement != minIndex) {
-                nextElement = this.getElementWithIndexI(indexOfNextElement, elems);
+                nextElement = this.getElementWithIndexJ(indexOfNextElement, elems);
                 if (nextElement.isReal) {
                     nextElement.setPosition(new Position(nextElement.getPosition().i, currentIndexJ), true);
                     this.findActionLeftAndRight(currentIndexJ + increment, elems, minIndex, increment);

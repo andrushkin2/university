@@ -36,12 +36,13 @@ public class NumberElement {
         this.value = value;
         this.innerText = new Text(String.valueOf(this.value));
         this.innerText.getStyleClass().add(this.innerTextClassName);
+        this.element.getStyleClass().add("class" + String.valueOf(this.value));
         this.element.add(this.innerText, 0, 0);
         this.setPosition(position);
         parent.getChildren().add(this.element);
         this.element.setOpacity(0);
         new Timeline(
-                new KeyFrame(Duration.millis(300), new KeyValue(this.element.opacityProperty(), 1))
+                new KeyFrame(Duration.millis(200), new KeyValue(this.element.opacityProperty(), 1))
         ).play();
     }
     NumberElement() {
@@ -62,8 +63,8 @@ public class NumberElement {
         if (useAnimation) {
             this.position = pos;
             new Timeline(
-                    new KeyFrame(Duration.millis(300), new KeyValue(this.element.translateXProperty(), this.getTranslatePosition(this.position.j))),
-                    new KeyFrame(Duration.millis(300), new KeyValue(this.element.translateYProperty(), this.getTranslatePosition(this.position.i)))
+                    new KeyFrame(Duration.millis(200), new KeyValue(this.element.translateXProperty(), this.getTranslatePosition(this.position.j))),
+                    new KeyFrame(Duration.millis(200), new KeyValue(this.element.translateYProperty(), this.getTranslatePosition(this.position.i)))
             ).play();
         } else {
             this.setPosition(pos);
@@ -72,14 +73,21 @@ public class NumberElement {
     public void setPosition(sample.Position pos, EventHandler<ActionEvent> onAnimationEnd) {
         this.position = pos;
         Timeline animation = new Timeline(
-            new KeyFrame(Duration.millis(300), new KeyValue(this.element.translateXProperty(), this.getTranslatePosition(this.position.j))),
-            new KeyFrame(Duration.millis(300), new KeyValue(this.element.translateYProperty(), this.getTranslatePosition(this.position.i)))
+            new KeyFrame(Duration.millis(200), new KeyValue(this.element.translateXProperty(), this.getTranslatePosition(this.position.j))),
+            new KeyFrame(Duration.millis(200), new KeyValue(this.element.translateYProperty(), this.getTranslatePosition(this.position.i)))
         );
         animation.setOnFinished(onAnimationEnd);
         animation.play();
     }
+    private String getClassName(int value) {
+        return "class" + String.valueOf(value);
+    }
     public void setValue(int value) {
+        this.element.getStyleClass().remove(this.getClassName(this.value));
         this.value = value;
+        String className = this.getClassName(this.value);
+        this.element.getStyleClass().add(className);
+        //this.element.setOpacity(1);
         this.innerText.setText(String.valueOf(this.value));
     }
     public int getValue() {
