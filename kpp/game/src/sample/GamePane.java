@@ -58,7 +58,7 @@ public class GamePane extends Pane {
         return this.getRandomPosition(this.getEmptyCells());
     }
     private void addElement() {
-        NumberElement elem = new NumberElement(this.numbersPane, this.getFreePosition(), 1024);
+        NumberElement elem = new NumberElement(this.numbersPane, this.getFreePosition(), 2);
         this.elements.add(elem);
     }
     private void setSize(Double width, Double height) {
