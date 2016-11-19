@@ -3,6 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/AbsolutePane.java" afterPath="$PROJECT_DIR$/src/sample/AbsolutePane.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/BackendTable.java" afterPath="$PROJECT_DIR$/src/sample/BackendTable.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/DialogShield.java" afterPath="$PROJECT_DIR$/src/sample/DialogShield.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/GamePane.java" afterPath="$PROJECT_DIR$/src/sample/GamePane.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Main.java" afterPath="$PROJECT_DIR$/src/sample/Main.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/NumberElement.java" afterPath="$PROJECT_DIR$/src/sample/NumberElement.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Table.java" afterPath="$PROJECT_DIR$/src/sample/Table.java" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -65,8 +72,8 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1083">
-              <caret line="65" column="11" selection-start-line="65" selection-start-column="11" selection-end-line="65" selection-end-column="11" />
+            <state relative-caret-position="484">
+              <caret line="22" column="47" selection-start-line="22" selection-start-column="47" selection-end-line="22" selection-end-column="47" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -74,36 +81,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainMenu.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sample/MainMenu.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="570">
-              <caret line="35" column="33" selection-start-line="35" selection-start-column="33" selection-end-line="35" selection-end-column="33" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="GamePane.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sample/GamePane.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="628">
-              <caret line="192" column="39" selection-start-line="192" selection-start-column="39" selection-end-line="192" selection-end-column="39" />
+            <state relative-caret-position="773">
+              <caret line="284" column="0" selection-start-line="284" selection-start-column="0" selection-end-line="284" selection-end-column="0" />
               <folding>
+                <element signature="method#findActionDownAndUp#0;class#GamePane#0" expanded="false" />
                 <element signature="method#findActionLeftAndRight#0;class#GamePane#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AbsolutePane.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sample/AbsolutePane.java">
+      <file leaf-file-name="Menu.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/Menu.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="627">
-              <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-              <folding>
-                <element signature="e#1240#1241#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="315">
+              <caret line="24" column="9" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="9" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -111,8 +107,31 @@
       <file leaf-file-name="Position.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/Position.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
+            <state relative-caret-position="176">
               <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AbsolutePane.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/AbsolutePane.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="367">
+              <caret line="32" column="27" selection-start-line="32" selection-start-column="16" selection-end-line="32" selection-end-column="27" />
+              <folding>
+                <element signature="e#998#999#0" expanded="true" />
+                <element signature="e#1046#1047#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Table.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/Table.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="726">
+              <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -121,18 +140,33 @@
       <file leaf-file-name="NumberElement.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/NumberElement.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="836">
-              <caret line="59" column="44" selection-start-line="59" selection-start-column="44" selection-end-line="59" selection-end-column="44" />
+            <state relative-caret-position="557">
+              <caret line="93" column="1" selection-start-line="93" selection-start-column="1" selection-end-line="93" selection-end-column="1" />
+              <folding>
+                <element signature="e#3388#3389#0" expanded="true" />
+                <element signature="e#3442#3443#0" expanded="true" />
+                <element signature="e#3751#3752#0" expanded="true" />
+                <element signature="e#3784#3785#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BackendTable.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/BackendTable.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="352">
+              <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="numberElement.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sample/numberElement.css">
+      <file leaf-file-name="DialogShield.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/DialogShield.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="551">
-              <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
+            <state relative-caret-position="455">
+              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -164,33 +198,35 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/sample/sample.fxml" />
         <option value="$PROJECT_DIR$/src/sample/Manu.java" />
         <option value="$PROJECT_DIR$/src/sample/button.css" />
         <option value="$PROJECT_DIR$/src/sample/Button.java" />
         <option value="$PROJECT_DIR$/src/.gitignore" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/src/sample/Menu.java" />
-        <option value="$PROJECT_DIR$/src/sample/DialogShield.java" />
         <option value="$PROJECT_DIR$/src/sample/table.css" />
         <option value="$PROJECT_DIR$/src/sample/styles.css" />
-        <option value="$PROJECT_DIR$/src/sample/BackendTable.java" />
-        <option value="$PROJECT_DIR$/src/sample/Table.java" />
-        <option value="$PROJECT_DIR$/src/sample/AbsolutePane.java" />
         <option value="$PROJECT_DIR$/src/sample/Position.java" />
         <option value="$PROJECT_DIR$/src/sample/MainMenu.java" />
-        <option value="$PROJECT_DIR$/src/sample/Main.java" />
-        <option value="$PROJECT_DIR$/src/sample/NumberElement.java" />
         <option value="$PROJECT_DIR$/src/sample/numberElement.css" />
         <option value="$PROJECT_DIR$/src/sample/GamePane.java" />
+        <option value="$PROJECT_DIR$/src/sample/DialogShield.java" />
+        <option value="$PROJECT_DIR$/src/sample/AbsolutePane.java" />
+        <option value="$PROJECT_DIR$/src/sample/BackendTable.java" />
+        <option value="$PROJECT_DIR$/src/sample/Table.java" />
+        <option value="$PROJECT_DIR$/src/sample/NumberElement.java" />
+        <option value="$PROJECT_DIR$/src/sample/sample.fxml" />
+        <option value="$PROJECT_DIR$/src/sample/Menu.java" />
+        <option value="$PROJECT_DIR$/src/sample/Main.java" />
+        <option value="$PROJECT_DIR$/src/sample/GamePaneController.java" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="828" />
+    <option name="x" value="1912" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1096" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -222,7 +258,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -261,8 +298,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -311,6 +347,86 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="" />
       <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Cold Fusion runner description" factoryName="Cold Fusion" custom_browser="" web_path="">
+      <method />
+    </configuration>
+    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="myFilePath" />
+      <option name="GLUE" />
+      <option name="myNameFilter" />
+      <option name="myGeneratedName" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnitTestDiscovery" factoryName="JUnit Test Discovery" changeList="All">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
       <method />
     </configuration>
     <configuration default="true" type="JarApplication" factoryName="JAR Application">
@@ -395,6 +511,68 @@
       <setting name="testKind" value="Class" />
       <setting name="showProgressMessages" value="true" />
       <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNGTestDiscovery" factoryName="TestNG Test Discovery" changeList="All">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
       <method />
     </configuration>
     <configuration default="true" type="osgi.bnd.run" factoryName="Run Launcher">
@@ -483,44 +661,45 @@
       <workItem from="1478971714730" duration="6927000" />
       <workItem from="1479139106289" duration="1119000" />
       <workItem from="1479142968910" duration="29000" />
+      <workItem from="1479548310263" duration="19127000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="70635000" />
+    <option name="totallyTimeSpent" value="89762000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="828" extended-state="6" />
-    <editor active="false" />
+    <frame x="1912" y="-8" width="1936" height="1096" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32791328" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32883817" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32883817" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20124482" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15808298" sideWeight="0.6703755" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15778251" sideWeight="0.6703755" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32987553" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.398374" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.398374" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32791328" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20189703" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -569,14 +748,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/sample/NumberElement.java</url>
-          <line>87</line>
-          <properties />
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="21" />
     </breakpoint-manager>
     <watches-manager />
@@ -587,88 +758,19 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/sample/sample.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
-        </state>
-      </provider>
       <provider editor-type-id="JavaFX-Scene-Builder">
         <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/table.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/sample.fxml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
         </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/sample.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
       </provider>
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/Parent.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/lang/String.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/application/Application.java" />
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/geometry/Insets.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/layout/Region.java" />
-    <entry file="file://$PROJECT_DIR$/src/sample/Button.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="9" column="21" selection-start-line="9" selection-start-column="21" selection-end-line="9" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/.gitignore" />
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
@@ -678,35 +780,11 @@
       </provider>
     </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home/javafx-src.zip!/javafx/scene/control/ButtonBase.java" />
-    <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Menu.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="703">
-          <caret line="39" column="20" selection-start-line="39" selection-start-column="20" selection-end-line="39" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/button.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="15" column="80" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="80" />
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/sample.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
       </provider>
     </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home/javafx-src.zip!/javafx/geometry/Orientation.java" />
@@ -719,26 +797,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Table.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="18" column="24" selection-start-line="18" selection-start-column="24" selection-end-line="18" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/BackendTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding>
-            <element signature="e#460#461#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/javax/swing/text/Position.java" />
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/Node.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/animation/Timeline.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/util/AbstractCollection.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/util/List.java" />
@@ -750,80 +809,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/DialogShield.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="572">
-          <caret line="30" column="5" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Position.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/control/ButtonBase.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/input/KeyEvent.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/input/KeyCode.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/event/Event.java" />
-    <entry file="file://$PROJECT_DIR$/src/sample/AbsolutePane.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="627">
-          <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-          <folding>
-            <element signature="e#1240#1241#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/layout/Pane.java" />
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home/src.zip!/java/util/List.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="260" column="0" selection-start-line="260" selection-start-column="0" selection-end-line="260" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home/javafx-src.zip!/javafx/scene/layout/GridPane.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-22">
-          <caret line="1646" column="26" selection-start-line="1646" selection-start-column="26" selection-end-line="1646" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home/src.zip!/java/util/List.java" />
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home/javafx-src.zip!/javafx/scene/layout/GridPane.java" />
     <entry file="file://$PROJECT_DIR$/src/sample/numberElement.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
+        <state relative-caret-position="220">
+          <caret line="83" column="1" selection-start-line="83" selection-start-column="1" selection-end-line="83" selection-end-column="1" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/NumberElement.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="836">
-          <caret line="59" column="44" selection-start-line="59" selection-start-column="44" selection-end-line="59" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1083">
-          <caret line="65" column="11" selection-start-line="65" selection-start-column="11" selection-end-line="65" selection-end-column="11" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/MainMenu.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
+        <state relative-caret-position="660">
           <caret line="35" column="33" selection-start-line="35" selection-start-column="33" selection-end-line="35" selection-end-column="33" />
           <folding />
         </state>
@@ -848,54 +849,502 @@
         </state>
       </provider>
     </entry>
-    <entry file="uml://JAVA/sample.AbsolutePane">
+    <entry file="file://$PROJECT_DIR$/src/sample/Position.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="uml://JAVA/sample">
       <provider selected="true" editor-type-id="UmlEditorProvider">
         <state>
           <ID>JAVA</ID>
-          <OriginalElement>sample.AbsolutePane</OriginalElement>
+          <OriginalElement>sample</OriginalElement>
           <nodes>
-            <node x="" y="">javafx.scene.control.Button</node>
-            <node x="" y="">sample.Main</node>
-            <node x="" y="">sample.BackendTable</node>
-            <node x="" y="">javafx.scene.control.Skinnable</node>
-            <node x="" y="">javafx.scene.control.Control</node>
-            <node x="" y="">sample.Position</node>
-            <node x="" y="">sample.Controller</node>
-            <node x="" y="">javafx.application.Application</node>
-            <node x="" y="">javafx.scene.Parent</node>
-            <node x="" y="">sample.GamePane</node>
-            <node x="" y="">javafx.scene.control.Labeled</node>
-            <node x="" y="">sample.Menu</node>
-            <node x="" y="">sample.Button</node>
-            <node x="" y="">javafx.scene.layout.Pane</node>
-            <node x="" y="">sample.AbsolutePane</node>
-            <node x="" y="">sample.Table</node>
-            <node x="" y="">javafx.scene.control.ButtonBase</node>
-            <node x="" y="">sample.DialogShield</node>
-            <node x="" y="">javafx.scene.Node</node>
-            <node x="" y="">javafx.event.EventTarget</node>
-            <node x="" y="">sample.NumberElement</node>
-            <node x="" y="">sample.MainMenu</node>
-            <node x="" y="">javafx.scene.layout.Region</node>
-            <node x="" y="">javafx.beans.DefaultProperty</node>
-            <node x="" y="">com.sun.javafx.beans.IDProperty</node>
-            <node x="" y="">javafx.css.Styleable</node>
+            <node x="0.0" y="153.0">sample.AbsolutePane</node>
+            <node x="108.0" y="301.0">sample.Table</node>
+            <node x="214.0" y="301.0">sample.Main</node>
+            <node x="0.0" y="79.0">sample.BackendTable</node>
+            <node x="4.0" y="0.0">sample.DialogShield</node>
+            <node x="130.0" y="227.0">sample.Position</node>
+            <node x="285.0" y="153.0">sample.GamePane</node>
+            <node x="0.0" y="227.0">sample.Controller</node>
+            <node x="0.0" y="301.0">sample.Menu</node>
+            <node x="250.0" y="227.0">sample.Button</node>
+            <node x="151.0" y="0.0">sample.NumberElement</node>
+            <node x="150.0" y="153.0">sample.MainMenu</node>
           </nodes>
           <notes />
-          <edges />
-          <settings layout="Hierarchic Group" zoom="0.709046442838797" x="299.0" y="376.0" />
-          <SelectedNodes />
+          <edges>
+            <edge source="sample.BackendTable" target="sample.DialogShield">
+              <point x="0.0" y="-14.5" />
+              <point x="0.0" y="14.5" />
+            </edge>
+          </edges>
+          <settings layout="Hierarchic Group" zoom="1.0" x="-363.0" y="-49.5" />
+          <SelectedNodes>
+            <node>sample.Main</node>
+          </SelectedNodes>
           <Categories />
           <SCOPE>All</SCOPE>
           <VISIBILITY>private</VISIBILITY>
         </state>
       </provider>
     </entry>
+    <entry file="uml://JAVA/sample.AbsolutePane">
+      <provider selected="true" editor-type-id="UmlEditorProvider">
+        <state>
+          <ID>JAVA</ID>
+          <OriginalElement>sample.AbsolutePane</OriginalElement>
+          <nodes>
+            <node x="1206.0561497326207" y="613.0">javafx.scene.control.Button</node>
+            <node x="1656.0" y="198.0">javafx.scene.Node.AccessibilityProperties</node>
+            <node x="111.0" y="845.0">sample.Main</node>
+            <node x="215.0" y="845.0">sample.BackendTable</node>
+            <node x="641.7473262032088" y="277.0">javafx.scene.control.Skinnable</node>
+            <node x="665.2473262032088" y="376.0">javafx.scene.control.Control</node>
+            <node x="795.0" y="766.0">sample.Position</node>
+            <node x="665.0" y="766.0">sample.Controller</node>
+            <node x="46.5" y="766.0">javafx.application.Application</node>
+            <node x="1570.0" y="198.0">javafx.scene.Parent</node>
+            <node x="1567.3074866310162" y="376.0">javafx.scene.layout.Region.ShapeProperty</node>
+            <node x="1117.0" y="198.0">javafx.scene.Node.StyleableProperties</node>
+            <node x="915.0" y="198.0">javafx.scene.Node.EffectiveOrientationProperty</node>
+            <node x="0.0" y="198.0">javafx.scene.Node.LazyTransformProperty</node>
+            <node x="1696.3074866310162" y="376.0">javafx.scene.layout.Region.StyleableProperties</node>
+            <node x="1721.3074866310162" y="534.0">sample.GamePane</node>
+            <node x="915.0" y="766.0">sample.Menu</node>
+            <node x="1185.3061497326207" y="455.0">javafx.scene.control.Labeled</node>
+            <node x="1206.0561497326207" y="692.0">sample.Button</node>
+            <node x="1795.3074866310162" y="455.0">javafx.scene.layout.Pane</node>
+            <node x="617.2473262032088" y="455.0">javafx.scene.control.Control.StyleableProperties</node>
+            <node x="1830.3074866310162" y="534.0">sample.AbsolutePane</node>
+            <node x="1023.0" y="766.0">sample.Table</node>
+            <node x="1849.3074866310162" y="376.0">javafx.scene.layout.Region.InsetsProperty</node>
+            <node x="1050.3061497326207" y="376.0">javafx.scene.layout.Region.MinPrefMaxProperty</node>
+            <node x="1042.0561497326207" y="534.0">javafx.scene.control.Labeled.StyleableProperties</node>
+            <node x="219.0" y="766.0">sample.DialogShield</node>
+            <node x="1194.0561497326207" y="534.0">javafx.scene.control.ButtonBase</node>
+            <node x="175.0" y="198.0">javafx.scene.Node.NodeTransformation</node>
+            <node x="1064.5574866310162" y="79.0">javafx.scene.Node</node>
+            <node x="84.05614973262072" y="277.0">javafx.scene.Node.NodeTransformation.LocalToSceneTransformProperty</node>
+            <node x="1269.0" y="198.0">javafx.scene.Node.FocusedProperty</node>
+            <node x="942.3074866310162" y="0.0">javafx.event.EventTarget</node>
+            <node x="0.0" y="845.0">javafx.application.Application.Parameters</node>
+            <node x="530.0" y="766.0">sample.MainMenu</node>
+            <node x="366.0" y="766.0">sample.NumberElement</node>
+            <node x="338.0" y="198.0">javafx.scene.Node.ReadOnlyObjectWrapperManualFire</node>
+            <node x="1568.5" y="277.0">javafx.scene.layout.Region</node>
+            <node x="1410.0" y="198.0">javafx.scene.Node.LazyBoundsProperty</node>
+            <node x="1211.3061497326207" y="376.0">javafx.beans.DefaultProperty</node>
+            <node x="710.0" y="198.0">javafx.scene.Node.TreeVisiblePropertyReadOnly</node>
+            <node x="1156.3074866310162" y="0.0">com.sun.javafx.beans.IDProperty</node>
+            <node x="580.0" y="198.0">javafx.scene.Node.MiscProperties</node>
+            <node x="1057.3074866310162" y="0.0">javafx.css.Styleable</node>
+          </nodes>
+          <notes />
+          <edges>
+            <edge source="javafx.scene.control.Labeled.StyleableProperties" target="javafx.scene.control.Labeled">
+              <point x="0.0" y="-14.5" />
+              <point x="1108.0561497326207" y="509.0" />
+              <point x="1203.5561497326207" y="509.0" />
+              <point x="-18.25" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node" target="javafx.css.Styleable">
+              <point x="0.0" y="-14.5" />
+              <point x="1095.0574866310162" y="54.0" />
+              <point x="1096.8074866310162" y="54.0" />
+              <point x="0.0" y="14.5" />
+            </edge>
+            <edge source="javafx.application.Application.Parameters" target="javafx.application.Application">
+              <point x="0.0" y="-14.5" />
+              <point x="45.5" y="820.0" />
+              <point x="69.75" y="820.0" />
+              <point x="-23.25" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.control.ButtonBase" target="javafx.scene.control.Labeled">
+              <point x="0.0" y="-14.5" />
+              <point x="18.25" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node.NodeTransformation.LocalToSceneTransformProperty" target="javafx.scene.Node.LazyTransformProperty">
+              <point x="-51.25" y="-14.5" />
+              <point x="135.30614973262072" y="252.0" />
+              <point x="77.5" y="252.0" />
+              <point x="0.0" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node" target="com.sun.javafx.beans.IDProperty">
+              <point x="20.333333333333258" y="-14.5" />
+              <point x="1115.3908199643495" y="54.0" />
+              <point x="1200.3074866310162" y="54.0" />
+              <point x="0.0" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.layout.Region.MinPrefMaxProperty" target="javafx.scene.layout.Region">
+              <point x="0.0" y="-14.5" />
+              <point x="1120.8061497326207" y="356.0" />
+              <point x="1585.75" y="356.0" />
+              <point x="-17.25" y="14.5" />
+            </edge>
+            <edge source="sample.BackendTable" target="sample.DialogShield">
+              <point x="0.0" y="-14.5" />
+              <point x="0.0" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node.MiscProperties" target="javafx.scene.Node">
+              <point x="0.0" y="-14.5" />
+              <point x="635.0" y="158.0" />
+              <point x="1083.9665775401072" y="158.0" />
+              <point x="-11.090909090909008" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node.ReadOnlyObjectWrapperManualFire" target="javafx.scene.Node">
+              <point x="0.0" y="-14.5" />
+              <point x="449.0" y="148.0" />
+              <point x="1078.4211229946525" y="148.0" />
+              <point x="-16.63636363636374" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.layout.Pane" target="javafx.scene.layout.Region">
+              <point x="14.5" y="-14.5" />
+              <point x="1838.8074866310162" y="336.0" />
+              <point x="1620.25" y="336.0" />
+              <point x="17.25" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Parent" target="javafx.scene.Node">
+              <point x="0.0" y="-14.5" />
+              <point x="1603.0" y="148.0" />
+              <point x="1117.2393048128345" y="148.0" />
+              <point x="22.181818181818244" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.control.Control" target="javafx.scene.layout.Region">
+              <point x="18.0" y="-14.5" />
+              <point x="719.2473262032088" y="346.0" />
+              <point x="1574.25" y="346.0" />
+              <point x="-28.75" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node.LazyBoundsProperty" target="javafx.scene.Node">
+              <point x="0.0" y="-14.5" />
+              <point x="1480.0" y="158.0" />
+              <point x="1111.69385026738" y="158.0" />
+              <point x="16.63636363636374" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node.EffectiveOrientationProperty" target="javafx.scene.Node">
+              <point x="0.0" y="-14.5" />
+              <point x="1006.0" y="178.0" />
+              <point x="1095.0574866310162" y="178.0" />
+              <point x="0.0" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node.StyleableProperties" target="javafx.scene.Node">
+              <point x="0.0" y="-14.5" />
+              <point x="1183.0" y="178.0" />
+              <point x="1100.6029411764707" y="178.0" />
+              <point x="5.545454545454504" y="14.5" />
+            </edge>
+            <edge source="sample.AbsolutePane" target="javafx.scene.layout.Pane">
+              <point x="0.0" y="-14.5" />
+              <point x="1882.8074866310162" y="509.0" />
+              <point x="1838.8074866310162" y="509.0" />
+              <point x="14.5" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node.FocusedProperty" target="javafx.scene.Node">
+              <point x="0.0" y="-14.5" />
+              <point x="1329.5" y="168.0" />
+              <point x="1106.1483957219252" y="168.0" />
+              <point x="11.090909090909008" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node" target="javafx.event.EventTarget">
+              <point x="-20.333333333333258" y="-14.5" />
+              <point x="1074.724153297683" y="54.0" />
+              <point x="989.8074866310162" y="54.0" />
+              <point x="0.0" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.layout.Region.StyleableProperties" target="javafx.scene.layout.Region">
+              <point x="0.0" y="-14.5" />
+              <point x="1762.3074866310162" y="346.0" />
+              <point x="1608.75" y="346.0" />
+              <point x="5.75" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node.NodeTransformation.LocalToSceneTransformProperty" target="javafx.scene.Node.NodeTransformation">
+              <point x="51.25" y="-14.5" />
+              <point x="237.80614973262072" y="252.0" />
+              <point x="246.5" y="252.0" />
+              <point x="0.0" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.control.Control.StyleableProperties" target="javafx.scene.control.Control">
+              <point x="0.0" y="-14.5" />
+              <point x="-18.0" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.control.Control" target="javafx.scene.control.Skinnable">
+              <point x="-18.0" y="-14.5" />
+              <point x="0.0" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node.LazyTransformProperty" target="javafx.scene.Node">
+              <point x="0.0" y="-14.5" />
+              <point x="77.5" y="128.0" />
+              <point x="1067.3302139037435" y="128.0" />
+              <point x="-27.727272727272748" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.control.Labeled" target="javafx.scene.control.Control">
+              <point x="-18.25" y="-14.5" />
+              <point x="1203.5561497326207" y="430.0" />
+              <point x="719.2473262032088" y="430.0" />
+              <point x="18.0" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.layout.Region.InsetsProperty" target="javafx.scene.layout.Region">
+              <point x="0.0" y="-14.5" />
+              <point x="1902.8074866310162" y="326.0" />
+              <point x="1631.75" y="326.0" />
+              <point x="28.75" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.control.Button" target="javafx.scene.control.ButtonBase">
+              <point x="0.0" y="-14.5" />
+              <point x="0.0" y="14.5" />
+            </edge>
+            <edge source="sample.GamePane" target="javafx.scene.layout.Pane">
+              <point x="0.0" y="-14.5" />
+              <point x="1765.8074866310162" y="509.0" />
+              <point x="1809.8074866310162" y="509.0" />
+              <point x="-14.5" y="14.5" />
+            </edge>
+            <edge source="sample.Main" target="javafx.application.Application">
+              <point x="0.0" y="-14.5" />
+              <point x="140.5" y="820.0" />
+              <point x="116.25" y="820.0" />
+              <point x="23.25" y="14.5" />
+            </edge>
+            <edge source="sample.Button" target="javafx.scene.control.Button">
+              <point x="0.0" y="-14.5" />
+              <point x="0.0" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node.TreeVisiblePropertyReadOnly" target="javafx.scene.Node">
+              <point x="0.0" y="-14.5" />
+              <point x="802.5" y="168.0" />
+              <point x="1089.5120320855617" y="168.0" />
+              <point x="-5.545454545454504" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node.AccessibilityProperties" target="javafx.scene.Node">
+              <point x="0.0" y="-14.5" />
+              <point x="1731.0" y="138.0" />
+              <point x="1122.784759358289" y="138.0" />
+              <point x="27.727272727272748" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.control.Labeled" target="javafx.beans.DefaultProperty">
+              <point x="18.25" y="-14.5" />
+              <point x="-28.75" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.layout.Region" target="javafx.scene.Parent">
+              <point x="0.0" y="-14.5" />
+              <point x="0.0" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.layout.Pane" target="javafx.beans.DefaultProperty">
+              <point x="-14.5" y="-14.5" />
+              <point x="1809.8074866310162" y="430.0" />
+              <point x="1297.5561497326207" y="430.0" />
+              <point x="28.75" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.Node.NodeTransformation" target="javafx.scene.Node">
+              <point x="0.0" y="-14.5" />
+              <point x="246.5" y="138.0" />
+              <point x="1072.875668449198" y="138.0" />
+              <point x="-22.181818181818244" y="14.5" />
+            </edge>
+            <edge source="javafx.scene.layout.Region.ShapeProperty" target="javafx.scene.layout.Region">
+              <point x="0.0" y="-14.5" />
+              <point x="1621.8074866310162" y="356.0" />
+              <point x="1597.25" y="356.0" />
+              <point x="-5.75" y="14.5" />
+            </edge>
+          </edges>
+          <settings layout="Hierarchic Group" zoom="0.9" x="150.66666666666669" y="97.66666666666669" />
+          <SelectedNodes />
+          <Categories>
+            <Category>Inner Classes</Category>
+          </Categories>
+          <SCOPE>All</SCOPE>
+          <VISIBILITY>private</VISIBILITY>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/layout/VBox.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="861">
+          <caret line="137" column="13" selection-start-line="137" selection-start-column="13" selection-end-line="137" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/layout/Pane.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="96" column="13" selection-start-line="96" selection-start-column="13" selection-end-line="96" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/AbsolutePane.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="367">
+          <caret line="32" column="27" selection-start-line="32" selection-start-column="16" selection-end-line="32" selection-end-column="27" />
+          <folding>
+            <element signature="e#998#999#0" expanded="true" />
+            <element signature="e#1046#1047#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/DialogShield.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="455">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/layout/GridPane.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="259" column="13" selection-start-line="259" selection-start-column="13" selection-end-line="259" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/Node.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="5459" column="27" selection-start-line="5459" selection-start-column="27" selection-end-line="5459" selection-end-column="52" />
+          <folding>
+            <element signature="e#234517#234518#0" expanded="false" />
+            <element signature="e#234578#234579#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/geometry/Insets.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="858">
+          <caret line="62" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Table.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="726">
+          <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/BackendTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/shape/Shape.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="49">
+          <caret line="117" column="22" selection-start-line="117" selection-start-column="22" selection-end-line="117" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/text/Text.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="313">
+          <caret line="94" column="29" selection-start-line="94" selection-start-column="29" selection-end-line="94" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/control/ButtonBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="49" column="22" selection-start-line="49" selection-start-column="22" selection-end-line="49" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/javafx-src.zip!/javafx/scene/control/Button.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="237">
+          <caret line="59" column="34" selection-start-line="59" selection-start-column="34" selection-end-line="59" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Button.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="9" column="50" selection-start-line="9" selection-start-column="44" selection-end-line="9" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/NumberElement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="557">
+          <caret line="93" column="1" selection-start-line="93" selection-start-column="1" selection-end-line="93" selection-end-column="1" />
+          <folding>
+            <element signature="e#3388#3389#0" expanded="true" />
+            <element signature="e#3442#3443#0" expanded="true" />
+            <element signature="e#3751#3752#0" expanded="true" />
+            <element signature="e#3784#3785#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/sample.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Menu.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="24" column="9" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="484">
+          <caret line="22" column="47" selection-start-line="22" selection-start-column="47" selection-end-line="22" selection-end-column="47" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/GamePaneController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1040">
+          <caret line="184" column="5" selection-start-line="184" selection-start-column="5" selection-end-line="184" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/GamePane.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="628">
-          <caret line="192" column="39" selection-start-line="192" selection-start-column="39" selection-end-line="192" selection-end-column="39" />
+        <state relative-caret-position="773">
+          <caret line="284" column="0" selection-start-line="284" selection-start-column="0" selection-end-line="284" selection-end-column="0" />
           <folding>
+            <element signature="method#findActionDownAndUp#0;class#GamePane#0" expanded="false" />
             <element signature="method#findActionLeftAndRight#0;class#GamePane#0" expanded="false" />
           </folding>
         </state>

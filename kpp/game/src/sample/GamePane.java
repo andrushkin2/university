@@ -10,13 +10,11 @@ import java.util.Random;
  * Created by User on 10/16/2016.
  */
 public class GamePane extends Pane {
-    private Pane parentPane;
     private BackendTable backendPane;
     private AbsolutePane numbersPane;
     private ArrayList<NumberElement> elements;
     GamePane(Pane parentPane) {
         super();
-        this.parentPane = parentPane;
         parentPane.getChildren().add(this);
         this.setSize(parentPane.getMaxWidth(), parentPane.getMaxHeight());
         this.backendPane = new BackendTable(this);

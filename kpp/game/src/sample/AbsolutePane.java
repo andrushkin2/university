@@ -17,11 +17,9 @@ import java.util.Iterator;
  * Created by User on 10/16/2016.
  */
 public class AbsolutePane extends Pane {
-    private Pane parentPane;
     private final String className = "absolutePane";
     AbsolutePane(Pane parentElement) {
         super();
-        this.parentPane = parentElement;
         this.getStyleClass().add(this.className);
         this.setSize(parentElement.getMaxWidth(), parentElement.getMaxHeight());
         parentElement.getChildren().add(this);
@@ -31,14 +29,6 @@ public class AbsolutePane extends Pane {
     private void setSize(Double width, Double height) {
         this.setMinSize(width, height);
         this.setMaxSize(width, height);
-    }
-    public void show() {
-        this.setVisible(true);
-        this.toFront();
-    }
-    public void hide() {
-        this.toBack();
-        this.setVisible(false);
     }
     public void removeChild(Node child) {
         this.getChildren().remove(child);

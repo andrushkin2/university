@@ -12,7 +12,6 @@ import javafx.scene.text.Text;
  */
 public class Table {
     private GridPane grid;
-    private GridPane firstNode;
     private final String tableClassName = "tableGrid";
     Table(Pane parent) {
         this.grid = new GridPane();
@@ -26,9 +25,6 @@ public class Table {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 GridPane empty = new GridPane();
-                if (i == 0 && j == 0) {
-                    this.firstNode = empty;
-                }
                 empty.setAlignment(Pos.CENTER);
                 Text text = new Text("");
                 empty.add(text, 0, 0);
@@ -49,8 +45,5 @@ public class Table {
     public void hide() {
         this.grid.toBack();
         this.grid.setVisible(false);
-    }
-    public Bounds getBounds() {
-        return this.grid.localToScene(this.firstNode.getBoundsInLocal());
     }
 }

@@ -14,7 +14,4 @@ public class BackendTable extends DialogShield {
         this.table = new Table(this.pane);
         this.table.show();
     }
-    public Bounds getTableBounds() {
-        return this.table.getBounds();
-    }
 }

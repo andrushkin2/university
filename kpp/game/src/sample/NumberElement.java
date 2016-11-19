@@ -85,9 +85,7 @@ public class NumberElement {
     public void setValue(int value) {
         this.element.getStyleClass().remove(this.getClassName(this.value));
         this.value = value;
-        String className = this.getClassName(this.value);
-        this.element.getStyleClass().add(className);
-        //this.element.setOpacity(1);
+        this.element.getStyleClass().add(this.getClassName(this.value));
         this.innerText.setText(String.valueOf(this.value));
     }
     public int getValue() {

@@ -44,9 +44,6 @@ public class DialogShield {
         this.pane.setVisible(false);
         this.pane.toBack();
     }
-    public boolean isVisible() {
-        return this.pane.isVisible();
-    }
     public void appendChild(Parent element) {
         this.pane.getChildren().add(element);
     }
