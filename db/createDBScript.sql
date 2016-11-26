@@ -45,28 +45,28 @@ CREATE TABLE IF NOT EXISTS `mydb`.`serviceEmployeeHash` (
         REFERENCES `mydb`.`employee` (`passportId`)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
+CREATE TABLE IF NOT EXISTS `mydb`.`hole` (
+    `number` INT NOT NULL AUTO_INCREMENT,
+    `comment` VARCHAR(250) NULL,
+    PRIMARY KEY (`number`),
+    UNIQUE INDEX `id_UNIQUE` (`number` ASC)
+);
 CREATE TABLE IF NOT EXISTS `mydb`.`event` (
     `date` DATETIME NOT NULL,
     `clientId` INT NOT NULL,
     `serviceId` INT NOT NULL,
     `holeId` INT NOT NULL,
-    `emplyeeId` INT NOT NULL,
     `comment` VARCHAR(250) NULL,
-    PRIMARY KEY (`clientId` , `serviceId` , `holeId` , `emplyeeId`),
+    PRIMARY KEY (`clientId` , `serviceId`),
     INDEX `fk_serviceId_idx` (`serviceId` ASC),
-    INDEX `fk_holeId_idx` (`holeId` ASC),
-    INDEX `fk_clientId_idx` (`clientId` ASC),
-    INDEX `fk_emplyeeId_idx` (`emplyeeId` ASC),
-    CONSTRAINT `fk_clientIdEvent` FOREIGN KEY (`clientId`)
+    INDEX `fk_event_hole1_idx` (`holeId` ASC),
+    CONSTRAINT `fk_clientId` FOREIGN KEY (`clientId`)
         REFERENCES `mydb`.`client` (`passportId`)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT `fk_serviceIdEvent` FOREIGN KEY (`serviceId`)
+    CONSTRAINT `fk_serviceId` FOREIGN KEY (`serviceId`)
         REFERENCES `mydb`.`service` (`id`)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT `fk_emplyeeIdEvent` FOREIGN KEY (`emplyeeId`)
-        REFERENCES `mydb`.`employee` (`passportId`)
-        ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT `fk_holeIdEvent` FOREIGN KEY (`holeId`)
+    CONSTRAINT `fk_event_hole1` FOREIGN KEY (`holeId`)
         REFERENCES `mydb`.`hole` (`number`)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 )  ENGINE=INNODB
