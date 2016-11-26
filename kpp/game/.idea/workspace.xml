@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/AbsolutePane.java" afterPath="$PROJECT_DIR$/src/sample/AbsolutePane.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/BackendTable.java" afterPath="$PROJECT_DIR$/src/sample/BackendTable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/DialogShield.java" afterPath="$PROJECT_DIR$/src/sample/DialogShield.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/GamePane.java" afterPath="$PROJECT_DIR$/src/sample/GamePane.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Main.java" afterPath="$PROJECT_DIR$/src/sample/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/NumberElement.java" afterPath="$PROJECT_DIR$/src/sample/NumberElement.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sample/Table.java" afterPath="$PROJECT_DIR$/src/sample/Table.java" />
-    </list>
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="" />
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -661,16 +652,16 @@
       <workItem from="1478971714730" duration="6927000" />
       <workItem from="1479139106289" duration="1119000" />
       <workItem from="1479142968910" duration="29000" />
-      <workItem from="1479548310263" duration="19127000" />
+      <workItem from="1479548310263" duration="19484000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="89762000" />
+    <option name="totallyTimeSpent" value="90119000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1096" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32791328" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
