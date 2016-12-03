@@ -12,7 +12,6 @@ import java.util.ArrayList;
  */
 public class MainMenu {
     private DialogShield shield;
-    private ArrayList<Button> buttons;
     private sample.Button newGameButton;
     private sample.Button exit;
     private sample.Button donate;
@@ -20,12 +19,6 @@ public class MainMenu {
         sample.Button button = new Button(text);
         this.shield.appendChild(button);
         return button;
-    }
-    MainMenu(Pane parent, EventHandler<javafx.event.ActionEvent> value, boolean fillParent) {
-        this(parent, value);
-        if (fillParent) {
-            this.shield.fillParent();
-        }
     }
     MainMenu(Pane parent, EventHandler<javafx.event.ActionEvent> newGameEvent) {
         this.shield = new DialogShield(parent);
@@ -40,9 +33,6 @@ public class MainMenu {
         this.exit.setOnAction(event -> {
             Platform.exit();
         });
-    }
-    public void show() {
-        this.shield.show();
     }
     public void hide() {
         this.shield.hide();

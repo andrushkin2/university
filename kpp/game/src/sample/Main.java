@@ -27,7 +27,6 @@ public class Main extends Application {
         primaryStage.setMaximized(false);
         primaryStage.setFullScreen(false);
     }
-    private Menu menu;
     private MainMenu mainMenu;
     private GamePane table;
     private EventHandler<KeyEvent> keyPress;
@@ -55,8 +54,6 @@ public class Main extends Application {
         this.table = new GamePane(root);
         this.table.hide();
         mainScene.getStylesheets().add("sample/styles.css");
-        this.menu = new Menu(root, true);
-        this.menu.hide();
         this.mainMenu = new MainMenu(root, event -> {
             this.mainMenu.hide();
             this.table.show();
