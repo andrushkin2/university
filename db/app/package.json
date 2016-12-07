@@ -1,0 +1,10 @@
+{
+    "name": "app",
+    "version": "0.0.2",
+    "dependencies": {
+        "gulp": "~3.9.1",
+        "gulp-serve": "~1.4.0",
+        "gulp-typescript": "~2.13.6",
+        "tsd": "~0.6.5"
+    }
+}
