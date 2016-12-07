@@ -19,7 +19,9 @@ gulp.task("serve", serve({
     root: ["public", "build"],
     port: 3000,
     https: true,
-    middleware: function(req, res) {}    // custom optional middleware
+    middleware: function(req, res) {
+        debugger;
+    }    // custom optional middleware
 }));
 
 gulp.task("default", () => {
@@ -29,3 +31,6 @@ gulp.task("default", () => {
 gulp.task("watcher", function() {
     //gulp.watch();
 });
+
+
+gulp.start("serve");
