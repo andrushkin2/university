@@ -1,9 +1,15 @@
-(SELECT 
-    MAX(T.soPopular)
+SELECT 
+    service.id, service.name, service.comment
 FROM
-    (SELECT 
-        COUNT(event.clientId) AS soPopular, event.serviceId
-    FROM
-        event
-    GROUP BY event.serviceId) as T) as T2;
+    service
+WHERE
+    service.id = (SELECT 
+            MAX(T.soPopular) AS popularServiceId
+        FROM
+            (SELECT 
+                COUNT(event.clientId) AS soPopular,
+                    event.serviceId AS service
+            FROM
+                event
+            GROUP BY event.serviceId) AS T);
 
