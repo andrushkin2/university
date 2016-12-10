@@ -1,5 +1,5 @@
-SELECT 
-    service.*
+SET @ids = (SELECT 
+	service.id as ids
 FROM
     service
 WHERE
@@ -10,4 +10,9 @@ WHERE
         AND service.id NOT IN (SELECT DISTINCT
             event.serviceId
         FROM
-            event);
+            event));
+            
+		
+DELETE FROM service 
+WHERE
+    service.id IN (@ids);
