@@ -16,6 +16,7 @@ public class Main extends Application {
         GridPane root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Test application");
         GridPane grid = new GridPane();
+        grid.setMinWidth(150);
         ToggleGroup group = new ToggleGroup();
         RadioButton button1 = new RadioButton("Button1");
         button1.setSelected(true);
