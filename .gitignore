@@ -10,7 +10,7 @@
 *.sln.docstates
 
 university.sublime-project
-university.sublime-workspace 
+university.sublime-workspace
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -30,6 +30,10 @@ bld/
 # Visual Studo 2015 cache/options directory
 .vs/
 .vscode/
+
+.idea/
+*.idea
+./*/.idea
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
