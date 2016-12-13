@@ -1,30 +1,14 @@
-SELECT distinct
-    employee.vocation, employee.lastName, employee.passportId, count(serviceEmployeeHash.serviceId) as servicesCount
+SELECT DISTINCT
+    vocation.name as vocationName,
+    service.name as serviceName
 FROM
     employee,
     vocation,
+    service,
     serviceEmployeeHash
 WHERE
-	employee.vocation = vocation.id and employee.passportId = serviceEmployeeHash.employeeId
-    
-group by employee.passportId;
+    employee.vocation = vocation.id
+        AND employee.passportId = serviceEmployeeHash.employeeId
+        AND serviceEmployeeHash.serviceId = service.id
+GROUP BY employee.vocation, service.name;
 
-
-SELECT 
-    vocation.*, COUNT(T.servicesCount)
-FROM
-    vocation,
-    employee,
-    (SELECT 
-			count(serviceEmployeeHash.serviceId) as servicesCount
-		FROM
-			employee,
-			vocation,
-			serviceEmployeeHash
-		WHERE
-			employee.vocation = vocation.id and employee.passportId = serviceEmployeeHash.employeeId
-			
-		group by employee.passportId) as T
-WHERE
-    vocation.id = employee.vocation
-GROUP BY vocation.id;
