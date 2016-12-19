@@ -10,6 +10,7 @@ import java.util.Random;
  * Created by User on 10/16/2016.
  */
 public class GamePane extends Pane {
+
     private BackendTable backendPane;
     private AbsolutePane numbersPane;
     private ArrayList<NumberElement> elements;
