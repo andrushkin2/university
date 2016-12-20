@@ -1566,26 +1566,6 @@ lpm_and2:inst3|lpm_and:lpm_and_component
 
 # end
 # entity
-Bus
-# storage
-db|Arbiter.(0).cnf
-db|Arbiter.(0).cnf
-# case_insensitive
-# source_file
-bus.bdf
-4fbd46b201a2e1299e0e2d387d0767e
-26
-# internal_option {
-BLOCK_DESIGN_NAMING
-AUTO
-}
-# hierarchies {
-|
-}
-# macro_sequence
-
-# end
-# entity
 Devices
 # storage
 db|Arbiter.(1).cnf
@@ -1601,6 +1581,26 @@ AUTO
 }
 # hierarchies {
 Devices:inst
+}
+# macro_sequence
+
+# end
+# entity
+Bus
+# storage
+db|Arbiter.(0).cnf
+db|Arbiter.(0).cnf
+# case_insensitive
+# source_file
+bus.bdf
+dadf211397f350a74e959c5bdf4aaec4
+26
+# internal_option {
+BLOCK_DESIGN_NAMING
+AUTO
+}
+# hierarchies {
+|
 }
 # macro_sequence
 

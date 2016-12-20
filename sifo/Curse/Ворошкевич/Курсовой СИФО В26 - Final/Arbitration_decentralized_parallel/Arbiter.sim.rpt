@@ -1,5 +1,5 @@
 Simulator report for Arbiter
-Mon Dec 19 11:02:48 2016
+Tue Dec 20 07:08:08 2016
 Quartus II Version 9.1 Build 222 10/21/2009 SJ Web Edition
 
 
@@ -77,7 +77,7 @@ applicable agreement for further details.
 ; Preserve fewer signal transitions to reduce memory requirements                            ; On                   ; On            ;
 ; Trigger vector comparison with the specified mode                                          ; INPUT_EDGE           ; INPUT_EDGE    ;
 ; Disable setup and hold time violations detection in input registers of bi-directional pins ; Off                  ; Off           ;
-; Overwrite Waveform Inputs With Simulation Outputs                                          ; Off                  ;               ;
+; Overwrite Waveform Inputs With Simulation Outputs                                          ; On                   ;               ;
 ; Perform Glitch Filtering in Timing Simulation                                              ; Auto                 ; Auto          ;
 +--------------------------------------------------------------------------------------------+----------------------+---------------+
 
@@ -219,18 +219,21 @@ The following table displays output ports that do not toggle to 0 during simulat
 Info: *******************************************************************
 Info: Running Quartus II Simulator
     Info: Version 9.1 Build 222 10/21/2009 SJ Web Edition
-    Info: Processing started: Mon Dec 19 11:02:48 2016
+    Info: Processing started: Tue Dec 20 07:08:07 2016
 Info: Command: quartus_sim --read_settings_files=on --write_settings_files=off Arbitration_decentralized_parallel -c Arbiter
-Info: Using vector source file "D:/StudFiles/—Ë‘Œ/ ”–—Œ¬Œ…/¬ –¿¡Œ“≈/ÀÓÈÍÓ/ ÛÒÓ‚ÓÈ —»‘Œ ¬26 - Final/Arbitration_decentralized_parallel/Arbitration_test.vwf"
+Info: Using vector source file "C:/work/university/sifo/Curse/¬ÓÓ¯ÍÂ‚Ë˜/ ÛÒÓ‚ÓÈ —»‘Œ ¬26 - Final/Arbitration_decentralized_parallel/Arbitration_test.vwf"
+Info: Overwriting simulation input file with simulation results
+    Info: A backup of Arbitration_test.vwf called Arbiter.sim_ori.vwf has been created in the db folder
 Info: Option to preserve fewer signal transitions to reduce memory requirements is enabled
     Info: Simulation has been partitioned into sub-simulations according to the maximum transition count determined by the engine. Transitions from memory will be flushed out to disk at the end of each sub-simulation to reduce memory requirements.
 Info: Simulation partitioned into 1 sub-simulations
 Info: Simulation coverage is      83.10 %
 Info: Number of transitions in simulation is 5062
+Info: Vector file Arbitration_test.vwf is saved in VWF text format. You can compress it into CVWF format in order to reduce file size. For more details please refer to the Quartus II Help.
 Info: Quartus II Simulator was successful. 0 errors, 0 warnings
-    Info: Peak virtual memory: 154 megabytes
-    Info: Processing ended: Mon Dec 19 11:02:48 2016
-    Info: Elapsed time: 00:00:00
+    Info: Peak virtual memory: 160 megabytes
+    Info: Processing ended: Tue Dec 20 07:08:08 2016
+    Info: Elapsed time: 00:00:01
     Info: Total CPU time (on all processors): 00:00:00
 
 

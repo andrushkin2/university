@@ -1,5 +1,5 @@
 Assembler report for Predictor
-Mon Dec 19 12:09:21 2016
+Tue Dec 20 07:53:47 2016
 Quartus II Version 9.1 Build 222 10/21/2009 SJ Web Edition
 
 
@@ -10,8 +10,8 @@ Quartus II Version 9.1 Build 222 10/21/2009 SJ Web Edition
   2. Assembler Summary
   3. Assembler Settings
   4. Assembler Generated Files
-  5. Assembler Device Options: D:/StudFiles/СиФО/КУРСОВОЙ/В РАБОТЕ/Лойко/Курсовой СИФО В26 - Final/Branch_prediction_A2_3bit_PC_GHR_mod2/Predictor.sof
-  6. Assembler Device Options: D:/StudFiles/СиФО/КУРСОВОЙ/В РАБОТЕ/Лойко/Курсовой СИФО В26 - Final/Branch_prediction_A2_3bit_PC_GHR_mod2/Predictor.pof
+  5. Assembler Device Options: C:/work/university/sifo/Curse/Ворошкевич/Курсовой СИФО В26 - Final/Branch_prediction_A2_3bit_PC_GHR_mod2/Predictor.sof
+  6. Assembler Device Options: C:/work/university/sifo/Curse/Ворошкевич/Курсовой СИФО В26 - Final/Branch_prediction_A2_3bit_PC_GHR_mod2/Predictor.pof
   7. Assembler Messages
 
 
@@ -38,7 +38,7 @@ applicable agreement for further details.
 +---------------------------------------------------------------+
 ; Assembler Summary                                             ;
 +-----------------------+---------------------------------------+
-; Assembler Status      ; Successful - Mon Dec 19 12:09:21 2016 ;
+; Assembler Status      ; Successful - Tue Dec 20 07:53:47 2016 ;
 ; Revision Name         ; Predictor                             ;
 ; Top-level Entity Name ; Predictor                             ;
 ; Family                ; Stratix II GX                         ;
@@ -77,37 +77,37 @@ applicable agreement for further details.
 +-----------------------------------------------------------------------------+----------+---------------+
 
 
-+-------------------------------------------------------------------------------------------------------------------------+
-; Assembler Generated Files                                                                                               ;
-+-------------------------------------------------------------------------------------------------------------------------+
-; File Name                                                                                                               ;
-+-------------------------------------------------------------------------------------------------------------------------+
-; D:/StudFiles/СиФО/КУРСОВОЙ/В РАБОТЕ/Лойко/Курсовой СИФО В26 - Final/Branch_prediction_A2_3bit_PC_GHR_mod2/Predictor.sof ;
-; D:/StudFiles/СиФО/КУРСОВОЙ/В РАБОТЕ/Лойко/Курсовой СИФО В26 - Final/Branch_prediction_A2_3bit_PC_GHR_mod2/Predictor.pof ;
-+-------------------------------------------------------------------------------------------------------------------------+
++------------------------------------------------------------------------------------------------------------------------+
+; Assembler Generated Files                                                                                              ;
++------------------------------------------------------------------------------------------------------------------------+
+; File Name                                                                                                              ;
++------------------------------------------------------------------------------------------------------------------------+
+; C:/work/university/sifo/Curse/Ворошкевич/Курсовой СИФО В26 - Final/Branch_prediction_A2_3bit_PC_GHR_mod2/Predictor.sof ;
+; C:/work/university/sifo/Curse/Ворошкевич/Курсовой СИФО В26 - Final/Branch_prediction_A2_3bit_PC_GHR_mod2/Predictor.pof ;
++------------------------------------------------------------------------------------------------------------------------+
 
 
-+---------------------------------------------------------------------------------------------------------------------------------------------------+
-; Assembler Device Options: D:/StudFiles/СиФО/КУРСОВОЙ/В РАБОТЕ/Лойко/Курсовой СИФО В26 - Final/Branch_prediction_A2_3bit_PC_GHR_mod2/Predictor.sof ;
-+----------------+----------------------------------------------------------------------------------------------------------------------------------+
-; Option         ; Setting                                                                                                                          ;
-+----------------+----------------------------------------------------------------------------------------------------------------------------------+
-; Device         ; EP2SGX30DF780C3                                                                                                                  ;
-; JTAG usercode  ; 0xFFFFFFFF                                                                                                                       ;
-; Checksum       ; 0x0048C31F                                                                                                                       ;
-+----------------+----------------------------------------------------------------------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------------------------------------+
+; Assembler Device Options: C:/work/university/sifo/Curse/Ворошкевич/Курсовой СИФО В26 - Final/Branch_prediction_A2_3bit_PC_GHR_mod2/Predictor.sof ;
++----------------+---------------------------------------------------------------------------------------------------------------------------------+
+; Option         ; Setting                                                                                                                         ;
++----------------+---------------------------------------------------------------------------------------------------------------------------------+
+; Device         ; EP2SGX30DF780C3                                                                                                                 ;
+; JTAG usercode  ; 0xFFFFFFFF                                                                                                                      ;
+; Checksum       ; 0x0048C31F                                                                                                                      ;
++----------------+---------------------------------------------------------------------------------------------------------------------------------+
 
 
-+---------------------------------------------------------------------------------------------------------------------------------------------------+
-; Assembler Device Options: D:/StudFiles/СиФО/КУРСОВОЙ/В РАБОТЕ/Лойко/Курсовой СИФО В26 - Final/Branch_prediction_A2_3bit_PC_GHR_mod2/Predictor.pof ;
-+--------------------+------------------------------------------------------------------------------------------------------------------------------+
-; Option             ; Setting                                                                                                                      ;
-+--------------------+------------------------------------------------------------------------------------------------------------------------------+
-; Device             ; EPC16                                                                                                                        ;
-; JTAG usercode      ; 0xFFFFFFFF                                                                                                                   ;
-; Checksum           ; 0x1E02B6EE                                                                                                                   ;
-; Compression Ratio  ; 3                                                                                                                            ;
-+--------------------+------------------------------------------------------------------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------------------------------------+
+; Assembler Device Options: C:/work/university/sifo/Curse/Ворошкевич/Курсовой СИФО В26 - Final/Branch_prediction_A2_3bit_PC_GHR_mod2/Predictor.pof ;
++--------------------+-----------------------------------------------------------------------------------------------------------------------------+
+; Option             ; Setting                                                                                                                     ;
++--------------------+-----------------------------------------------------------------------------------------------------------------------------+
+; Device             ; EPC16                                                                                                                       ;
+; JTAG usercode      ; 0xFFFFFFFF                                                                                                                  ;
+; Checksum           ; 0x1E02B6EE                                                                                                                  ;
+; Compression Ratio  ; 3                                                                                                                           ;
++--------------------+-----------------------------------------------------------------------------------------------------------------------------+
 
 
 +--------------------+
@@ -116,14 +116,14 @@ applicable agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus II Assembler
     Info: Version 9.1 Build 222 10/21/2009 SJ Web Edition
-    Info: Processing started: Mon Dec 19 12:09:19 2016
+    Info: Processing started: Tue Dec 20 07:53:45 2016
 Info: Command: quartus_asm --read_settings_files=off --write_settings_files=off Branch_prediction_A2_3_PC_GHR_mod2 -c Predictor
 Info: Writing out detailed assembly data for power analysis
 Info: Assembler is generating device programming files
 Info: Quartus II Assembler was successful. 0 errors, 0 warnings
-    Info: Peak virtual memory: 282 megabytes
-    Info: Processing ended: Mon Dec 19 12:09:21 2016
+    Info: Peak virtual memory: 289 megabytes
+    Info: Processing ended: Tue Dec 20 07:53:47 2016
     Info: Elapsed time: 00:00:02
-    Info: Total CPU time (on all processors): 00:00:02
+    Info: Total CPU time (on all processors): 00:00:03
 
 

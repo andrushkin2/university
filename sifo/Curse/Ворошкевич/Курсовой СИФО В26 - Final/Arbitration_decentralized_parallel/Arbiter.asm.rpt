@@ -1,5 +1,5 @@
 Assembler report for Arbiter
-Thu May 09 19:53:23 2013
+Tue Dec 20 07:07:44 2016
 Quartus II Version 9.1 Build 222 10/21/2009 SJ Web Edition
 
 
@@ -10,8 +10,8 @@ Quartus II Version 9.1 Build 222 10/21/2009 SJ Web Edition
   2. Assembler Summary
   3. Assembler Settings
   4. Assembler Generated Files
-  5. Assembler Device Options: C:/Users/Alukar/Desktop/Курсовой_СИФО/Курсовой СИФО В26 - Final/Arbitration_decentralized_parallel/Arbiter.sof
-  6. Assembler Device Options: C:/Users/Alukar/Desktop/Курсовой_СИФО/Курсовой СИФО В26 - Final/Arbitration_decentralized_parallel/Arbiter.pof
+  5. Assembler Device Options: C:/work/university/sifo/Curse/Ворошкевич/Курсовой СИФО В26 - Final/Arbitration_decentralized_parallel/Arbiter.sof
+  6. Assembler Device Options: C:/work/university/sifo/Curse/Ворошкевич/Курсовой СИФО В26 - Final/Arbitration_decentralized_parallel/Arbiter.pof
   7. Assembler Messages
 
 
@@ -38,7 +38,7 @@ applicable agreement for further details.
 +---------------------------------------------------------------+
 ; Assembler Summary                                             ;
 +-----------------------+---------------------------------------+
-; Assembler Status      ; Successful - Thu May 09 19:53:23 2013 ;
+; Assembler Status      ; Successful - Tue Dec 20 07:07:44 2016 ;
 ; Revision Name         ; Arbiter                               ;
 ; Top-level Entity Name ; Bus                                   ;
 ; Family                ; Stratix II GX                         ;
@@ -77,37 +77,37 @@ applicable agreement for further details.
 +-----------------------------------------------------------------------------+----------+---------------+
 
 
-+----------------------------------------------------------------------------------------------------------------+
-; Assembler Generated Files                                                                                      ;
-+----------------------------------------------------------------------------------------------------------------+
-; File Name                                                                                                      ;
-+----------------------------------------------------------------------------------------------------------------+
-; C:/Users/Alukar/Desktop/Курсовой_СИФО/Курсовой СИФО В26 - Final/Arbitration_decentralized_parallel/Arbiter.sof ;
-; C:/Users/Alukar/Desktop/Курсовой_СИФО/Курсовой СИФО В26 - Final/Arbitration_decentralized_parallel/Arbiter.pof ;
-+----------------------------------------------------------------------------------------------------------------+
++-------------------------------------------------------------------------------------------------------------------+
+; Assembler Generated Files                                                                                         ;
++-------------------------------------------------------------------------------------------------------------------+
+; File Name                                                                                                         ;
++-------------------------------------------------------------------------------------------------------------------+
+; C:/work/university/sifo/Curse/Ворошкевич/Курсовой СИФО В26 - Final/Arbitration_decentralized_parallel/Arbiter.sof ;
+; C:/work/university/sifo/Curse/Ворошкевич/Курсовой СИФО В26 - Final/Arbitration_decentralized_parallel/Arbiter.pof ;
++-------------------------------------------------------------------------------------------------------------------+
 
 
-+------------------------------------------------------------------------------------------------------------------------------------------+
-; Assembler Device Options: C:/Users/Alukar/Desktop/Курсовой_СИФО/Курсовой СИФО В26 - Final/Arbitration_decentralized_parallel/Arbiter.sof ;
-+----------------+-------------------------------------------------------------------------------------------------------------------------+
-; Option         ; Setting                                                                                                                 ;
-+----------------+-------------------------------------------------------------------------------------------------------------------------+
-; Device         ; EP2SGX30DF780C3                                                                                                         ;
-; JTAG usercode  ; 0xFFFFFFFF                                                                                                              ;
-; Checksum       ; 0x0048FCCC                                                                                                              ;
-+----------------+-------------------------------------------------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------------------------------------------------------+
+; Assembler Device Options: C:/work/university/sifo/Curse/Ворошкевич/Курсовой СИФО В26 - Final/Arbitration_decentralized_parallel/Arbiter.sof ;
++----------------+----------------------------------------------------------------------------------------------------------------------------+
+; Option         ; Setting                                                                                                                    ;
++----------------+----------------------------------------------------------------------------------------------------------------------------+
+; Device         ; EP2SGX30DF780C3                                                                                                            ;
+; JTAG usercode  ; 0xFFFFFFFF                                                                                                                 ;
+; Checksum       ; 0x0048FCCC                                                                                                                 ;
++----------------+----------------------------------------------------------------------------------------------------------------------------+
 
 
-+------------------------------------------------------------------------------------------------------------------------------------------+
-; Assembler Device Options: C:/Users/Alukar/Desktop/Курсовой_СИФО/Курсовой СИФО В26 - Final/Arbitration_decentralized_parallel/Arbiter.pof ;
-+--------------------+---------------------------------------------------------------------------------------------------------------------+
-; Option             ; Setting                                                                                                             ;
-+--------------------+---------------------------------------------------------------------------------------------------------------------+
-; Device             ; EPC16                                                                                                               ;
-; JTAG usercode      ; 0xFFFFFFFF                                                                                                          ;
-; Checksum           ; 0x1E01E188                                                                                                          ;
-; Compression Ratio  ; 3                                                                                                                   ;
-+--------------------+---------------------------------------------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------------------------------------------------------+
+; Assembler Device Options: C:/work/university/sifo/Curse/Ворошкевич/Курсовой СИФО В26 - Final/Arbitration_decentralized_parallel/Arbiter.pof ;
++--------------------+------------------------------------------------------------------------------------------------------------------------+
+; Option             ; Setting                                                                                                                ;
++--------------------+------------------------------------------------------------------------------------------------------------------------+
+; Device             ; EPC16                                                                                                                  ;
+; JTAG usercode      ; 0xFFFFFFFF                                                                                                             ;
+; Checksum           ; 0x1E01E188                                                                                                             ;
+; Compression Ratio  ; 3                                                                                                                      ;
++--------------------+------------------------------------------------------------------------------------------------------------------------+
 
 
 +--------------------+
@@ -116,14 +116,14 @@ applicable agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus II Assembler
     Info: Version 9.1 Build 222 10/21/2009 SJ Web Edition
-    Info: Processing started: Thu May 09 19:53:20 2013
+    Info: Processing started: Tue Dec 20 07:07:41 2016
 Info: Command: quartus_asm --read_settings_files=off --write_settings_files=off Arbitration_decentralized_parallel -c Arbiter
 Info: Writing out detailed assembly data for power analysis
 Info: Assembler is generating device programming files
 Info: Quartus II Assembler was successful. 0 errors, 0 warnings
-    Info: Peak virtual memory: 256 megabytes
-    Info: Processing ended: Thu May 09 19:53:23 2013
+    Info: Peak virtual memory: 288 megabytes
+    Info: Processing ended: Tue Dec 20 07:07:44 2016
     Info: Elapsed time: 00:00:03
-    Info: Total CPU time (on all processors): 00:00:04
+    Info: Total CPU time (on all processors): 00:00:03
 
 
