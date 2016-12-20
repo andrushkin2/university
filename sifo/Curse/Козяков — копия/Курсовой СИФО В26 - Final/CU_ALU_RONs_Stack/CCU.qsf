@@ -25,12 +25,11 @@
 
 set_global_assignment -name DEVICE AUTO
 set_global_assignment -name FAMILY "Cyclone III"
-set_global_assignment -name TOP_LEVEL_ENTITY CU
+set_global_assignment -name TOP_LEVEL_ENTITY ALU
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION "7.1 SP1"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "18:28:41  APRIL 11, 2010"
 set_global_assignment -name LAST_QUARTUS_VERSION 9.1
 set_global_assignment -name SIMULATION_MODE FUNCTIONAL
-set_global_assignment -name INCREMENTAL_VECTOR_INPUT_SOURCE CPU_test.vwf
 set_global_assignment -name BDF_FILE CPU.bdf
 set_global_assignment -name VECTOR_WAVEFORM_FILE CPU_test.vwf
 set_global_assignment -name BDF_FILE CU.bdf
@@ -51,6 +50,7 @@ set_global_assignment -name ENABLE_INIT_DONE_OUTPUT ON
 set_global_assignment -name QIP_FILE lpm_or4.qip
 set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
 set_global_assignment -name INCREMENTAL_COMPILATION OFF
+set_global_assignment -name INCREMENTAL_VECTOR_INPUT_SOURCE RONs_test.vwf
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
