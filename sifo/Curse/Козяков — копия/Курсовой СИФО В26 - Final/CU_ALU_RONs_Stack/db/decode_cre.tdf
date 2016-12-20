@@ -1,0 +1,56 @@
+--lpm_decode CASCADE_CHAIN="MANUAL" DEVICE_FAMILY="FLEX10K" IGNORE_CASCADE_BUFFERS="OFF" LPM_DECODES=4 LPM_WIDTH=2 data eq CARRY_CHAIN="MANUAL" CARRY_CHAIN_LENGTH=32
+--VERSION_BEGIN 9.0SP2 cbx_cycloneii 2008:05:19:10:57:37:SJ cbx_lpm_add_sub 2009:05:07:10:25:28:SJ cbx_lpm_compare 2009:02:03:01:43:16:SJ cbx_lpm_decode 2008:05:19:10:39:27:SJ cbx_mgl 2009:02:26:16:06:21:SJ cbx_stratix 2008:09:18:16:08:35:SJ cbx_stratixii 2008:11:14:16:08:42:SJ  VERSION_END
+
+
+-- Copyright (C) 1991-2009 Altera Corporation
+--  Your use of Altera Corporation's design tools, logic functions 
+--  and other software and tools, and its AMPP partner logic 
+--  functions, and any output files from any of the foregoing 
+--  (including device programming or simulation files), and any 
+--  associated documentation or information are expressly subject 
+--  to the terms and conditions of the Altera Program License 
+--  Subscription Agreement, Altera MegaCore Function License 
+--  Agreement, or other applicable license agreement, including, 
+--  without limitation, that your use is for the sole purpose of 
+--  programming logic devices manufactured by Altera and sold by 
+--  Altera or its authorized distributors.  Please refer to the 
+--  applicable agreement for further details.
+
+
+FUNCTION cmpr_tlc (dataa[1..0], datab[1..0])
+RETURNS ( aeb);
+
+--synthesis_resources = 
+SUBDESIGN decode_cre
+( 
+	data[1..0]	:	input;
+	eq[3..0]	:	output;
+) 
+VARIABLE 
+	cmpr1 : cmpr_tlc;
+	cmpr2 : cmpr_tlc;
+	cmpr3 : cmpr_tlc;
+	cmpr4 : cmpr_tlc;
+	const_data0w[1..0]	: WIRE;
+	const_data1w[1..0]	: WIRE;
+	const_data2w[1..0]	: WIRE;
+	const_data3w[1..0]	: WIRE;
+	eq_node[3..0]	: WIRE;
+
+BEGIN 
+	cmpr1.dataa[] = data[];
+	cmpr1.datab[] = const_data0w[];
+	cmpr2.dataa[] = data[];
+	cmpr2.datab[] = const_data1w[];
+	cmpr3.dataa[] = data[];
+	cmpr3.datab[] = const_data2w[];
+	cmpr4.dataa[] = data[];
+	cmpr4.datab[] = const_data3w[];
+	const_data0w[] = B"00";
+	const_data1w[] = B"01";
+	const_data2w[] = B"10";
+	const_data3w[] = B"11";
+	eq[] = eq_node[];
+	eq_node[] = ( cmpr4.aeb, cmpr3.aeb, cmpr2.aeb, cmpr1.aeb);
+END;
+--VALID FILE

@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<LOG_ROOT>
+	<PROJECT NAME="CCU">
+		<CBX_INST_ENTRY INSTANCE_NAME="|CU|LPM_RAM_IO:inst50|altram:sram|altsyncram:ram_block" CBX_FILE_NAME="altsyncram_3p91.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|CU|lpm_counter2:inst15|lpm_counter:lpm_counter_component" CBX_FILE_NAME="cntr_bri.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|CU|LPM_RAM_IO:inst51|altram:sram|altsyncram:ram_block" CBX_FILE_NAME="altsyncram_14a1.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|CU|lpm_counter0:inst47|lpm_counter:lpm_counter_component" CBX_FILE_NAME="cntr_odj.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|CU|lpm_decode1:inst35|lpm_decode:lpm_decode_component" CBX_FILE_NAME="decode_0af.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|CU|lpm_counter6:inst26|lpm_counter:lpm_counter_component" CBX_FILE_NAME="cntr_ari.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|CU|lpm_decode0:inst105|lpm_decode:lpm_decode_component" CBX_FILE_NAME="decode_fdf.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|CU|lpm_decode0:inst110|lpm_decode:lpm_decode_component" CBX_FILE_NAME="decode_fdf.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|CU|lpm_decode5:inst49|lpm_decode:lpm_decode_component" CBX_FILE_NAME="decode_5af.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|CU|parallel_add0:inst65|parallel_add:parallel_add_component" CBX_FILE_NAME="par_add_7ue.tdf"/>
+	</PROJECT>
+</LOG_ROOT>

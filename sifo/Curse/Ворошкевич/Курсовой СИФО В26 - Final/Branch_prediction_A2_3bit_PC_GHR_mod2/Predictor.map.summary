@@ -1,0 +1,17 @@
+Analysis & Synthesis Status : Successful - Mon Dec 19 12:09:12 2016
+Quartus II Version : 9.1 Build 222 10/21/2009 SJ Web Edition
+Revision Name : Predictor
+Top-level Entity Name : Predictor
+Family : Stratix II GX
+Logic utilization : N/A
+    Combinational ALUTs : 3
+    Dedicated logic registers : 3
+Total registers : 3
+Total pins : 11
+Total virtual pins : 0
+Total block memory bits : 0
+DSP block 9-bit elements : 0
+Total GXB Receiver Channels : 0
+Total GXB Transmitter Channels : 0
+Total PLLs : 0
+Total DLLs : 0

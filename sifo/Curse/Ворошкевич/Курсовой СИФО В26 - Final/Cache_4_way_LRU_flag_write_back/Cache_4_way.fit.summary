@@ -1,0 +1,19 @@
+Fitter Status : Successful - Wed May 08 17:56:49 2013
+Quartus II Version : 9.1 Build 222 10/21/2009 SJ Web Edition
+Revision Name : Cache_4_way
+Top-level Entity Name : Cache_4_way
+Family : Stratix II GX
+Device : EP2SGX30DF780C3
+Timing Models : Final
+Logic utilization : 2 %
+    Combinational ALUTs : 372 / 27,104 ( 1 % )
+    Dedicated logic registers : 256 / 27,104 ( < 1 % )
+Total registers : 256
+Total pins : 181 / 406 ( 45 % )
+Total virtual pins : 0
+Total block memory bits : 2,048 / 1,369,728 ( < 1 % )
+DSP block 9-bit elements : 0 / 128 ( 0 % )
+Total GXB Receiver Channels : 0 / 8 ( 0 % )
+Total GXB Transmitter Channels : 0 / 8 ( 0 % )
+Total PLLs : 0 / 4 ( 0 % )
+Total DLLs : 0 / 2 ( 0 % )

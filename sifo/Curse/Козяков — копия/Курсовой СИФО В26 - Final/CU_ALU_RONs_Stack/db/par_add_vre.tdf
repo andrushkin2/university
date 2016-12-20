@@ -1,0 +1,48 @@
+--parallel_add DEVICE_FAMILY="Arria II GX" MSW_SUBTRACT="NO" PIPELINE=0 REPRESENTATION="UNSIGNED" RESULT_ALIGNMENT="LSB" SHIFT=0 SIZE=3 WIDTH=16 WIDTHR=16 data result
+--VERSION_BEGIN 9.1 cbx_cycloneii 2009:10:21:21:22:16:SJ cbx_lpm_add_sub 2009:10:21:21:22:16:SJ cbx_mgl 2009:10:21:21:37:49:SJ cbx_padd 2009:10:21:21:22:16:SJ cbx_parallel_add 2009:10:21:21:22:16:SJ cbx_stratix 2009:10:21:21:22:16:SJ cbx_stratixii 2009:10:21:21:22:16:SJ cbx_util_mgl 2009:10:21:21:22:16:SJ  VERSION_END
+
+
+-- Copyright (C) 1991-2009 Altera Corporation
+--  Your use of Altera Corporation's design tools, logic functions 
+--  and other software and tools, and its AMPP partner logic 
+--  functions, and any output files from any of the foregoing 
+--  (including device programming or simulation files), and any 
+--  associated documentation or information are expressly subject 
+--  to the terms and conditions of the Altera Program License 
+--  Subscription Agreement, Altera MegaCore Function License 
+--  Agreement, or other applicable license agreement, including, 
+--  without limitation, that your use is for the sole purpose of 
+--  programming logic devices manufactured by Altera and sold by 
+--  Altera or its authorized distributors.  Please refer to the 
+--  applicable agreement for further details.
+
+
+FUNCTION soft (in)
+RETURNS ( out);
+
+--synthesis_resources = lut 36 
+SUBDESIGN par_add_vre
+( 
+	data[47..0]	:	input;
+	result[15..0]	:	output;
+) 
+VARIABLE
+	add1_result[17..0]	:	WIRE;
+	sft2a[17..0] : soft;
+	sft3a[17..0] : soft;
+	sft4a[17..0] : soft;
+	sft5a[17..0] : soft;
+	w118w	: WIRE;
+	w143w[17..0]	: WIRE;
+
+BEGIN 
+	add1_result[] = sft2a[].out + sft3a[].out + sft4a[].out;
+	sft2a[].in = ( w118w, ( w118w, ( data[15..15], ( data[14..14], ( data[13..13], ( data[12..12], ( data[11..11], ( data[10..10], ( data[9..9], ( data[8..8], ( data[7..7], ( data[6..6], ( data[5..5], ( data[4..4], ( data[3..3], ( data[2..2], ( data[1..0])))))))))))))))));
+	sft3a[].in = ( w118w, ( w118w, ( data[31..31], ( data[30..30], ( data[29..29], ( data[28..28], ( data[27..27], ( data[26..26], ( data[25..25], ( data[24..24], ( data[23..23], ( data[22..22], ( data[21..21], ( data[20..20], ( data[19..19], ( data[18..18], ( data[17..16])))))))))))))))));
+	sft4a[].in = ( w118w, ( w118w, ( data[47..47], ( data[46..46], ( data[45..45], ( data[44..44], ( data[43..43], ( data[42..42], ( data[41..41], ( data[40..40], ( data[39..39], ( data[38..38], ( data[37..37], ( data[36..36], ( data[35..35], ( data[34..34], ( data[33..32])))))))))))))))));
+	sft5a[].in = add1_result[];
+	result[15..0] = w143w[15..0];
+	w118w = B"0";
+	w143w[] = ( sft5a[17..17].out, sft5a[16..16].out, sft5a[15..15].out, sft5a[14..14].out, sft5a[13..13].out, sft5a[12..12].out, sft5a[11..11].out, sft5a[10..10].out, sft5a[9..9].out, sft5a[8..8].out, sft5a[7..7].out, sft5a[6..6].out, sft5a[5..5].out, sft5a[4..4].out, sft5a[3..3].out, sft5a[2..2].out, sft5a[1..1].out, sft5a[0..0].out);
+END;
+--VALID FILE

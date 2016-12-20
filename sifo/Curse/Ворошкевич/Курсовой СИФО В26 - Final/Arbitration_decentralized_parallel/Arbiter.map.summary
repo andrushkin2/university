@@ -1,0 +1,17 @@
+Analysis & Synthesis Status : Successful - Thu May 09 19:53:09 2013
+Quartus II Version : 9.1 Build 222 10/21/2009 SJ Web Edition
+Revision Name : Arbiter
+Top-level Entity Name : Bus
+Family : Stratix II GX
+Logic utilization : N/A
+    Combinational ALUTs : 27
+    Dedicated logic registers : 12
+Total registers : 12
+Total pins : 7
+Total virtual pins : 0
+Total block memory bits : 0
+DSP block 9-bit elements : 0
+Total GXB Receiver Channels : 0
+Total GXB Transmitter Channels : 0
+Total PLLs : 0
+Total DLLs : 0

@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<LOG_ROOT>
+	<PROJECT NAME="Arbiter">
+		<CBX_INST_ENTRY INSTANCE_NAME="|Bus|Devices:inst|LPM_COUNTER:inst" CBX_FILE_NAME="cntr_stl.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|Bus|Devices:inst|LPM_COUNTER:inst1" CBX_FILE_NAME="cntr_utl.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|Bus|Devices:inst|LPM_COUNTER:inst2" CBX_FILE_NAME="cntr_vtl.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|Bus|Devices:inst|LPM_COUNTER:inst3" CBX_FILE_NAME="cntr_rtl.tdf"/>
+	</PROJECT>
+</LOG_ROOT>
