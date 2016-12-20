@@ -1,5 +1,5 @@
 Simulator report for Arbiter
-Tue Dec 20 07:08:08 2016
+Tue Dec 20 09:17:47 2016
 Quartus II Version 9.1 Build 222 10/21/2009 SJ Web Edition
 
 
@@ -219,7 +219,7 @@ The following table displays output ports that do not toggle to 0 during simulat
 Info: *******************************************************************
 Info: Running Quartus II Simulator
     Info: Version 9.1 Build 222 10/21/2009 SJ Web Edition
-    Info: Processing started: Tue Dec 20 07:08:07 2016
+    Info: Processing started: Tue Dec 20 09:17:47 2016
 Info: Command: quartus_sim --read_settings_files=on --write_settings_files=off Arbitration_decentralized_parallel -c Arbiter
 Info: Using vector source file "C:/work/university/sifo/Curse/Ворошкевич/Курсовой СИФО В26 - Final/Arbitration_decentralized_parallel/Arbitration_test.vwf"
 Info: Overwriting simulation input file with simulation results
@@ -231,9 +231,9 @@ Info: Simulation coverage is      83.10 %
 Info: Number of transitions in simulation is 5062
 Info: Vector file Arbitration_test.vwf is saved in VWF text format. You can compress it into CVWF format in order to reduce file size. For more details please refer to the Quartus II Help.
 Info: Quartus II Simulator was successful. 0 errors, 0 warnings
-    Info: Peak virtual memory: 160 megabytes
-    Info: Processing ended: Tue Dec 20 07:08:08 2016
-    Info: Elapsed time: 00:00:01
+    Info: Peak virtual memory: 161 megabytes
+    Info: Processing ended: Tue Dec 20 09:17:47 2016
+    Info: Elapsed time: 00:00:00
     Info: Total CPU time (on all processors): 00:00:00
 
 
