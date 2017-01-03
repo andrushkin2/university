@@ -1,36 +1,64 @@
 
 import gulp = require("gulp");
-import fs = require("fs");
-import ts = require("gulp-typescript");
+import * as ts from "typescript";
+import * as fs from "fs";
+import * as browserify from "browserify";
+import * as tsify from "tsify";
 
-let serve = require("gulp-serve"),
-    devFolderPath = "./dev",
-    outPut = "./bin/",
-    outPutTs = `${outPut}ts/`,
-    outPutJs = `${outPut}js/`;
+
+let devFolderPath = "./public/dev",
+    tsConfig: ts.CompilerOptions = JSON.parse(fs.readFileSync("./tsconfig.json", "utf-8")),
+    outPut = "./public/scripts",
+    outPutJs = `${outPut}/js/`,
+    createPathToDev = (file: string) => {
+        return `${devFolderPath}/${file}`;
+    },
+    compileDevFolder = (pathToFile: string[]) => {
+        let program: ts.Program = ts.createProgram(pathToFile.map(file => {
+            return createPathToDev(file);
+        }), tsConfig);
+        let emitResult = program.emit();
+
+        let allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
+
+        allDiagnostics.forEach(diagnostic => {
+            let stat = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+            let line = stat.line;
+            let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
+
+            //colorize input
+            process.stdout.write("\x1b[31m");
+            process.stdout.write(`Message: ${message} \n`);
+            process.stdout.write("\x1b[37m");
+            process.stdout.write(`File: ${diagnostic.file.fileName} \n`);
+            process.stdout.write("\x1b[32m");
+            process.stdout.write(`Line: ${ diagnostic.file.getText().split("\n")[line].trim() } \n`);
+            process.stdout.write("\x1b[37m");
+            process.stdout.write("\n");
+        });
+
+        if (!allDiagnostics.length) {
+            pathToFile.forEach(file => {
+                let fileName: string = createPathToDev(file.replace(".ts", ".js"));
+                browserify(fileName).bundle();
+            });
+            process.stdout.write("Compilation end\n");
+        }
+    };
 
 gulp.task("tsBuild", function() {
-    let tsProject: ts.Project = ts.createProject("./tsconfig.json"),
-        typescriptResult = gulp.src(`${devFolderPath}/**/*.ts`).pipe(<any>ts(tsProject));
-    return typescriptResult.js.pipe(gulp.dest("./build"));
+    compileDevFolder(fs.readdirSync(devFolderPath).filter(file => {
+        return file.endsWith(".ts");
+    }));
 });
 
-gulp.task("serve", serve({
-    root: ["public", "build"],
-    port: 3000,
-    https: true,
-    middleware: function(req, res) {
-        debugger;
-    }    // custom optional middleware
-}));
 
 gulp.task("default", () => {
-
+    gulp.start("watcher");
 });
 
-gulp.task("watcher", function() {
-    //gulp.watch();
+gulp.task("watcher", () => {
+    fs.watch(devFolderPath, (e, file) => {
+        file.endsWith(".ts") && compileDevFolder([file]);
+    });
 });
-
-
-gulp.start("serve");

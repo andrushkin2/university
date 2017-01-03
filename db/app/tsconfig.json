@@ -7,8 +7,10 @@
   "compilerOptions": {
     "target": "ES5",
     "module": "commonjs",
+    "typeRoots" : ["./typings"],
     "noImplicitAny": false,
     "allowJs": false,
+    "noResolve": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true
   }
