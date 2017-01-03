@@ -8,8 +8,11 @@ webix.ready(function () {
                 type: "header", template: "Фитнез-зал!" },
             {
                 view: "tabview",
-                cells: [
-                    clientsView_1.DataTable,
+                type: "space",
+                cells: [{
+                        header: "Events",
+                        body: clientsView_1.DataTable
+                    },
                     { header: "Empty",
                         body: {
                             template: "Some content"
@@ -19,4 +22,8 @@ webix.ready(function () {
             }
         ]
     });
+    var eventCollection = new webix.DataCollection({
+        url: "./request?type=events"
+    });
+    $$(clientsView_1.DataTable.id).sync(eventCollection);
 });

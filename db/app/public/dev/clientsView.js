@@ -1,11 +1,21 @@
 "use strict";
-var dataTable = {
+var parser = webix.Date.dateToStr("%d-%M-%y %G:%s", false), dataTable = {
     view: "datatable",
+    id: "eventsTable",
     columns: [
-        { id: "rank", header: "", width: 50 },
-        { id: "title", header: "Film title", width: 200 },
-        { id: "year", header: "Released", width: 80 },
-        { id: "votes", header: "Votes", width: 100 }
+        { id: "clientId", header: "Client", width: 50, fillspace: 1, template: function (obj) {
+                return obj.clientName + " " + obj.clientLastName;
+            } },
+        { id: "serviceId", header: "Service", width: 200, gravity: 2, fillspace: 1, template: function (obj) {
+                return "" + obj.serviceName;
+            } },
+        { id: "holeId", header: "Hole Id", width: 80, fillspace: 1 },
+        { id: "emplyeeId", header: "Employee", width: 100, fillspace: 1, template: function (obj) {
+                return obj.empName + " " + obj.empLastName;
+            } },
+        { id: "date", header: "Date", width: 100, fillspace: 1, template: function (obj) {
+                return parser(new Date(obj.date));
+            } }
     ],
     data: [
         { id: 1, title: "The Shawshank Redemption", year: 1994, votes: 678790, rank: 1 },
