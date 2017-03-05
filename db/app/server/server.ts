@@ -33,7 +33,7 @@ let connection = mysql.createConnection({
         user: "root",
         password: "325674kl"
     }),
-    queryEvents = "SELECT mydb.client.firstName as clientName,mydb.client.lastName as clientLastName,mydb.event.*,mydb.employee.firstName AS empName,mydb.employee.lastName AS empLastName, mydb.service.name as serviceName FROM mydb.client,mydb.event,mydb.employee,mydb.service WHERE clientId = client.passportId AND emplyeeId = employee.passportId AND serviceId = service.id",
+    queryEvents = "SELECT mydb.client.firstName as clientName,mydb.client.lastName as clientLastName,mydb.event.*,mydb.employee.firstName AS empName,mydb.employee.lastName AS empLastName, mydb.service.name as serviceName FROM mydb.client,mydb.event,mydb.employee,mydb.service WHERE clientId = client.passportId AND emplyeeId = employee.passportId AND serviceId = service.id order by date desc",
     clientsQuery = "SELECT t1.passportId as id, concat(t1.firstName, ' ', t1.lastName) as value, t1.firstName, t1.lastName from mydb.client as t1",
     holeQuery = "SELECT hole.number as id, hole.number as value from mydb.hole",
     employeeQuery = "SELECT t1.passportId as id, concat(t1.firstName, ' ', t1.lastName) as value, t1.firstName, t1.lastName from mydb.employee as t1",
