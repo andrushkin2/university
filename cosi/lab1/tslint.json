@@ -1,0 +1,41 @@
+{
+    "rules": {
+        "class-name": true,
+        "indent": [true, "spaces"],
+        "no-duplicate-variable": true,
+        "no-eval": true,
+        "no-arg": true,
+        "curly": true,
+        "no-unreachable": true,
+        "no-internal-module": true,
+        "no-trailing-whitespace": true,
+        "no-var-keyword": false,
+        "no-unused-variable": true,
+        "no-shadowed-variable": true,
+        "no-construct": true,
+        "one-line": [true, "check-open-brace", "check-whitespace"],
+        "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
+        "quotemark": [true, "double"],
+        "semicolon": [true, "always"],
+        "array-type": [true, "array"],
+        "interface-name": [true, "always-prefix"],
+        "triple-equals": true,
+        "typedef-whitespace": [true, {
+            "call-signature": "nospace",
+            "index-signature": "nospace",
+            "parameter": "nospace",
+            "property-declaration": "nospace",
+            "variable-declaration": "nospace"
+        }],
+        "variable-name": [true, "ban-keywords", "check-format"],
+        "whitespace": [
+            true,
+            "check-branch",
+            "check-decl",
+            "check-operator",
+            "check-separator",
+            "check-type",
+            "check-module"
+        ]
+    }
+}

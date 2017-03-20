@@ -1,0 +1,20 @@
+{
+  "exclude": [
+    ".idea",
+    ".vscode",
+    "node_modules"
+  ],
+  "include": [
+    "./*.ts"
+  ],
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es2017",
+    "noImplicitAny": false,
+    "allowJs": false,
+    "noResolve": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "outFile": "main.js"
+  }
+}
