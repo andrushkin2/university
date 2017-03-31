@@ -1,23 +1,17 @@
 {
   "exclude": [
     ".idea",
-    ".vscode",
-    "node_modules"
-  ],
-  "include": [
-    "./*.ts"
+    ".vscode"
   ],
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es2015",
+    "module": "commonjs",
+    "typeRoots" : ["./typings"],
     "noImplicitAny": false,
     "allowJs": false,
     "noResolve": true,
     "strictNullChecks": true,
-    "allowUnreachableCode": false,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
-    "forceConsistentCasingInFileNames": true,
-    "outFile": "main.js"
+    "forceConsistentCasingInFileNames": true
   }
 }

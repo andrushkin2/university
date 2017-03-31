@@ -43,7 +43,7 @@ let dft = (arr: Complex[], n: number, reverse: boolean): void => {
         }
     },
     getWn = (index: number, n: number, direction: number): Complex => {
-        return Math.cos(2 * Math.PI / n) + direction * index * Math.sin(2 * Math.PI / n);
+        return new Complex(Math.cos(2 * Math.PI / n), direction * index * Math.sin(2 * Math.PI / n));
     },
     bpf = (arr: Complex[], n: number, direction: number) => {
         if (arr.length === 1) {

@@ -6,11 +6,11 @@
         "no-eval": true,
         "no-arg": true,
         "curly": true,
-        "no-unreachable": true,
+        "no-unreachable": true,     //DEPRECATED, TSC has --allowUnreachableCode=false (added to tsconfig)
         "no-internal-module": true,
         "no-trailing-whitespace": true,
         "no-var-keyword": false,
-        "no-unused-variable": true,
+        "no-unused-variable": true, //DEPRECATED, TSC has --noUnusedParameters and --noUnusedLocals instead (not in tsconfig yet)
         "no-shadowed-variable": true,
         "no-construct": true,
         "one-line": [true, "check-open-brace", "check-whitespace"],
@@ -28,8 +28,7 @@
             "variable-declaration": "nospace"
         }],
         "variable-name": [true, "ban-keywords", "check-format"],
-        "whitespace": [
-            true,
+        "whitespace": [true,
             "check-branch",
             "check-decl",
             "check-operator",
