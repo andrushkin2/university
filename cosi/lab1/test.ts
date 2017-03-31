@@ -27,32 +27,31 @@ class Complex {
 
 
 let dft = (arr: Complex[], n: number, reverse: boolean): void => {
-    let tmp: Complex[] = [];
-    for (let i = 0; i < n; i++) {
-        for (let j = 0; j < n; j++) {
-            let calc: number = (2 * Math.PI / n) * j * i,
-                w: Complex = new Complex(Math.cos(calc), reverse ? -Math.sin(calc) : Math.sin(calc));
-            if (!tmp[i]) {
-                tmp[i] = new Complex(0);
+        let tmp: Complex[] = [];
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                let calc: number = (2 * Math.PI / n) * j * i,
+                    w: Complex = new Complex(Math.cos(calc), reverse ? -Math.sin(calc) : Math.sin(calc));
+                if (!tmp[i]) {
+                    tmp[i] = new Complex(0);
+                }
+                tmp[i].add(w.mult(arr[j]));
             }
-            tmp[i].add(w.mult(arr[j]));
         }
-    }
-    for (let i = 0; i < n; i++) {
-        arr[i] = tmp[i];
-    }
-};
-
-let getWn = (index: number, n: number, direction: number): number => Math.cos(2 * Math.PI / n) + direction * index * Math.sin(2 * Math.PI / n);
-
-let bpf = (arr: Complex[], n: number, direction: number) => {
-    if (arr.length === 1) {
-        return;
-    }
-    let wn = getWn(1, n, direction);
-}
-
-let getSample = (length: number, rate: number, frequency: number, func: (value: number) => number): Complex[] => {
+        for (let i = 0; i < n; i++) {
+            arr[i] = tmp[i];
+        }
+    },
+    getWn = (index: number, n: number, direction: number): Complex => {
+        return Math.cos(2 * Math.PI / n) + direction * index * Math.sin(2 * Math.PI / n);
+    },
+    bpf = (arr: Complex[], n: number, direction: number) => {
+        if (arr.length === 1) {
+            return;
+        }
+        let wn = getWn(1, n, direction);
+    },
+    getSample = (length: number, rate: number, frequency: number, func: (value: number) => number): Complex[] => {
         let period = rate / frequency / 2,
             res: Complex[] = [];
         for (let i = 0; i < length; i++) {

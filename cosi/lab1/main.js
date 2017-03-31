@@ -36,15 +36,14 @@ let dft = (arr, n, reverse) => {
     for (let i = 0; i < n; i++) {
         arr[i] = tmp[i];
     }
-};
-let getWn = (index, n, direction) => Math.cos(2 * Math.PI / n) + direction * index * Math.sin(2 * Math.PI / n);
-let bpf = (arr, n, direction) => {
+}, getWn = (index, n, direction) => {
+    return Math.cos(2 * Math.PI / n) + direction * index * Math.sin(2 * Math.PI / n);
+}, bpf = (arr, n, direction) => {
     if (arr.length === 1) {
         return;
     }
     let wn = getWn(1, n, direction);
-};
-let getSample = (length, rate, frequency, func) => {
+}, getSample = (length, rate, frequency, func) => {
     let period = rate / frequency / 2, res = [];
     for (let i = 0; i < length; i++) {
         res[i] = new Complex(func(i * Math.PI / period));
