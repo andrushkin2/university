@@ -1,4 +1,4 @@
-class Complex {
+export class Complex {
     public re: number;
     public im: number;
     constructor(re: number, im: number = 0) {
@@ -17,39 +17,56 @@ class Complex {
     public sub(comp: Complex): Complex {
         return new Complex(this.re - comp.re, this.im - comp.im);
     }
-    public abs(): number {
-        return Math.sqrt(Math.pow(this.re, 2) + Math.pow(this.im, 2));
+    get magnitude() {
+        return Math.sqrt(this.re * this.re + this.im * this.im);
     }
-    public arg(): number {
+    get phase() {
         return Math.atan2(this.im, this.re);
     }
 }
 
 
-let dft = (arr: Complex[], n: number, reverse: boolean): void => {
+let dft = (arr: Complex[], n: number, reverse: boolean, iterations: {count: number}): Complex[] => {
         let tmp: Complex[] = [];
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
-                let calc: number = (2 * Math.PI / n) * j * i,
+                let calc: number = (2.0 * Math.PI / n) * j * i,
                     w: Complex = new Complex(Math.cos(calc), reverse ? -Math.sin(calc) : Math.sin(calc));
                 if (!tmp[i]) {
-                    tmp[i] = new Complex(0);
+                    tmp[i] = new Complex(0.0);
                 }
-                tmp[i].add(w.mult(arr[j]));
+                tmp[i] = tmp[i].add(w.mult(arr[j]));
+                //update counter
+                iterations.count++;
             }
         }
-        for (let i = 0; i < n; i++) {
-            arr[i] = tmp[i];
-        }
+        return tmp;
     },
-    getWn = (index: number, n: number, direction: number): Complex => {
-        return new Complex(Math.cos(2 * Math.PI / n), direction * index * Math.sin(2 * Math.PI / n));
+    getWn = (n: number, direction: number): Complex => {
+        return new Complex(Math.cos(2.0 * Math.PI / n), direction * Math.sin(2.0 * Math.PI / n));
     },
-    bpf = (arr: Complex[], n: number, direction: number) => {
+    fft = (arr: Complex[], n: number, direction: number, iterations: {count: number}): Complex[] => {
         if (arr.length === 1) {
-            return;
+            return arr;
         }
-        let wn = getWn(1, n, direction);
+        let wn = getWn(n, direction),
+            w = new Complex(1.0),
+            len = arr.length,
+            halfOfLen = len / 2,
+            first: Complex[] = [],
+            second: Complex[] = [];
+        for (let i = 0; i < halfOfLen; i++) {
+            let currentComplex = arr[i],
+                jumpedComplex = arr[i + halfOfLen];
+            first[i] = currentComplex.add(jumpedComplex);
+            second[i] = (currentComplex.sub(jumpedComplex)).mult(w);
+            w = w.mult(wn);
+            // update counter
+            iterations.count++;
+        }
+        let firstFFT = fft(first, halfOfLen, direction, iterations),
+            secondFFT = fft(second, halfOfLen, direction, iterations);
+        return firstFFT.concat(secondFFT);
     },
     getSample = (length: number, rate: number, frequency: number, func: (value: number) => number): Complex[] => {
         let period = rate / frequency / 2,
@@ -63,6 +80,39 @@ let dft = (arr: Complex[], n: number, reverse: boolean): void => {
         return Math.cos(3 * value) + Math.sin(2 * value);
     });
 
+console.time("Start fft");
+let iterRes: {count: number} = {count: 0};
+let res = fft(arr.slice(0), 8192, 1, iterRes);
+console.timeEnd("Start fft");
+console.log(iterRes.count);
+
 console.time("Start");
-dft(arr, 8192, false);
+let iterRes2: {count: number} = {count: 0};
+let res2 = dft(arr.slice(0), 8192, false, iterRes2);
 console.timeEnd("Start");
+console.log(iterRes2.count);
+
+
+let createSamples = (length: number, rate: number, frequency: number, func: (value) => number): Complex[] => getSample(length, rate, frequency, func),
+    dftFunc = (array: Complex[], n: number, reverse: boolean): {result: Complex[], count: number} => {
+        console.time("DFT time: ");
+        let counter = {count: 0},
+            arrRes: Complex[] = dft(array, n, reverse, counter);
+        console.timeEnd("DFT time: ");
+        return {
+            count: counter.count,
+            result: arrRes
+        };
+    },
+    fftFunc = (array: Complex[], n: number, reverse: boolean): {result: Complex[], count: number} => {
+        console.time("FFT time: ");
+        let counter = {count: 0},
+            arrRes: Complex[] = fft(array, n, reverse ? -1 : 1, counter);
+        console.timeEnd("FFT time: ");
+        return {
+            count: counter.count,
+            result: arrRes
+        };
+    };
+
+export {createSamples as CreateSamples, dftFunc as DFT, fftFunc as FFT};
