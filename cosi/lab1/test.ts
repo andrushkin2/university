@@ -1,7 +1,7 @@
 export class Complex {
     public re: number;
     public im: number;
-    constructor(re: number, im: number = 0) {
+    constructor(re: number, im: number = 0.0) {
         this.re = re;
         this.im = im;
     }
@@ -80,7 +80,7 @@ let dft = (arr: Complex[], n: number, reverse: boolean, iterations: {count: numb
         return Math.cos(3 * value) + Math.sin(2 * value);
     });
 
-console.time("Start fft");
+/*console.time("Start fft");
 let iterRes: {count: number} = {count: 0};
 let res = fft(arr.slice(0), 8192, 1, iterRes);
 console.timeEnd("Start fft");
@@ -90,7 +90,7 @@ console.time("Start");
 let iterRes2: {count: number} = {count: 0};
 let res2 = dft(arr.slice(0), 8192, false, iterRes2);
 console.timeEnd("Start");
-console.log(iterRes2.count);
+console.log(iterRes2.count);*/
 
 
 let createSamples = (length: number, rate: number, frequency: number, func: (value) => number): Complex[] => getSample(length, rate, frequency, func),

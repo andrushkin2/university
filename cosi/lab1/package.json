@@ -9,9 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/chartjs": "0.0.29",
-    "chart.js": "^2.5.0",
-    "types": "^0.1.1"
+    "@types/webix": "^4.2.0"
   },
   "devDependencies": {
     "retyped-chartjs-tsd-ambient": "0.0.0-0"

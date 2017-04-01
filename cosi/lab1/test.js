@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Complex {
-    constructor(re, im = 0) {
+    constructor(re, im = 0.0) {
         this.re = re;
         this.im = im;
     }
@@ -65,16 +65,17 @@ let dft = (arr, n, reverse, iterations) => {
 }, arr = getSample(8192, 8000, 187.5, (value) => {
     return Math.cos(3 * value) + Math.sin(2 * value);
 });
-console.time("Start fft");
-let iterRes = { count: 0 };
+/*console.time("Start fft");
+let iterRes: {count: number} = {count: 0};
 let res = fft(arr.slice(0), 8192, 1, iterRes);
 console.timeEnd("Start fft");
 console.log(iterRes.count);
+
 console.time("Start");
-let iterRes2 = { count: 0 };
+let iterRes2: {count: number} = {count: 0};
 let res2 = dft(arr.slice(0), 8192, false, iterRes2);
 console.timeEnd("Start");
-console.log(iterRes2.count);
+console.log(iterRes2.count);*/
 let createSamples = (length, rate, frequency, func) => getSample(length, rate, frequency, func), dftFunc = (array, n, reverse) => {
     console.time("DFT time: ");
     let counter = { count: 0 }, arrRes = dft(array, n, reverse, counter);
