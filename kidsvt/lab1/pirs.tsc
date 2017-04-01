@@ -1,0 +1,15 @@
+CIRCUIT Pirs;
+INPUTS P1(1),P2(1),P3(1),P4(1);
+OUTPUTS C1(1);
+GATES
+A1 'NOR' (1) P1(1);
+A2 'NOR' (1) P2(1);
+A3 'NOR' (1) P3(1);
+A4 'NOR' (1) P4(1);
+A5 'NOR' (1) A1(1),A3(1),A4(1);
+A6 'NOR' (1) A2(1),A4(1);
+A7 'NOR' (1) P3(1),A4(1);
+A8 'NOR' (1) A5(1),A6(1),A7(1);
+C1 'NOR' (1) A8(1);
+ENDGATES
+END
