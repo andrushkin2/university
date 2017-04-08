@@ -10,19 +10,18 @@ let getXData = (count) => {
 }, getMagnitudeFromComplex = (data) => data.map(complex => complex.magnitude), getPhaseFromComplex = (data) => data.map(complex => complex.phase), getRealFromComplex = (data) => data.map(complex => complex.re), runLab = () => {
     let amount = 1024, data = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
         return Math.cos(3.0 * value) + Math.sin(2.0 * value);
-    }), xData = getXData(amount), dftData = test_1.DFT(data.slice(0), amount, false), dftDataReverse = test_1.DFT(dftData.result.slice(0), amount, true), fftData = test_1.FFT(data.slice(0), amount, false), fftReverse = test_1.FFT(fftData.result.slice(0), amount, true);
-    debugger;
+    }), xData = getXData(amount), dftData = test_1.DFT(data, amount, false), dftDataReverse = test_1.DFT(dftData.result, amount, true), fftData = test_1.FFT(data, amount, false), fftReverse = test_1.FFT(fftData.result, amount, true);
     drawChart(xData, getRealFromComplex(data), $$(firstChartId));
     console.log(`DFT iterations: ${dftData.count}`);
     console.log(`FFT iterations: ${fftData.count}`);
     // DFT
-    drawChart(xData.slice(0), getPhaseFromComplex(dftData.result.slice(0)), $$(dftPhaseId));
-    drawChart(xData.slice(0), getMagnitudeFromComplex(dftData.result.slice(0)), $$(dftMagnitudeId));
-    drawChart(xData.slice(0), getRealFromComplex(dftDataReverse.result.slice(0)), $$(dftId));
+    drawChart(xData, getPhaseFromComplex(dftData.result), $$(dftPhaseId));
+    drawChart(xData, getMagnitudeFromComplex(dftData.result), $$(dftMagnitudeId));
+    drawChart(xData, getRealFromComplex(dftDataReverse.result), $$(dftId));
     // FFT
-    drawChart(xData.slice(0), getPhaseFromComplex(fftData.result.slice(0)), $$(fftPhaseId));
-    drawChart(xData.slice(0), getMagnitudeFromComplex(fftData.result.slice(0)), $$(fftMagnitudeId));
-    drawChart(xData.slice(0), getRealFromComplex(fftReverse.result.slice(0)), $$(fftId));
+    drawChart(xData, getPhaseFromComplex(fftData.result), $$(fftPhaseId));
+    drawChart(xData, getMagnitudeFromComplex(fftData.result), $$(fftMagnitudeId));
+    drawChart(xData, getRealFromComplex(fftReverse.result), $$(fftId));
 }, firstChartId = "firstChart", dftId = "dftREverse", dftPhaseId = "dftPhase", dftMagnitudeId = "dftMagnitude", fftId = "fftREverse", fftPhaseId = "fftPhase", fftMagnitudeId = "fftMagnitude", getData = (x, y) => {
     let len = x.length, res = [];
     for (let i = 0; i < len; i++) {
@@ -74,26 +73,33 @@ window["lab"] = {
 };
 webix.ready(() => {
     webix.ui({
+        type: "space",
         rows: [
             {
-                template: "Transform",
-                height: 30
+                view: "toolbar",
+                cols: [
+                    { template: "Transform", type: "header", width: 100, borderless: true },
+                    { view: "button", id: "runId", value: "Run", width: 100, align: "left" },
+                    {}
+                ]
             },
             {
                 view: "scrollview",
                 scroll: "y",
                 body: {
                     rows: [
-                        { template: "Start state", height: 30 },
+                        { type: "header", template: "Start state", height: 50 },
                         getChartObject(firstChartId),
                         { template: "FFT reverse", height: 30 },
                         getChartObject(fftId),
                         { template: "DFT reverse", height: 30 },
                         getChartObject(dftId),
+                        { type: "header", template: "Phase", height: 50 },
                         { template: "FFT phase", height: 30 },
                         getChartObject(fftPhaseId),
                         { template: "DFT phase", height: 30 },
                         getChartObject(dftPhaseId),
+                        { type: "header", template: "Magnitude", height: 50 },
                         { template: "DFT magnitude", height: 30 },
                         getChartObject(dftMagnitudeId),
                         { template: "FFT magnitude", height: 30 },
@@ -102,5 +108,8 @@ webix.ready(() => {
                 }
             }
         ]
+    });
+    $$("runId").attachEvent("onItemClick", () => {
+        runLab();
     });
 });

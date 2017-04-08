@@ -17,22 +17,22 @@ let getXData = (count: number): number[] => {
                 return Math.cos(3.0 * value) + Math.sin(2.0 * value);
             }),
             xData: number[] = getXData(amount),
-            dftData = DFT(data.slice(0), amount, false),
-            dftDataReverse = DFT(dftData.result.slice(0), amount, true),
-            fftData = FFT(data.slice(0), amount, false),
-            fftReverse = FFT(fftData.result.slice(0), amount, true);
-            debugger;
+            dftData = DFT(data, amount, false),
+            dftDataReverse = DFT(dftData.result, amount, true),
+            fftData = FFT(data, amount, false),
+            fftReverse = FFT(fftData.result, amount, true);
+
         drawChart(xData, getRealFromComplex(data), $$(firstChartId) as webix.ui.chart);
         console.log(`DFT iterations: ${dftData.count}`);
         console.log(`FFT iterations: ${fftData.count}`);
         // DFT
-        drawChart(xData.slice(0), getPhaseFromComplex(dftData.result.slice(0)), $$(dftPhaseId) as webix.ui.chart);
-        drawChart(xData.slice(0), getMagnitudeFromComplex(dftData.result.slice(0)), $$(dftMagnitudeId) as webix.ui.chart);
-        drawChart(xData.slice(0), getRealFromComplex(dftDataReverse.result.slice(0)), $$(dftId) as webix.ui.chart);
+        drawChart(xData, getPhaseFromComplex(dftData.result), $$(dftPhaseId) as webix.ui.chart);
+        drawChart(xData, getMagnitudeFromComplex(dftData.result), $$(dftMagnitudeId) as webix.ui.chart);
+        drawChart(xData, getRealFromComplex(dftDataReverse.result), $$(dftId) as webix.ui.chart);
         // FFT
-        drawChart(xData.slice(0), getPhaseFromComplex(fftData.result.slice(0)), $$(fftPhaseId) as webix.ui.chart);
-        drawChart(xData.slice(0), getMagnitudeFromComplex(fftData.result.slice(0)), $$(fftMagnitudeId) as webix.ui.chart);
-        drawChart(xData.slice(0), getRealFromComplex(fftReverse.result.slice(0)), $$(fftId) as webix.ui.chart);
+        drawChart(xData, getPhaseFromComplex(fftData.result), $$(fftPhaseId) as webix.ui.chart);
+        drawChart(xData, getMagnitudeFromComplex(fftData.result), $$(fftMagnitudeId) as webix.ui.chart);
+        drawChart(xData, getRealFromComplex(fftReverse.result), $$(fftId) as webix.ui.chart);
     },
     firstChartId = "firstChart",
     dftId = "dftREverse",
@@ -97,26 +97,33 @@ window["lab"] = {
 
 webix.ready(() => {
     webix.ui({
+        type: "space",
         rows: [
             {
-                template: "Transform",
-                height: 30
+                view: "toolbar",
+                cols: [
+                    { template: "Transform", type: "header", width: 100, borderless: true },
+                    { view: "button", id: "runId", value: "Run", width: 100, align: "left" },
+                    {}
+                ]
             },
             {
                 view: "scrollview",
                 scroll: "y",
                 body: {
                     rows: [
-                        { template: "Start state", height: 30 },
+                        { type: "header", template: "Start state", height: 50 },
                         getChartObject(firstChartId),
                         { template: "FFT reverse", height: 30 },
                         getChartObject(fftId),
                         { template: "DFT reverse", height: 30 },
                         getChartObject(dftId),
+                        { type: "header", template: "Phase", height: 50},
                         { template: "FFT phase", height: 30 },
                         getChartObject(fftPhaseId),
                         { template: "DFT phase", height: 30 },
                         getChartObject(dftPhaseId),
+                        { type: "header", template: "Magnitude", height: 50},
                         { template: "DFT magnitude", height: 30 },
                         getChartObject(dftMagnitudeId),
                         { template: "FFT magnitude", height: 30 },
@@ -125,5 +132,8 @@ webix.ready(() => {
                 }
             }
         ]
+    });
+    (<webix.ui.button>$$("runId")).attachEvent("onItemClick", () => {
+        runLab();
     });
 });

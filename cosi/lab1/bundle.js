@@ -40,44 +40,36 @@ let dft = (arr, n, reverse, iterations) => {
         }
     }
     return tmp;
-}, getWn = (n, direction) => {
-    return new Complex(Math.cos(2.0 * Math.PI / n), direction * Math.sin(2.0 * Math.PI / n));
 }, fft = (arr, n, direction, iterations) => {
     if (arr.length === 1) {
         return arr;
     }
-    let wn = getWn(n, direction), w = new Complex(1.0), len = arr.length, halfOfLen = len / 2, first = [], second = [];
+    let arg = 2.0 * Math.PI / n, wn = new Complex(Math.cos(arg), direction * Math.sin(arg)), w = new Complex(1.0), len = arr.length, halfOfLen = len >> 1, first = [], second = [], result = [];
     for (let i = 0; i < halfOfLen; i++) {
-        let currentComplex = arr[i], jumpedComplex = arr[i + halfOfLen];
-        first[i] = currentComplex.add(jumpedComplex);
-        second[i] = (currentComplex.sub(jumpedComplex)).mult(w);
+        result[i] = arr[i].add(arr[i + halfOfLen]);
+        result[i + halfOfLen] = arr[i].sub(arr[i + halfOfLen]).mult(w);
         w = w.mult(wn);
         // update counter
         iterations.count++;
     }
+    for (let i = 0; i < halfOfLen; i++) {
+        first[i] = result[i];
+        second[i] = result[i + halfOfLen];
+    }
     let firstFFT = fft(first, halfOfLen, direction, iterations), secondFFT = fft(second, halfOfLen, direction, iterations);
-    return firstFFT.concat(secondFFT);
+    for (let i = 0; i < halfOfLen; i++) {
+        let j = i << 1;
+        result[j] = firstFFT[i];
+        result[j + 1] = secondFFT[i];
+    }
+    return result;
 }, getSample = (length, rate, frequency, func) => {
     let period = rate / frequency / 2, res = [];
     for (let i = 0; i < length; i++) {
         res[i] = new Complex(func(i * Math.PI / period));
     }
     return res;
-}, arr = getSample(8192, 8000, 187.5, (value) => {
-    return Math.cos(3 * value) + Math.sin(2 * value);
-});
-/*console.time("Start fft");
-let iterRes: {count: number} = {count: 0};
-let res = fft(arr.slice(0), 8192, 1, iterRes);
-console.timeEnd("Start fft");
-console.log(iterRes.count);
-
-console.time("Start");
-let iterRes2: {count: number} = {count: 0};
-let res2 = dft(arr.slice(0), 8192, false, iterRes2);
-console.timeEnd("Start");
-console.log(iterRes2.count);*/
-let createSamples = (length, rate, frequency, func) => getSample(length, rate, frequency, func), dftFunc = (array, n, reverse) => {
+}, createSamples = (length, rate, frequency, func) => getSample(length, rate, frequency, func), dftFunc = (array, n, reverse) => {
     console.time("DFT time: ");
     let counter = { count: 0 }, arrRes = dft(array, n, reverse, counter);
     console.timeEnd("DFT time: ");
@@ -111,19 +103,18 @@ let getXData = (count) => {
 }, getMagnitudeFromComplex = (data) => data.map(complex => complex.magnitude), getPhaseFromComplex = (data) => data.map(complex => complex.phase), getRealFromComplex = (data) => data.map(complex => complex.re), runLab = () => {
     let amount = 1024, data = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
         return Math.cos(3.0 * value) + Math.sin(2.0 * value);
-    }), xData = getXData(amount), dftData = test_1.DFT(data.slice(0), amount, false), dftDataReverse = test_1.DFT(dftData.result.slice(0), amount, true), fftData = test_1.FFT(data.slice(0), amount, false), fftReverse = test_1.FFT(fftData.result.slice(0), amount, true);
-    debugger;
+    }), xData = getXData(amount), dftData = test_1.DFT(data, amount, false), dftDataReverse = test_1.DFT(dftData.result, amount, true), fftData = test_1.FFT(data, amount, false), fftReverse = test_1.FFT(fftData.result, amount, true);
     drawChart(xData, getRealFromComplex(data), $$(firstChartId));
     console.log(`DFT iterations: ${dftData.count}`);
     console.log(`FFT iterations: ${fftData.count}`);
     // DFT
-    drawChart(xData.slice(0), getPhaseFromComplex(dftData.result.slice(0)), $$(dftPhaseId));
-    drawChart(xData.slice(0), getMagnitudeFromComplex(dftData.result.slice(0)), $$(dftMagnitudeId));
-    drawChart(xData.slice(0), getRealFromComplex(dftDataReverse.result.slice(0)), $$(dftId));
+    drawChart(xData, getPhaseFromComplex(dftData.result), $$(dftPhaseId));
+    drawChart(xData, getMagnitudeFromComplex(dftData.result), $$(dftMagnitudeId));
+    drawChart(xData, getRealFromComplex(dftDataReverse.result), $$(dftId));
     // FFT
-    drawChart(xData.slice(0), getPhaseFromComplex(fftData.result.slice(0)), $$(fftPhaseId));
-    drawChart(xData.slice(0), getMagnitudeFromComplex(fftData.result.slice(0)), $$(fftMagnitudeId));
-    drawChart(xData.slice(0), getRealFromComplex(fftReverse.result.slice(0)), $$(fftId));
+    drawChart(xData, getPhaseFromComplex(fftData.result), $$(fftPhaseId));
+    drawChart(xData, getMagnitudeFromComplex(fftData.result), $$(fftMagnitudeId));
+    drawChart(xData, getRealFromComplex(fftReverse.result), $$(fftId));
 }, firstChartId = "firstChart", dftId = "dftREverse", dftPhaseId = "dftPhase", dftMagnitudeId = "dftMagnitude", fftId = "fftREverse", fftPhaseId = "fftPhase", fftMagnitudeId = "fftMagnitude", getData = (x, y) => {
     let len = x.length, res = [];
     for (let i = 0; i < len; i++) {
@@ -175,26 +166,33 @@ window["lab"] = {
 };
 webix.ready(() => {
     webix.ui({
+        type: "space",
         rows: [
             {
-                template: "Transform",
-                height: 30
+                view: "toolbar",
+                cols: [
+                    { template: "Transform", type: "header", width: 100, borderless: true },
+                    { view: "button", id: "runId", value: "Run", width: 100, align: "left" },
+                    {}
+                ]
             },
             {
                 view: "scrollview",
                 scroll: "y",
                 body: {
                     rows: [
-                        { template: "Start state", height: 30 },
+                        { type: "header", template: "Start state", height: 50 },
                         getChartObject(firstChartId),
                         { template: "FFT reverse", height: 30 },
                         getChartObject(fftId),
                         { template: "DFT reverse", height: 30 },
                         getChartObject(dftId),
+                        { type: "header", template: "Phase", height: 50 },
                         { template: "FFT phase", height: 30 },
                         getChartObject(fftPhaseId),
                         { template: "DFT phase", height: 30 },
                         getChartObject(dftPhaseId),
+                        { type: "header", template: "Magnitude", height: 50 },
                         { template: "DFT magnitude", height: 30 },
                         getChartObject(dftMagnitudeId),
                         { template: "FFT magnitude", height: 30 },
@@ -203,6 +201,9 @@ webix.ready(() => {
                 }
             }
         ]
+    });
+    $$("runId").attachEvent("onItemClick", () => {
+        runLab();
     });
 });
 
