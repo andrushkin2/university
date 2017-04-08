@@ -17,6 +17,9 @@ export class Complex {
     public sub(comp: Complex): Complex {
         return new Complex(this.re - comp.re, this.im - comp.im);
     }
+    get conjugate() {
+        return new Complex(this.re, -1 * this.im);
+    }
     get magnitude() {
         return Math.sqrt(this.re * this.re + this.im * this.im);
     }
@@ -102,6 +105,63 @@ let dft = (arr: Complex[], n: number, reverse: boolean, iterations: {count: numb
             count: counter.count,
             result: arrRes
         };
+    },
+    correlation = (signal1: Complex[], signal2: Complex[]) => {
+        let len: number = signal1.length,
+            result: Complex[] = [];
+        for (let m = 0; m < len; m++) {
+            if (!result[m]) {
+                result[m] = new Complex(0.0);
+            }
+            for (let h = 0; h < len; h++) {
+                if (m + h < len) {
+                    result[m] = result[m].add(signal1[h].mult(signal2[m + h]));
+                }
+                else {
+                    result[m] = result[m].add(signal1[h].mult(signal2[m + h - len]));
+                }
+            }
+            result[m] = result[m].divNumber(len);
+        }
+        return result;
+    },
+    convolution = (signal1: Complex[], signal2: Complex[]) => {
+        let len = signal1.length,
+            result: Complex[] = [];
+        for (let m = 0; m < len; m++) {
+            if (!result[m]) {
+                result[m] = new Complex(0.0);
+            }
+            for (let h = 0; h < len; h++) {
+                if (m - h >= 0) {
+                    result[m] = result[m].add(signal1[h].mult(signal2[m - h]));
+                } else {
+                    result[m] = result[m].add(signal1[h].mult(signal2[m - h + len]));
+                }
+            }
+            result[m] = result[m].divNumber(len);
+        }
+        return result;
+    },
+    convolutionFourier = (signal1: Complex[], signal2: Complex[]) => {
+        let len = signal1.length,
+            firstImage: Complex[] = fft(signal1, len, 1, {count: 0}),
+            secondImage: Complex[] = fft(signal2, len, 1, {count: 0}),
+            result: Complex[] = [];
+        for (let i = 0; i < len; i++) {
+            result[i] = firstImage[i].mult(secondImage[i]);
+        }
+        return fft(result, len, -1, {count: 0});
+    },
+    correlationFourier = (firstSignal: Complex[], secondSignal: Complex[]) => {
+        let len = firstSignal.length,
+            firstImage = fft(firstSignal, len, -1, {count: 0}),
+            secondImage = fft(secondSignal, len, -1, {count: 0}),
+            result: Complex[] = [];
+        for (let i = 0; i < len; i++) {
+            result[i] = firstImage[i].conjugate.mult(secondImage[i]);
+        }
+        return fft(result, len, -1, {count: 0});
     };
 
-export {createSamples as CreateSamples, dftFunc as DFT, fftFunc as FFT};
+export {createSamples as CreateSamples, dftFunc as DFT, fftFunc as FFT, correlation as Correlation, convolution as Convolution, convolutionFourier as ConvolutionFourier, correlationFourier as CorrelationFourier};

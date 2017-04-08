@@ -17,6 +17,9 @@ class Complex {
     sub(comp) {
         return new Complex(this.re - comp.re, this.im - comp.im);
     }
+    get conjugate() {
+        return new Complex(this.re, -1 * this.im);
+    }
     get magnitude() {
         return Math.sqrt(this.re * this.re + this.im * this.im);
     }
@@ -84,7 +87,57 @@ let dft = (arr, n, reverse, iterations) => {
         count: counter.count,
         result: arrRes
     };
+}, correlation = (signal1, signal2) => {
+    let len = signal1.length, result = [];
+    for (let m = 0; m < len; m++) {
+        if (!result[m]) {
+            result[m] = new Complex(0.0);
+        }
+        for (let h = 0; h < len; h++) {
+            if (m + h < len) {
+                result[m] = result[m].add(signal1[h].mult(signal2[m + h]));
+            }
+            else {
+                result[m] = result[m].add(signal1[h].mult(signal2[m + h - len]));
+            }
+        }
+        result[m] = result[m].divNumber(len);
+    }
+    return result;
+}, convolution = (signal1, signal2) => {
+    let len = signal1.length, result = [];
+    for (let m = 0; m < len; m++) {
+        if (!result[m]) {
+            result[m] = new Complex(0.0);
+        }
+        for (let h = 0; h < len; h++) {
+            if (m - h >= 0) {
+                result[m] = result[m].add(signal1[h].mult(signal2[m - h]));
+            }
+            else {
+                result[m] = result[m].add(signal1[h].mult(signal2[m - h + len]));
+            }
+        }
+        result[m] = result[m].divNumber(len);
+    }
+    return result;
+}, convolutionFourier = (signal1, signal2) => {
+    let len = signal1.length, firstImage = fft(signal1, len, 1, { count: 0 }), secondImage = fft(signal2, len, 1, { count: 0 }), result = [];
+    for (let i = 0; i < len; i++) {
+        result[i] = firstImage[i].mult(secondImage[i]);
+    }
+    return fft(result, len, -1, { count: 0 });
+}, correlationFourier = (firstSignal, secondSignal) => {
+    let len = firstSignal.length, firstImage = fft(firstSignal, len, -1, { count: 0 }), secondImage = fft(secondSignal, len, -1, { count: 0 }), result = [];
+    for (let i = 0; i < len; i++) {
+        result[i] = firstImage[i].conjugate.mult(secondImage[i]);
+    }
+    return fft(result, len, -1, { count: 0 });
 };
 exports.CreateSamples = createSamples;
 exports.DFT = dftFunc;
 exports.FFT = fftFunc;
+exports.Correlation = correlation;
+exports.Convolution = convolution;
+exports.ConvolutionFourier = convolutionFourier;
+exports.CorrelationFourier = correlationFourier;
