@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 """Module for compiling TS-files"""
 import subprocess as process
 

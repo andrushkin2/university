@@ -23,7 +23,7 @@ let getXData = (count) => {
     drawChart(xData, getMagnitudeFromComplex(fftData.result), $$(fftMagnitudeId));
     drawChart(xData, getRealFromComplex(fftReverse.result), $$(fftId));
 }, runLab2 = () => {
-    let amount = 1024, xData = getXData(amount), dataLab1 = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
+    let amount = 16, xData = getXData(amount), dataLab1 = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
         return Math.cos(3.0 * value) + Math.sin(2.0 * value);
     }), dataLab2 = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
         return Math.cos(5.0 * value) /* + Math.sin(6.0 * value)*/;

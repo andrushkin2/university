@@ -128,7 +128,7 @@ let dft = (arr, n, reverse, iterations) => {
     }
     return fft(result, len, -1, { count: 0 });
 }, correlationFourier = (firstSignal, secondSignal) => {
-    let len = firstSignal.length, firstImage = fft(firstSignal, len, -1, { count: 0 }), secondImage = fft(secondSignal, len, -1, { count: 0 }), result = [];
+    let len = firstSignal.length, firstImage = fft(firstSignal, len, 1, { count: 0 }), secondImage = fft(secondSignal, len, 1, { count: 0 }), result = [];
     for (let i = 0; i < len; i++) {
         result[i] = firstImage[i].conjugate.mult(secondImage[i]);
     }

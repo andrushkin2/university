@@ -155,8 +155,8 @@ let dft = (arr: Complex[], n: number, reverse: boolean, iterations: {count: numb
     },
     correlationFourier = (firstSignal: Complex[], secondSignal: Complex[]) => {
         let len = firstSignal.length,
-            firstImage = fft(firstSignal, len, -1, {count: 0}),
-            secondImage = fft(secondSignal, len, -1, {count: 0}),
+            firstImage = fft(firstSignal, len, 1, {count: 0}),
+            secondImage = fft(secondSignal, len, 1, {count: 0}),
             result: Complex[] = [];
         for (let i = 0; i < len; i++) {
             result[i] = firstImage[i].conjugate.mult(secondImage[i]);

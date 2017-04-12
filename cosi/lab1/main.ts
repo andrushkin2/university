@@ -35,7 +35,7 @@ let getXData = (count: number): number[] => {
         drawChart(xData, getRealFromComplex(fftReverse.result), $$(fftId) as webix.ui.chart);
     },
     runLab2 = () => {
-        let amount = 1024,
+        let amount = 16,
             xData: number[] = getXData(amount),
             dataLab1: Complex[] = CreateSamples(amount, 8000, 187.5, (value: number) => {
                 return Math.cos(3.0 * value) + Math.sin(2.0 * value);
