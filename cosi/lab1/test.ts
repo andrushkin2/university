@@ -81,7 +81,7 @@ let dft = (arr: Complex[], n: number, reverse: boolean, iterations: {count: numb
         let period = rate / frequency / 2,
             res: Complex[] = [];
         for (let i = 0; i < length; i++) {
-            res[i] = new Complex(func(i * Math.PI / period));
+            res[i] = new Complex(func(i * 2 * Math.PI / length));
         }
         return res;
     },

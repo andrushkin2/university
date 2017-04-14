@@ -9,14 +9,21 @@ let getXData = (count: number): number[] => {
         return res;
     },
     getMagnitudeFromComplex = (data: Complex[]): number[] => data.map(complex => complex.magnitude),
-    getPhaseFromComplex = (data: Complex[]): number[] => data.map(complex => complex.phase),
+    getPhaseFromComplex = (data: Complex[]): number[] => {
+        return data.map(complex => complex.magnitude > 0.3 ? complex.phase : 0);
+    },
     getRealFromComplex = (data: Complex[]): number[] => data.map(complex => complex.re),
     runLab = () => {
         let amount: number = 1024,
             data: Complex[] = CreateSamples(amount, 8000, 187.5, (value: number) => {
-                return Math.cos(3.0 * value) + Math.sin(2.0 * value);
+                return Math.sin(3.0 * value) + Math.cos(value);
             }),
             xData: number[] = getXData(amount),
+            getHalfData = (data: number[]) => {
+                let newData = data.slice(0);
+                newData.length = newData.length / 2;
+                return newData;
+            },
             dftData = DFT(data, amount, false),
             dftDataReverse = DFT(dftData.result, amount, true),
             fftData = FFT(data, amount, false),
@@ -26,12 +33,12 @@ let getXData = (count: number): number[] => {
         console.log(`DFT iterations: ${dftData.count}`);
         console.log(`FFT iterations: ${fftData.count}`);
         // DFT
-        drawChart(xData, getPhaseFromComplex(dftData.result), $$(dftPhaseId) as webix.ui.chart);
-        drawChart(xData, getMagnitudeFromComplex(dftData.result), $$(dftMagnitudeId) as webix.ui.chart);
+        drawChart(getHalfData(xData), getHalfData(getPhaseFromComplex(dftData.result)), $$(dftPhaseId) as webix.ui.chart);
+        drawChart(getHalfData(xData), getHalfData(getMagnitudeFromComplex(dftData.result)), $$(dftMagnitudeId) as webix.ui.chart);
         drawChart(xData, getRealFromComplex(dftDataReverse.result), $$(dftId) as webix.ui.chart);
         // FFT
-        drawChart(xData, getPhaseFromComplex(fftData.result), $$(fftPhaseId) as webix.ui.chart);
-        drawChart(xData, getMagnitudeFromComplex(fftData.result), $$(fftMagnitudeId) as webix.ui.chart);
+        drawChart(getHalfData(xData), getHalfData(getPhaseFromComplex(fftData.result)), $$(fftPhaseId) as webix.ui.chart);
+        drawChart(getHalfData(xData), getHalfData(getMagnitudeFromComplex(fftData.result)), $$(fftMagnitudeId) as webix.ui.chart);
         drawChart(xData, getRealFromComplex(fftReverse.result), $$(fftId) as webix.ui.chart);
     },
     runLab2 = () => {
@@ -89,6 +96,7 @@ let getXData = (count: number): number[] => {
             view: "chart",
             type: "line",
             height: 300,
+            width: 800,
             id: id,
             value: "#y#",
             line: {
@@ -100,7 +108,9 @@ let getXData = (count: number): number[] => {
                 radius: 0
             },
             xAxis: {
-                template: "",
+                template: function(inedx) {
+                    return (<webix.ui.chart>$$(id)).getIndexById(inedx.id) % 100 ? "" : inedx.x;
+                },
                 lines: function(index) {
                     return this.getIndexById(index.id) % 100 ? false : true;
                 }

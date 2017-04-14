@@ -7,20 +7,26 @@ let getXData = (count) => {
         res.push(i);
     }
     return res;
-}, getMagnitudeFromComplex = (data) => data.map(complex => complex.magnitude), getPhaseFromComplex = (data) => data.map(complex => complex.phase), getRealFromComplex = (data) => data.map(complex => complex.re), runLab = () => {
+}, getMagnitudeFromComplex = (data) => data.map(complex => complex.magnitude), getPhaseFromComplex = (data) => {
+    return data.map(complex => complex.magnitude > 0.3 ? complex.phase : 0);
+}, getRealFromComplex = (data) => data.map(complex => complex.re), runLab = () => {
     let amount = 1024, data = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
-        return Math.cos(3.0 * value) + Math.sin(2.0 * value);
-    }), xData = getXData(amount), dftData = test_1.DFT(data, amount, false), dftDataReverse = test_1.DFT(dftData.result, amount, true), fftData = test_1.FFT(data, amount, false), fftReverse = test_1.FFT(fftData.result, amount, true);
+        return Math.sin(3.0 * value) + Math.cos(value);
+    }), xData = getXData(amount), getHalfData = (data) => {
+        let newData = data.slice(0);
+        newData.length = newData.length / 2;
+        return newData;
+    }, dftData = test_1.DFT(data, amount, false), dftDataReverse = test_1.DFT(dftData.result, amount, true), fftData = test_1.FFT(data, amount, false), fftReverse = test_1.FFT(fftData.result, amount, true);
     drawChart(xData, getRealFromComplex(data), $$(firstChartId));
     console.log(`DFT iterations: ${dftData.count}`);
     console.log(`FFT iterations: ${fftData.count}`);
     // DFT
-    drawChart(xData, getPhaseFromComplex(dftData.result), $$(dftPhaseId));
-    drawChart(xData, getMagnitudeFromComplex(dftData.result), $$(dftMagnitudeId));
+    drawChart(getHalfData(xData), getHalfData(getPhaseFromComplex(dftData.result)), $$(dftPhaseId));
+    drawChart(getHalfData(xData), getHalfData(getMagnitudeFromComplex(dftData.result)), $$(dftMagnitudeId));
     drawChart(xData, getRealFromComplex(dftDataReverse.result), $$(dftId));
     // FFT
-    drawChart(xData, getPhaseFromComplex(fftData.result), $$(fftPhaseId));
-    drawChart(xData, getMagnitudeFromComplex(fftData.result), $$(fftMagnitudeId));
+    drawChart(getHalfData(xData), getHalfData(getPhaseFromComplex(fftData.result)), $$(fftPhaseId));
+    drawChart(getHalfData(xData), getHalfData(getMagnitudeFromComplex(fftData.result)), $$(fftMagnitudeId));
     drawChart(xData, getRealFromComplex(fftReverse.result), $$(fftId));
 }, runLab2 = () => {
     let amount = 16, xData = getXData(amount), dataLab1 = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
@@ -52,6 +58,7 @@ let getXData = (count) => {
         view: "chart",
         type: "line",
         height: 300,
+        width: 800,
         id: id,
         value: "#y#",
         line: {
@@ -63,7 +70,9 @@ let getXData = (count) => {
             radius: 0
         },
         xAxis: {
-            template: "",
+            template: function (inedx) {
+                return $$(id).getIndexById(inedx.id) % 100 ? "" : inedx.x;
+            },
             lines: function (index) {
                 return this.getIndexById(index.id) % 100 ? false : true;
             }

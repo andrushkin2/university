@@ -68,7 +68,7 @@ let dft = (arr, n, reverse, iterations) => {
 }, getSample = (length, rate, frequency, func) => {
     let period = rate / frequency / 2, res = [];
     for (let i = 0; i < length; i++) {
-        res[i] = new Complex(func(i * Math.PI / period));
+        res[i] = new Complex(func(i * 2 * Math.PI / length));
     }
     return res;
 }, createSamples = (length, rate, frequency, func) => getSample(length, rate, frequency, func), dftFunc = (array, n, reverse) => {
