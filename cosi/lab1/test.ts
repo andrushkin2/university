@@ -109,7 +109,7 @@ let dft = (arr: Complex[], n: number, reverse: boolean, iterations: {count: numb
     correlation = (signal1: Complex[], signal2: Complex[]) => {
         let len: number = signal1.length,
             result: Complex[] = [];
-        for (let m = 0; m < len; m++) {
+        for (let m = 0; m < len - 1; m++) {
             if (!result[m]) {
                 result[m] = new Complex(0.0);
             }
@@ -121,7 +121,7 @@ let dft = (arr: Complex[], n: number, reverse: boolean, iterations: {count: numb
                     result[m] = result[m].add(signal1[h].mult(signal2[m + h - len]));
                 }
             }
-            result[m] = result[m].divNumber(len);
+            result[m] = result[m].divNumber(len / 2);
         }
         return result;
     },

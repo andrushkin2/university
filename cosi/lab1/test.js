@@ -89,7 +89,7 @@ let dft = (arr, n, reverse, iterations) => {
     };
 }, correlation = (signal1, signal2) => {
     let len = signal1.length, result = [];
-    for (let m = 0; m < len; m++) {
+    for (let m = 0; m < len - 1; m++) {
         if (!result[m]) {
             result[m] = new Complex(0.0);
         }
@@ -101,7 +101,7 @@ let dft = (arr, n, reverse, iterations) => {
                 result[m] = result[m].add(signal1[h].mult(signal2[m + h - len]));
             }
         }
-        result[m] = result[m].divNumber(len);
+        result[m] = result[m].divNumber(len / 2);
     }
     return result;
 }, convolution = (signal1, signal2) => {

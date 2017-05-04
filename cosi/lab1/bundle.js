@@ -90,7 +90,7 @@ let dft = (arr, n, reverse, iterations) => {
     };
 }, correlation = (signal1, signal2) => {
     let len = signal1.length, result = [];
-    for (let m = 0; m < len; m++) {
+    for (let m = 0; m < len - 1; m++) {
         if (!result[m]) {
             result[m] = new Complex(0.0);
         }
@@ -102,7 +102,7 @@ let dft = (arr, n, reverse, iterations) => {
                 result[m] = result[m].add(signal1[h].mult(signal2[m + h - len]));
             }
         }
-        result[m] = result[m].divNumber(len);
+        result[m] = result[m].divNumber(len / 2);
     }
     return result;
 }, convolution = (signal1, signal2) => {
@@ -153,6 +153,12 @@ let getXData = (count) => {
         res.push(i);
     }
     return res;
+}, getXDataComplex = (count) => {
+    let i = 0, res = [];
+    for (i = 0; i < count; i++) {
+        res.push(new test_1.Complex(0.0, 0.0));
+    }
+    return res;
 }, getMagnitudeFromComplex = (data) => data.map(complex => complex.magnitude), getPhaseFromComplex = (data) => {
     return data.map(complex => complex.magnitude > 0.3 ? complex.phase : 0);
 }, getRealFromComplex = (data) => data.map(complex => complex.re), runLab = () => {
@@ -175,11 +181,12 @@ let getXData = (count) => {
     drawChart(getHalfData(xData), getHalfData(getMagnitudeFromComplex(fftData.result)), $$(fftMagnitudeId));
     drawChart(xData, getRealFromComplex(fftReverse.result), $$(fftId));
 }, runLab2 = () => {
-    let amount = 16, xData = getXData(amount), dataLab1 = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
-        return Math.cos(3.0 * value) + Math.sin(2.0 * value);
-    }), dataLab2 = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
+    let amount = 512, xData = getXData(amount * 2), dataLab1 = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
+        return Math.sin(3.0 * value) + Math.cos(value);
+    }).concat(getXDataComplex(amount)), dataLab2 = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
         return Math.cos(5.0 * value) /* + Math.sin(6.0 * value)*/;
-    }), convolutionRezult = test_1.Convolution(dataLab1, dataLab2), correlationRezult = test_1.Correlation(dataLab1, dataLab2), correlationFourier = test_1.CorrelationFourier(dataLab1, dataLab2), convolutionFourier = test_1.ConvolutionFourier(dataLab1, dataLab2);
+    }).concat(getXDataComplex(amount)), convolutionRezult = test_1.Convolution(dataLab1, dataLab2), correlationRezult = test_1.Correlation(dataLab1, dataLab2), correlationFourier = test_1.CorrelationFourier(dataLab1, dataLab2), convolutionFourier = test_1.ConvolutionFourier(dataLab1, dataLab2);
+    debugger;
     drawChart(xData, getRealFromComplex(dataLab1), $$(lab2Data1Id));
     drawChart(xData, getRealFromComplex(dataLab2), $$(lab2Data2Id));
     drawChart(xData, getRealFromComplex(convolutionRezult), $$(lab2Conv1Id));

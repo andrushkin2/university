@@ -8,6 +8,14 @@ let getXData = (count: number): number[] => {
         }
         return res;
     },
+    getXDataComplex = (count: number): Complex[] => {
+        let i = 0,
+            res: Complex[] = [];
+        for (i = 0; i < count; i++) {
+            res.push(new Complex(0.0, 0.0));
+        }
+        return res;
+    },
     getMagnitudeFromComplex = (data: Complex[]): number[] => data.map(complex => complex.magnitude),
     getPhaseFromComplex = (data: Complex[]): number[] => {
         return data.map(complex => complex.magnitude > 0.3 ? complex.phase : 0);
@@ -42,19 +50,19 @@ let getXData = (count: number): number[] => {
         drawChart(xData, getRealFromComplex(fftReverse.result), $$(fftId) as webix.ui.chart);
     },
     runLab2 = () => {
-        let amount = 16,
-            xData: number[] = getXData(amount),
+        let amount = 512,
+            xData: number[] = getXData(amount * 2),
             dataLab1: Complex[] = CreateSamples(amount, 8000, 187.5, (value: number) => {
-                return Math.cos(3.0 * value) + Math.sin(2.0 * value);
-            }),
+                return Math.sin(3.0 * value) + Math.cos(value);
+            }).concat(getXDataComplex(amount)),
             dataLab2: Complex[] = CreateSamples(amount, 8000, 187.5, (value: number) => {
                 return Math.cos(5.0 * value)/* + Math.sin(6.0 * value)*/;
-            }),
+            }).concat(getXDataComplex(amount)),
             convolutionRezult = Convolution(dataLab1, dataLab2),
             correlationRezult = Correlation(dataLab1, dataLab2),
             correlationFourier = CorrelationFourier(dataLab1, dataLab2),
             convolutionFourier = ConvolutionFourier(dataLab1, dataLab2);
-
+            debugger;
             drawChart(xData, getRealFromComplex(dataLab1), $$(lab2Data1Id) as webix.ui.chart);
             drawChart(xData, getRealFromComplex(dataLab2), $$(lab2Data2Id) as webix.ui.chart);
             drawChart(xData, getRealFromComplex(convolutionRezult), $$(lab2Conv1Id) as webix.ui.chart);
