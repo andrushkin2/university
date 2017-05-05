@@ -3,26 +3,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
 let getXData = (count) => {
     let i = 0, res = [];
-    for (i = 0; i < count; i++) {
+    for (i; i < count; i++) {
         res.push(i);
     }
     return res;
 }, getXDataComplex = (count) => {
     let i = 0, res = [];
-    for (i = 0; i < count; i++) {
+    for (i; i < count; i++) {
         res.push(new test_1.Complex(0.0, 0.0));
     }
     return res;
 }, getMagnitudeFromComplex = (data) => data.map(complex => complex.magnitude), getPhaseFromComplex = (data) => {
     return data.map(complex => complex.magnitude > 0.3 ? complex.phase : 0);
-}, getRealFromComplex = (data) => data.map(complex => complex.re), runLab = () => {
+}, getRealFromComplex = (data) => data.map(complex => complex.re), getHalfData = (data) => {
+    let newData = data.slice(0);
+    newData.length = newData.length / 2;
+    return newData;
+}, runLab = () => {
     let amount = 1024, data = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
         return Math.sin(3.0 * value) + Math.cos(value);
-    }), xData = getXData(amount), getHalfData = (data) => {
-        let newData = data.slice(0);
-        newData.length = newData.length / 2;
-        return newData;
-    }, dftData = test_1.DFT(data, amount, false), dftDataReverse = test_1.DFT(dftData.result, amount, true), fftData = test_1.FFT(data, amount, false), fftReverse = test_1.FFT(fftData.result, amount, true);
+    }), xData = getXData(amount), dftData = test_1.DFT(data, amount, false), dftDataReverse = test_1.DFT(dftData.result, amount, true), fftData = test_1.FFT(data, amount, false), fftReverse = test_1.FFT(fftData.result, amount, true);
     drawChart(xData, getRealFromComplex(data), $$(firstChartId));
     console.log(`DFT iterations: ${dftData.count}`);
     console.log(`FFT iterations: ${fftData.count}`);
@@ -40,14 +40,31 @@ let getXData = (count) => {
     }).concat(getXDataComplex(amount)), dataLab2 = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
         return Math.cos(5.0 * value) /* + Math.sin(6.0 * value)*/;
     }).concat(getXDataComplex(amount)), convolutionRezult = test_1.Convolution(dataLab1, dataLab2), correlationRezult = test_1.Correlation(dataLab1, dataLab2), correlationFourier = test_1.CorrelationFourier(dataLab1, dataLab2), convolutionFourier = test_1.ConvolutionFourier(dataLab1, dataLab2);
-    debugger;
-    drawChart(xData, getRealFromComplex(dataLab1), $$(lab2Data1Id));
-    drawChart(xData, getRealFromComplex(dataLab2), $$(lab2Data2Id));
+    drawChart(getHalfData(xData), getHalfData(getRealFromComplex(dataLab1)), $$(lab2Data1Id));
+    drawChart(getHalfData(xData), getHalfData(getRealFromComplex(dataLab2)), $$(lab2Data2Id));
     drawChart(xData, getRealFromComplex(convolutionRezult), $$(lab2Conv1Id));
     drawChart(xData, getRealFromComplex(convolutionFourier), $$(lab2Conv2Id));
     drawChart(xData, getRealFromComplex(correlationRezult), $$(lab2Corr1Id));
     drawChart(xData, getRealFromComplex(correlationFourier), $$(lab2Corr2Id));
-}, lab2Data1Id = "lab2Data1Id", lab2Data2Id = "lab2Data2Id", lab2Conv1Id = "lab2Conv1Id", lab2Conv2Id = "lab2Conv2Id", lab2Corr1Id = "lab2Corr1Id", lab2Corr2Id = "lab2Corr2Id", firstChartId = "firstChart", dftId = "dftREverse", dftPhaseId = "dftPhase", dftMagnitudeId = "dftMagnitude", fftId = "fftREverse", fftPhaseId = "fftPhase", fftMagnitudeId = "fftMagnitude", getData = (x, y) => {
+}, runLab3 = () => {
+    const N = 8, size = 64, len = N * size;
+    let createData = (length, getSignal) => {
+        let step = 2 * Math.PI / length, curStep = 0.0, arr = [], i = 0;
+        for (; curStep < 2 * Math.PI; curStep += step, i++) {
+            arr[i] = getSignal(curStep);
+        }
+        arr[length - 1] = getSignal(2 * Math.PI);
+        return arr;
+    }, xData = getXData(len), data = createData(len, value => Math.sin(3.0 * value) + Math.cos(value)), fwhtData = test_1.FWHT(data, len), i = 0;
+    for (; i < len; i++) {
+        fwhtData[i] /= len; // this for normalisation
+    }
+    let extraData = test_1.GetPhaseAndAmplitude(fwhtData, len);
+    drawChart(xData, data, $$(lab3Data1Id));
+    drawChart(getHalfData(xData), extraData.phase, $$(lab3Data2Id));
+    drawChart(getHalfData(xData), extraData.amplitude, $$(lab3Data3Id));
+    drawChart(xData, test_1.FWHT(fwhtData, len), $$(lab3Data4Id));
+}, lab3Data1Id = "lab3Data1Id", lab3Data2Id = "lab3Data2Id", lab3Data3Id = "lab3Data3Id", lab3Data4Id = "lab3Data4Id", lab2Data1Id = "lab2Data1Id", lab2Data2Id = "lab2Data2Id", lab2Conv1Id = "lab2Conv1Id", lab2Conv2Id = "lab2Conv2Id", lab2Corr1Id = "lab2Corr1Id", lab2Corr2Id = "lab2Corr2Id", firstChartId = "firstChart", dftId = "dftREverse", dftPhaseId = "dftPhase", dftMagnitudeId = "dftMagnitude", fftId = "fftREverse", fftPhaseId = "fftPhase", fftMagnitudeId = "fftMagnitude", getData = (x, y) => {
     let len = x.length, res = [];
     for (let i = 0; i < len; i++) {
         res.push({
@@ -111,7 +128,8 @@ webix.ready(() => {
                     {
                         view: "segmented", id: "tabbar", value: "lab1", multiview: true, options: [
                             { value: "Lab 1", id: "lab1" },
-                            { value: "Lab 2", id: "lab2" }
+                            { value: "Lab 2", id: "lab2" },
+                            { value: "Lab 3", id: "lab3" }
                         ]
                     },
                     {}
@@ -165,6 +183,20 @@ webix.ready(() => {
                                 { template: "Using FFT", height: 30 },
                                 getChartObject(lab2Corr2Id)
                             ]
+                        },
+                        {
+                            id: "lab3",
+                            rows: [
+                                { type: "header", template: "Function", height: 50 },
+                                { template: "y = cos(3x) + sin(2x)", height: 30 },
+                                getChartObject(lab3Data1Id),
+                                { template: "Revert function", height: 30 },
+                                getChartObject(lab3Data4Id),
+                                { type: "header", template: "Phase", height: 50 },
+                                getChartObject(lab3Data2Id),
+                                { type: "header", template: "Magnitude", height: 50 },
+                                getChartObject(lab3Data3Id)
+                            ]
                         }
                     ]
                 }
@@ -172,11 +204,16 @@ webix.ready(() => {
         ]
     });
     $$("runId").attachEvent("onItemClick", () => {
-        if ($$("tabbar").getValue() === "lab1") {
-            runLab();
-        }
-        else {
-            runLab2();
+        switch ($$("tabbar").getValue()) {
+            case "lab1":
+                runLab();
+                return;
+            case "lab2":
+                runLab2();
+                return;
+            case "lab3":
+                runLab3();
+                return;
         }
     });
 });

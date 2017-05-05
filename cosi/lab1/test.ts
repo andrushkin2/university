@@ -78,8 +78,7 @@ let dft = (arr: Complex[], n: number, reverse: boolean, iterations: {count: numb
         return result;
     },
     getSample = (length: number, rate: number, frequency: number, func: (value: number) => number): Complex[] => {
-        let period = rate / frequency / 2,
-            res: Complex[] = [];
+        let res: Complex[] = [];
         for (let i = 0; i < length; i++) {
             res[i] = new Complex(func(i * 2 * Math.PI / length));
         }
@@ -162,6 +161,53 @@ let dft = (arr: Complex[], n: number, reverse: boolean, iterations: {count: numb
             result[i] = firstImage[i].conjugate.mult(secondImage[i]);
         }
         return fft(result, len, -1, {count: 0});
+    },
+    fwht = (data: number[], length: number) => {
+        if (length === 1) {
+            return data;
+        }
+        let half: number = length / 2,
+            firstHalf: number[] = [],
+            secondHalf: number[] = [],
+            result: number[] = [],
+            i: number,
+            firstPart: number[],
+            secondPart: number[];
+
+        for (i = 0; i < half; i++) {
+            firstHalf[i] = data[i] + data[i + half];
+            secondHalf[i] = -1 * data[i + half] + data[i];
+        }
+
+        firstPart = fwht(firstHalf, half);
+        secondPart = fwht(secondHalf, half);
+
+        for (i = 0; i < half; i++) {
+            result[i] = firstPart[i];
+            result[i + half] = secondPart[i];
+        }
+        return result;
+    },
+    getPhaseAndAmplitude = (mas: number[], len: number) => {
+        let amplitude: number[] = [mas[0] * mas[0]],
+            phase: number[] = [0],
+            i: number = 1;
+        for (; i < len / 2 - 1; i++) {
+            amplitude[i] = mas[2 * i - 1] * mas[2 * i - 1] + mas[2 * i] * mas[2 * i];
+            phase[i] = (amplitude[i] > 0.001) ? Math.atan2(mas[2 * i - 1], mas[2 * i]) : 0.0;
+        }
+        amplitude[len / 2 - 1] = mas[len - 1] * mas[len - 1];
+        phase[len / 2 - 1] = 0;
+        return { phase, amplitude };
     };
 
-export {createSamples as CreateSamples, dftFunc as DFT, fftFunc as FFT, correlation as Correlation, convolution as Convolution, convolutionFourier as ConvolutionFourier, correlationFourier as CorrelationFourier};
+export {
+    createSamples as CreateSamples,
+    dftFunc as DFT, fftFunc as FFT,
+    correlation as Correlation,
+    convolution as Convolution,
+    convolutionFourier as ConvolutionFourier,
+    correlationFourier as CorrelationFourier,
+    getPhaseAndAmplitude as GetPhaseAndAmplitude,
+    fwht as FWHT
+};

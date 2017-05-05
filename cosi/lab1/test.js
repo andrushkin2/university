@@ -66,7 +66,7 @@ let dft = (arr, n, reverse, iterations) => {
     }
     return result;
 }, getSample = (length, rate, frequency, func) => {
-    let period = rate / frequency / 2, res = [];
+    let res = [];
     for (let i = 0; i < length; i++) {
         res[i] = new Complex(func(i * 2 * Math.PI / length));
     }
@@ -133,6 +133,31 @@ let dft = (arr, n, reverse, iterations) => {
         result[i] = firstImage[i].conjugate.mult(secondImage[i]);
     }
     return fft(result, len, -1, { count: 0 });
+}, fwht = (data, length) => {
+    if (length === 1) {
+        return data;
+    }
+    let half = length / 2, firstHalf = [], secondHalf = [], result = [], i, firstPart, secondPart;
+    for (i = 0; i < half; i++) {
+        firstHalf[i] = data[i] + data[i + half];
+        secondHalf[i] = -1 * data[i + half] + data[i];
+    }
+    firstPart = fwht(firstHalf, half);
+    secondPart = fwht(secondHalf, half);
+    for (i = 0; i < half; i++) {
+        result[i] = firstPart[i];
+        result[i + half] = secondPart[i];
+    }
+    return result;
+}, getPhaseAndAmplitude = (mas, len) => {
+    let amplitude = [mas[0] * mas[0]], phase = [0], i = 1;
+    for (; i < len / 2 - 1; i++) {
+        amplitude[i] = mas[2 * i - 1] * mas[2 * i - 1] + mas[2 * i] * mas[2 * i];
+        phase[i] = (amplitude[i] > 0.001) ? Math.atan2(mas[2 * i - 1], mas[2 * i]) : 0.0;
+    }
+    amplitude[len / 2 - 1] = mas[len - 1] * mas[len - 1];
+    phase[len / 2 - 1] = 0;
+    return { phase, amplitude };
 };
 exports.CreateSamples = createSamples;
 exports.DFT = dftFunc;
@@ -141,3 +166,5 @@ exports.Correlation = correlation;
 exports.Convolution = convolution;
 exports.ConvolutionFourier = convolutionFourier;
 exports.CorrelationFourier = correlationFourier;
+exports.FWHT = fwht;
+exports.GetPhaseAndAmplitude = getPhaseAndAmplitude;
