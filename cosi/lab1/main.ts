@@ -26,6 +26,89 @@ let getXData = (count: number): number[] => {
         newData.length = newData.length / 2;
         return newData;
     },
+    bih = (noise: number[], grade: number) => {
+        let result: number[] = [],
+            temp: number[] = [],
+            acc: number = 0;
+        for (let t = grade / 2; t < noise.length; t++) {
+            temp[t] = noise[t];
+        }
+        for (let i = 0; i < grade / 2; i++) {
+            acc += noise[i] + noise[noise.length - i - 1];
+        }
+        for (let i = 0; i < noise.length - grade; i++) {
+            acc = acc + temp[i + grade / 2] - temp[i + grade];
+            result[i] = acc / grade * (-1);
+        }
+        return result;
+    },
+    kih = (nF: number, x: number[], grade: number, N: number) => {
+        let blackman: number[] = [],
+            result: number[] = [];
+
+        for (let i = 0; i < grade; i++) {
+            if (i - grade / 2 !== 0) {
+                blackman[i] = Math.sin(2 * Math.PI * nF * (i - grade / 2)) * (0.54 - 0.46 * Math.cos(2 * Math.PI * i / grade)) / (i - grade / 2);
+            } else {
+                blackman[i] = 2 * Math.PI * nF * (0.54 - 0.46 * Math.cos(2 * Math.PI * i / grade));
+            }
+        }
+
+        let dSum: number = 0;
+        for (let i = 0; i < grade; i++) {
+            dSum += blackman[i];
+        }
+
+        for (let i = 0; i < grade; i++) {
+            blackman[i] /= dSum * (-1);
+        }
+
+        for (let i = grade; i < N; i++) {
+            result[i - grade] = 0;
+            for (let t = 0; t < grade; t++) {
+                result[i   - grade] = result [ i - grade] + x[i - t] * blackman[t];
+            }
+            result[i - grade] *= -1;
+        }
+
+        return result;
+    },
+    addNoise = (y: number[]) => {
+        let temp: number[] = [],
+            len = y.length,
+            getRandomArbitrary = (min: number, max: number): number => (Math.random() * (max - min) + min);
+
+        for (let i = 0; i < len; i++) {
+            temp[i] = y[i] + Math.sin(getRandomArbitrary(0, 360)) / 8;
+        }
+        return temp;
+    },
+    runLab4 = () => {
+        let amount = 1024,
+            grade: number = 64,
+            nF = 0.015,
+            createData = (length: number, getSignal: (value: number) => number) => {
+                let step: number = 2 * Math.PI / length,
+                    curStep: number = 0.0,
+                    arr: number[] = [],
+                    i: number = 0;
+                for (; curStep < 2 * Math.PI; curStep += step, i++) {
+                    arr[i] = getSignal(curStep);
+                }
+                arr[length - 1] = getSignal(2 * Math.PI);
+                return arr;
+            },
+            data = createData(amount, value => Math.sin(3.0 * value) + Math.cos(value)),
+            withNoise = addNoise(data),
+            kihData = kih(nF, withNoise, grade, amount),
+            bihData = bih(withNoise, grade),
+            xData: number[] = getXData(amount);
+
+            drawChart(xData, data, $$(lab4Data1) as webix.ui.chart);
+            drawChart(xData, withNoise, $$(lab4Data2) as webix.ui.chart);
+            drawChart(getXData(kihData.length), kihData, $$(lab4Data3) as webix.ui.chart);
+            drawChart(getXData(bihData.length), bihData, $$(lab4Data4) as webix.ui.chart);
+    },
     runLab = () => {
         let amount: number = 1024,
             data: Complex[] = CreateSamples(amount, 8000, 187.5, (value: number) => {
@@ -99,6 +182,10 @@ let getXData = (count: number): number[] => {
         drawChart(getHalfData(xData), extraData.amplitude, $$(lab3Data3Id) as webix.ui.chart);
         drawChart(xData, FWHT(fwhtData, len), $$(lab3Data4Id) as webix.ui.chart);
     },
+    lab4Data1 = "lab4Data1",
+    lab4Data2 = "lab4Data2",
+    lab4Data3 = "lab4Data3",
+    lab4Data4 = "lab4Data4",
     lab3Data1Id = "lab3Data1Id",
     lab3Data2Id = "lab3Data2Id",
     lab3Data3Id = "lab3Data3Id",
@@ -186,7 +273,8 @@ webix.ready(() => {
                     view: "segmented", id: "tabbar", value: "lab1", multiview: true, options: [
                             { value: "Lab 1",  id: "lab1"},
                             { value: "Lab 2",  id: "lab2"},
-                            { value: "Lab 3",  id: "lab3"}
+                            { value: "Lab 3",  id: "lab3"},
+                            { value: "Lab 4",  id: "lab4"}
                         ]
                     },
                     {}
@@ -254,6 +342,20 @@ webix.ready(() => {
                                 { type: "header", template: "Magnitude", height: 50},
                                 getChartObject(lab3Data3Id)
                             ]
+                        },
+                        {
+                            id: "lab4",
+                            rows: [
+                                { type: "header", template: "Function", height: 50 },
+                                { template: "y = cos(3x) + sin(2x)", height: 30 },
+                                getChartObject(lab4Data1),
+                                { template: "With noise", height: 30 },
+                                getChartObject(lab4Data2),
+                                { type: "header", template: "KIH filter", height: 50},
+                                getChartObject(lab4Data3),
+                                { type: "header", template: "BIH filter", height: 50},
+                                getChartObject(lab4Data4)
+                            ]
                         }
                     ]
                 }
@@ -265,6 +367,7 @@ webix.ready(() => {
             case "lab1": runLab(); return;
             case "lab2": runLab2(); return;
             case "lab3": runLab3(); return;
+            case "lab4": runLab4(); return;
         }
     });
 });

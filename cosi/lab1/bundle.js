@@ -192,6 +192,63 @@ let getXData = (count) => {
     let newData = data.slice(0);
     newData.length = newData.length / 2;
     return newData;
+}, bih = (noise, grade) => {
+    let result = [], temp = [], acc = 0;
+    for (let t = grade / 2; t < noise.length; t++) {
+        temp[t] = noise[t];
+    }
+    for (let i = 0; i < grade / 2; i++) {
+        acc += noise[i] + noise[noise.length - i - 1];
+    }
+    for (let i = 0; i < noise.length - grade; i++) {
+        acc = acc + temp[i + grade / 2] - temp[i + grade];
+        result[i] = acc / grade * (-1);
+    }
+    return result;
+}, kih = (nF, x, grade, N) => {
+    let blackman = [], result = [];
+    for (let i = 0; i < grade; i++) {
+        if (i - grade / 2 !== 0) {
+            blackman[i] = Math.sin(2 * Math.PI * nF * (i - grade / 2)) * (0.54 - 0.46 * Math.cos(2 * Math.PI * i / grade)) / (i - grade / 2);
+        }
+        else {
+            blackman[i] = 2 * Math.PI * nF * (0.54 - 0.46 * Math.cos(2 * Math.PI * i / grade));
+        }
+    }
+    let dSum = 0;
+    for (let i = 0; i < grade; i++) {
+        dSum += blackman[i];
+    }
+    for (let i = 0; i < grade; i++) {
+        blackman[i] /= dSum * (-1);
+    }
+    for (let i = grade; i < N; i++) {
+        result[i - grade] = 0;
+        for (let t = 0; t < grade; t++) {
+            result[i - grade] = result[i - grade] + x[i - t] * blackman[t];
+        }
+        result[i - grade] *= -1;
+    }
+    return result;
+}, addNoise = (y) => {
+    let temp = [], len = y.length, getRandomArbitrary = (min, max) => (Math.random() * (max - min) + min);
+    for (let i = 0; i < len; i++) {
+        temp[i] = y[i] + Math.sin(getRandomArbitrary(0, 360)) / 8;
+    }
+    return temp;
+}, runLab4 = () => {
+    let amount = 1024, grade = 64, nF = 0.015, createData = (length, getSignal) => {
+        let step = 2 * Math.PI / length, curStep = 0.0, arr = [], i = 0;
+        for (; curStep < 2 * Math.PI; curStep += step, i++) {
+            arr[i] = getSignal(curStep);
+        }
+        arr[length - 1] = getSignal(2 * Math.PI);
+        return arr;
+    }, data = createData(amount, value => Math.sin(3.0 * value) + Math.cos(value)), withNoise = addNoise(data), kihData = kih(nF, withNoise, grade, amount), bihData = bih(withNoise, grade), xData = getXData(amount);
+    drawChart(xData, data, $$(lab4Data1));
+    drawChart(xData, withNoise, $$(lab4Data2));
+    drawChart(getXData(kihData.length), kihData, $$(lab4Data3));
+    drawChart(getXData(bihData.length), bihData, $$(lab4Data4));
 }, runLab = () => {
     let amount = 1024, data = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
         return Math.sin(3.0 * value) + Math.cos(value);
@@ -237,7 +294,7 @@ let getXData = (count) => {
     drawChart(getHalfData(xData), extraData.phase, $$(lab3Data2Id));
     drawChart(getHalfData(xData), extraData.amplitude, $$(lab3Data3Id));
     drawChart(xData, test_1.FWHT(fwhtData, len), $$(lab3Data4Id));
-}, lab3Data1Id = "lab3Data1Id", lab3Data2Id = "lab3Data2Id", lab3Data3Id = "lab3Data3Id", lab3Data4Id = "lab3Data4Id", lab2Data1Id = "lab2Data1Id", lab2Data2Id = "lab2Data2Id", lab2Conv1Id = "lab2Conv1Id", lab2Conv2Id = "lab2Conv2Id", lab2Corr1Id = "lab2Corr1Id", lab2Corr2Id = "lab2Corr2Id", firstChartId = "firstChart", dftId = "dftREverse", dftPhaseId = "dftPhase", dftMagnitudeId = "dftMagnitude", fftId = "fftREverse", fftPhaseId = "fftPhase", fftMagnitudeId = "fftMagnitude", getData = (x, y) => {
+}, lab4Data1 = "lab4Data1", lab4Data2 = "lab4Data2", lab4Data3 = "lab4Data3", lab4Data4 = "lab4Data4", lab3Data1Id = "lab3Data1Id", lab3Data2Id = "lab3Data2Id", lab3Data3Id = "lab3Data3Id", lab3Data4Id = "lab3Data4Id", lab2Data1Id = "lab2Data1Id", lab2Data2Id = "lab2Data2Id", lab2Conv1Id = "lab2Conv1Id", lab2Conv2Id = "lab2Conv2Id", lab2Corr1Id = "lab2Corr1Id", lab2Corr2Id = "lab2Corr2Id", firstChartId = "firstChart", dftId = "dftREverse", dftPhaseId = "dftPhase", dftMagnitudeId = "dftMagnitude", fftId = "fftREverse", fftPhaseId = "fftPhase", fftMagnitudeId = "fftMagnitude", getData = (x, y) => {
     let len = x.length, res = [];
     for (let i = 0; i < len; i++) {
         res.push({
@@ -302,7 +359,8 @@ webix.ready(() => {
                         view: "segmented", id: "tabbar", value: "lab1", multiview: true, options: [
                             { value: "Lab 1", id: "lab1" },
                             { value: "Lab 2", id: "lab2" },
-                            { value: "Lab 3", id: "lab3" }
+                            { value: "Lab 3", id: "lab3" },
+                            { value: "Lab 4", id: "lab4" }
                         ]
                     },
                     {}
@@ -370,6 +428,20 @@ webix.ready(() => {
                                 { type: "header", template: "Magnitude", height: 50 },
                                 getChartObject(lab3Data3Id)
                             ]
+                        },
+                        {
+                            id: "lab4",
+                            rows: [
+                                { type: "header", template: "Function", height: 50 },
+                                { template: "y = cos(3x) + sin(2x)", height: 30 },
+                                getChartObject(lab4Data1),
+                                { template: "With noise", height: 30 },
+                                getChartObject(lab4Data2),
+                                { type: "header", template: "KIH filter", height: 50 },
+                                getChartObject(lab4Data3),
+                                { type: "header", template: "BIH filter", height: 50 },
+                                getChartObject(lab4Data4)
+                            ]
                         }
                     ]
                 }
@@ -386,6 +458,9 @@ webix.ready(() => {
                 return;
             case "lab3":
                 runLab3();
+                return;
+            case "lab4":
+                runLab4();
                 return;
         }
     });
