@@ -207,12 +207,19 @@ let getXData = (count) => {
     return result;
 }, kih = (nF, x, grade, N) => {
     let blackman = [], result = [];
+    // for (let i = 0; i < grade; i++) {
+    //     if (i - grade / 2 !== 0) {
+    //         blackman[i] = Math.sin(2 * Math.PI * nF * (i - grade / 2)) * (0.54 - 0.46 * Math.cos(2 * Math.PI * i / grade)) / (i - grade / 2);
+    //     } else {
+    //         blackman[i] = 2 * Math.PI * nF * (0.54 - 0.46 * Math.cos(2 * Math.PI * i / grade));
+    //     }
+    // }
     for (let i = 0; i < grade; i++) {
         if (i - grade / 2 !== 0) {
-            blackman[i] = Math.sin(2 * Math.PI * nF * (i - grade / 2)) * (0.54 - 0.46 * Math.cos(2 * Math.PI * i / grade)) / (i - grade / 2);
+            blackman[i] = Math.sin(2 * Math.PI * nF * (i - grade / 2)) * (0.42 - 0.5 * Math.cos(2 * Math.PI * i / grade) + 0.08 * Math.cos(4 * Math.PI / grade)) / (i - grade / 2);
         }
         else {
-            blackman[i] = 2 * Math.PI * nF * (0.54 - 0.46 * Math.cos(2 * Math.PI * i / grade));
+            blackman[i] = 2 * Math.PI * nF * (0.42 - 0.5 * Math.cos(2 * Math.PI * i / grade) + 0.08 * Math.cos(4 * Math.PI / grade));
         }
     }
     let dSum = 0;
@@ -244,7 +251,7 @@ let getXData = (count) => {
         }
         arr[length - 1] = getSignal(2 * Math.PI);
         return arr;
-    }, data = createData(amount, value => Math.sin(3.0 * value) + Math.cos(value)), withNoise = addNoise(data), kihData = kih(nF, withNoise, grade, amount), bihData = bih(withNoise, grade), xData = getXData(amount);
+    }, data = createData(amount, value => Math.cos(3.0 * value) + Math.sin(2.0 * value)), withNoise = addNoise(data), kihData = kih(nF, withNoise, grade, amount), bihData = bih(withNoise, grade), xData = getXData(amount);
     drawChart(xData, data, $$(lab4Data1));
     drawChart(xData, withNoise, $$(lab4Data2));
     drawChart(getXData(kihData.length), kihData, $$(lab4Data3));
@@ -266,16 +273,16 @@ let getXData = (count) => {
     drawChart(xData, getRealFromComplex(fftReverse.result), $$(fftId));
 }, runLab2 = () => {
     let amount = 512, xData = getXData(amount * 2), dataLab1 = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
-        return Math.sin(3.0 * value) + Math.cos(value);
+        return Math.cos(3.0 * value) /* + Math.cos(value)*/;
     }).concat(getXDataComplex(amount)), dataLab2 = test_1.CreateSamples(amount, 8000, 187.5, (value) => {
-        return Math.cos(5.0 * value) /* + Math.sin(6.0 * value)*/;
+        return Math.cos(3.0 * value) + Math.sin(2.0 * value);
     }).concat(getXDataComplex(amount)), convolutionRezult = test_1.Convolution(dataLab1, dataLab2), correlationRezult = test_1.Correlation(dataLab1, dataLab2), correlationFourier = test_1.CorrelationFourier(dataLab1, dataLab2), convolutionFourier = test_1.ConvolutionFourier(dataLab1, dataLab2);
     drawChart(getHalfData(xData), getHalfData(getRealFromComplex(dataLab1)), $$(lab2Data1Id));
     drawChart(getHalfData(xData), getHalfData(getRealFromComplex(dataLab2)), $$(lab2Data2Id));
-    drawChart(xData, getRealFromComplex(convolutionRezult), $$(lab2Conv1Id));
-    drawChart(xData, getRealFromComplex(convolutionFourier), $$(lab2Conv2Id));
-    drawChart(xData, getRealFromComplex(correlationRezult), $$(lab2Corr1Id));
-    drawChart(xData, getRealFromComplex(correlationFourier), $$(lab2Corr2Id));
+    drawChart(getHalfData(xData), getRealFromComplex(convolutionRezult), $$(lab2Conv1Id));
+    drawChart(getHalfData(xData), getRealFromComplex(convolutionFourier), $$(lab2Conv2Id));
+    drawChart(getHalfData(xData), getRealFromComplex(correlationRezult), $$(lab2Corr1Id));
+    drawChart(getHalfData(xData), getRealFromComplex(correlationFourier), $$(lab2Corr2Id));
 }, runLab3 = () => {
     const N = 8, size = 64, len = N * size;
     let createData = (length, getSignal) => {
@@ -285,7 +292,7 @@ let getXData = (count) => {
         }
         arr[length - 1] = getSignal(2 * Math.PI);
         return arr;
-    }, xData = getXData(len), data = createData(len, value => Math.sin(3.0 * value) + Math.cos(value)), fwhtData = test_1.FWHT(data, len), i = 0;
+    }, xData = getXData(len), data = createData(len, value => Math.cos(3.0 * value) + Math.sin(2.0 * value)), fwhtData = test_1.FWHT(data, len), i = 0;
     for (; i < len; i++) {
         fwhtData[i] /= len; // this for normalisation
     }

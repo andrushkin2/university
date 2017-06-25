@@ -46,11 +46,18 @@ let getXData = (count: number): number[] => {
         let blackman: number[] = [],
             result: number[] = [];
 
+        // for (let i = 0; i < grade; i++) {
+        //     if (i - grade / 2 !== 0) {
+        //         blackman[i] = Math.sin(2 * Math.PI * nF * (i - grade / 2)) * (0.54 - 0.46 * Math.cos(2 * Math.PI * i / grade)) / (i - grade / 2);
+        //     } else {
+        //         blackman[i] = 2 * Math.PI * nF * (0.54 - 0.46 * Math.cos(2 * Math.PI * i / grade));
+        //     }
+        // }
         for (let i = 0; i < grade; i++) {
             if (i - grade / 2 !== 0) {
-                blackman[i] = Math.sin(2 * Math.PI * nF * (i - grade / 2)) * (0.54 - 0.46 * Math.cos(2 * Math.PI * i / grade)) / (i - grade / 2);
+                blackman[i] = Math.sin(2 * Math.PI * nF * (i - grade / 2)) * (0.42 - 0.5 * Math.cos(2 * Math.PI * i / grade) + 0.08 * Math.cos(4 * Math.PI / grade)) / (i - grade / 2);
             } else {
-                blackman[i] = 2 * Math.PI * nF * (0.54 - 0.46 * Math.cos(2 * Math.PI * i / grade));
+                blackman[i] = 2 * Math.PI * nF * (0.42 - 0.5 * Math.cos(2 * Math.PI * i / grade) + 0.08 * Math.cos(4 * Math.PI / grade));
             }
         }
 
@@ -98,7 +105,7 @@ let getXData = (count: number): number[] => {
                 arr[length - 1] = getSignal(2 * Math.PI);
                 return arr;
             },
-            data = createData(amount, value => Math.sin(3.0 * value) + Math.cos(value)),
+            data = createData(amount, value => Math.cos(3.0 * value) + Math.sin(2.0 * value)),
             withNoise = addNoise(data),
             kihData = kih(nF, withNoise, grade, amount),
             bihData = bih(withNoise, grade),
@@ -136,10 +143,10 @@ let getXData = (count: number): number[] => {
         let amount = 512,
             xData: number[] = getXData(amount * 2),
             dataLab1: Complex[] = CreateSamples(amount, 8000, 187.5, (value: number) => {
-                return Math.sin(3.0 * value) + Math.cos(value);
+                return Math.cos(3.0 * value)/* + Math.cos(value)*/;
             }).concat(getXDataComplex(amount)),
             dataLab2: Complex[] = CreateSamples(amount, 8000, 187.5, (value: number) => {
-                return Math.cos(5.0 * value)/* + Math.sin(6.0 * value)*/;
+                return Math.cos(3.0 * value) + Math.sin(2.0 * value);
             }).concat(getXDataComplex(amount)),
             convolutionRezult = Convolution(dataLab1, dataLab2),
             correlationRezult = Correlation(dataLab1, dataLab2),
@@ -147,10 +154,10 @@ let getXData = (count: number): number[] => {
             convolutionFourier = ConvolutionFourier(dataLab1, dataLab2);
             drawChart(getHalfData(xData), getHalfData(getRealFromComplex(dataLab1)), $$(lab2Data1Id) as webix.ui.chart);
             drawChart(getHalfData(xData), getHalfData(getRealFromComplex(dataLab2)), $$(lab2Data2Id) as webix.ui.chart);
-            drawChart(xData, getRealFromComplex(convolutionRezult), $$(lab2Conv1Id) as webix.ui.chart);
-            drawChart(xData, getRealFromComplex(convolutionFourier), $$(lab2Conv2Id) as webix.ui.chart);
-            drawChart(xData, getRealFromComplex(correlationRezult), $$(lab2Corr1Id) as webix.ui.chart);
-            drawChart(xData, getRealFromComplex(correlationFourier), $$(lab2Corr2Id) as webix.ui.chart);
+            drawChart(getHalfData(xData), getRealFromComplex(convolutionRezult), $$(lab2Conv1Id) as webix.ui.chart);
+            drawChart(getHalfData(xData), getRealFromComplex(convolutionFourier), $$(lab2Conv2Id) as webix.ui.chart);
+            drawChart(getHalfData(xData), getRealFromComplex(correlationRezult), $$(lab2Corr1Id) as webix.ui.chart);
+            drawChart(getHalfData(xData), getRealFromComplex(correlationFourier), $$(lab2Corr2Id) as webix.ui.chart);
     },
     runLab3 = () => {
         const   N: number = 8,
@@ -168,7 +175,7 @@ let getXData = (count: number): number[] => {
                 return arr;
             },
             xData = getXData(len),
-            data = createData(len, value => Math.sin(3.0 * value) + Math.cos(value)),
+            data = createData(len, value => Math.cos(3.0 * value) + Math.sin(2.0 * value)),
             fwhtData = FWHT(data, len),
             i: number = 0;
 
