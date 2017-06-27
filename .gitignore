@@ -12,6 +12,8 @@
 university.sublime-project
 university.sublime-workspace
 
+practice/practice/
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

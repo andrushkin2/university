@@ -1,0 +1,26 @@
+{
+  "name": "practice",
+  "version": "1.0.0",
+  "description": "A test work",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrei Kozyakov",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^14.4.0",
+    "express": "^4.15.3",
+    "expressjs": "^1.0.1",
+    "gulp": "^3.9.1",
+    "gulp-connect": "^5.0.0",
+    "gulp-less": "^3.3.2",
+    "gulp-typescript": "^3.1.7",
+    "gulp-watch": "^4.3.11",
+    "run-sequence": "^1.2.2",
+    "tsd": "^0.6.5",
+    "tslint": "^5.2.0",
+    "typescript": "^2.4.1",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
