@@ -1,4 +1,5 @@
-import {Complex, CreateSamples, DFT, FFT, Convolution, Correlation, ConvolutionFourier, CorrelationFourier, GetPhaseAndAmplitude, FWHT} from "./test";
+import { Complex, CreateSamples, DFT, FFT, Convolution, Correlation, ConvolutionFourier, CorrelationFourier, GetPhaseAndAmplitude, FWHT } from "./test";
+import { ui, canvasId, uploaderId } from "./lab1/ui";
 
 let getXData = (count: number): number[] => {
         let i: number = 0,
@@ -281,7 +282,8 @@ webix.ready(() => {
                             { value: "Lab 1",  id: "lab1"},
                             { value: "Lab 2",  id: "lab2"},
                             { value: "Lab 3",  id: "lab3"},
-                            { value: "Lab 4",  id: "lab4"}
+                            { value: "Lab 4",  id: "lab4"},
+                            { value: "Lab 1 gen.2",  id: "lab5"}
                         ]
                     },
                     {}
@@ -363,7 +365,8 @@ webix.ready(() => {
                                 { type: "header", template: "BIH filter", height: 50},
                                 getChartObject(lab4Data4)
                             ]
-                        }
+                        },
+                        ui
                     ]
                 }
             }
@@ -375,6 +378,10 @@ webix.ready(() => {
             case "lab2": runLab2(); return;
             case "lab3": runLab3(); return;
             case "lab4": runLab4(); return;
+            default: break;
         }
+    });
+    (<webix.ui.uploader>$$(uploaderId)).attachEvent("onAfterFileAdd", (e) => {
+        debugger;
     });
 });

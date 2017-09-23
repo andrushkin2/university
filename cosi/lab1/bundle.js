@@ -1,6 +1,39 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+let uploaderId = "imageUploader", canvasId = "canvasImage1", ui = {
+    id: "lab5",
+    rows: [
+        { type: "header", template: "Functions", height: 50 },
+        {
+            cols: [
+                {
+                    view: "uploader",
+                    value: "Load file",
+                    id: uploaderId,
+                    autosend: false,
+                    multiple: false
+                },
+                {}
+            ]
+        },
+        {
+            rows: [
+                { type: "header", template: "Image", height: 50 },
+                {
+                    template: `<div><canvas id="${canvasId}" width="1000" height="500"></canvas></div>`
+                }
+            ]
+        }
+    ]
+};
+exports.uploaderId = uploaderId;
+exports.canvasId = canvasId;
+exports.ui = ui;
+
+},{}],2:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 class Complex {
     constructor(re, im = 0.0) {
         this.re = re;
@@ -170,10 +203,11 @@ exports.CorrelationFourier = correlationFourier;
 exports.FWHT = fwht;
 exports.GetPhaseAndAmplitude = getPhaseAndAmplitude;
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
+const ui_1 = require("./lab1/ui");
 let getXData = (count) => {
     let i = 0, res = [];
     for (i; i < count; i++) {
@@ -367,7 +401,8 @@ webix.ready(() => {
                             { value: "Lab 1", id: "lab1" },
                             { value: "Lab 2", id: "lab2" },
                             { value: "Lab 3", id: "lab3" },
-                            { value: "Lab 4", id: "lab4" }
+                            { value: "Lab 4", id: "lab4" },
+                            { value: "Lab 1 gen.2", id: "lab5" }
                         ]
                     },
                     {}
@@ -449,7 +484,8 @@ webix.ready(() => {
                                 { type: "header", template: "BIH filter", height: 50 },
                                 getChartObject(lab4Data4)
                             ]
-                        }
+                        },
+                        ui_1.ui
                     ]
                 }
             }
@@ -469,8 +505,12 @@ webix.ready(() => {
             case "lab4":
                 runLab4();
                 return;
+            default: break;
         }
+    });
+    $$(ui_1.uploaderId).attachEvent("onAfterFileAdd", (e) => {
+        debugger;
     });
 });
 
-},{"./test":1}]},{},[2]);
+},{"./lab1/ui":1,"./test":2}]},{},[3]);

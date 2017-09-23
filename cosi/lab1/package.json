@@ -10,5 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "@types/webix": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.30",
+    "browserify": "^14.4.0"
   }
 }
