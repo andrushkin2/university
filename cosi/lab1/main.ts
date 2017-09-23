@@ -1,5 +1,6 @@
 import { Complex, CreateSamples, DFT, FFT, Convolution, Correlation, ConvolutionFourier, CorrelationFourier, GetPhaseAndAmplitude, FWHT } from "./test";
 import { ui, canvasId, uploaderId } from "./lab1/ui";
+import UiLogic from "./lab1/logic";
 
 let getXData = (count: number): number[] => {
         let i: number = 0,
@@ -278,7 +279,7 @@ webix.ready(() => {
                     { template: "Transform", type: "header", width: 100, borderless: true },
                     { view: "button", id: "runId", value: "Run", width: 100, align: "left" },
                     {
-                    view: "segmented", id: "tabbar", value: "lab1", multiview: true, options: [
+                    view: "segmented", id: "tabbar", value: "lab1", multiview: true,  options: [
                             { value: "Lab 1",  id: "lab1"},
                             { value: "Lab 2",  id: "lab2"},
                             { value: "Lab 3",  id: "lab3"},
@@ -372,6 +373,13 @@ webix.ready(() => {
             }
         ]
     });
+
+    let uiLogic: UiLogic;
+    (<webix.ui.segmented>$$("tabbar")).attachEvent("onAfterTabClick", (e) => {
+        if (uiLogic === undefined) {
+            uiLogic = new UiLogic();
+        }
+    });
     (<webix.ui.button>$$("runId")).attachEvent("onItemClick", () => {
         switch ((<webix.ui.segmented>$$("tabbar")).getValue()) {
             case "lab1": runLab(); return;
@@ -380,8 +388,5 @@ webix.ready(() => {
             case "lab4": runLab4(); return;
             default: break;
         }
-    });
-    (<webix.ui.uploader>$$(uploaderId)).attachEvent("onAfterFileAdd", (e) => {
-        debugger;
     });
 });

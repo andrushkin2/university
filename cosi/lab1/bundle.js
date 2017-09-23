@@ -1,6 +1,67 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const ui_1 = require("./ui");
+class UiLogic {
+    constructor() {
+        this.image = new Image();
+        let canvas = document.querySelector(`#${ui_1.canvasId}`), context;
+        if (canvas === null) {
+            throw new Error(`Cannot find canvas element with ID: ${ui_1.canvasId}`);
+        }
+        context = canvas.getContext("2d");
+        if (context === null) {
+            throw new Error("Cannot get context of canvas");
+        }
+        this.image.style.display = "none";
+        this.canvas = canvas;
+        this.context = context;
+        $$(ui_1.uploaderId).attachEvent("onAfterFileAdd", (e) => {
+            this.loadFile(e.file).then(data => this.insertImageToCanvas(data)).then(() => {
+                debugger;
+            }).catch(reason => {
+                new webix.message(reason.message || reason.text || "Error was happened");
+            });
+        });
+    }
+    insertImageToCanvas(urlData) {
+        return new Promise((resolve, reject) => {
+            this.image.src = urlData;
+            this.image.onload = () => {
+                this.context.drawImage(this.image, 0, 0);
+                resolve({});
+            };
+            this.image.onerror = e => {
+                reject(e);
+            };
+        });
+    }
+    loadFile(file) {
+        if (file instanceof File) {
+            return new Promise((resolve, reject) => {
+                if (FileReader) {
+                    let loader = new FileReader();
+                    loader.onload = () => {
+                        resolve(loader.result);
+                    };
+                    loader.onerror = (e) => {
+                        reject(e);
+                    };
+                    loader.readAsDataURL(file);
+                }
+                else {
+                    reject(new Error("The browser doesn't support FileReader"));
+                }
+            });
+        }
+        return Promise.reject(new Error("File not found"));
+    }
+}
+exports.default = UiLogic;
+
+},{"./ui":2}],2:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 let uploaderId = "imageUploader", canvasId = "canvasImage1", ui = {
     id: "lab5",
     rows: [
@@ -31,7 +92,7 @@ exports.uploaderId = uploaderId;
 exports.canvasId = canvasId;
 exports.ui = ui;
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Complex {
@@ -203,11 +264,12 @@ exports.CorrelationFourier = correlationFourier;
 exports.FWHT = fwht;
 exports.GetPhaseAndAmplitude = getPhaseAndAmplitude;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
 const ui_1 = require("./lab1/ui");
+const logic_1 = require("./lab1/logic");
 let getXData = (count) => {
     let i = 0, res = [];
     for (i; i < count; i++) {
@@ -491,6 +553,12 @@ webix.ready(() => {
             }
         ]
     });
+    let uiLogic;
+    $$("tabbar").attachEvent("onAfterTabClick", (e) => {
+        if (uiLogic === undefined) {
+            uiLogic = new logic_1.default();
+        }
+    });
     $$("runId").attachEvent("onItemClick", () => {
         switch ($$("tabbar").getValue()) {
             case "lab1":
@@ -508,9 +576,6 @@ webix.ready(() => {
             default: break;
         }
     });
-    $$(ui_1.uploaderId).attachEvent("onAfterFileAdd", (e) => {
-        debugger;
-    });
 });
 
-},{"./lab1/ui":1,"./test":2}]},{},[3]);
+},{"./lab1/logic":1,"./lab1/ui":2,"./test":3}]},{},[4]);

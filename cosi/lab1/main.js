@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
 const ui_1 = require("./lab1/ui");
+const logic_1 = require("./lab1/logic");
 let getXData = (count) => {
     let i = 0, res = [];
     for (i; i < count; i++) {
@@ -285,6 +286,12 @@ webix.ready(() => {
             }
         ]
     });
+    let uiLogic;
+    $$("tabbar").attachEvent("onAfterTabClick", (e) => {
+        if (uiLogic === undefined) {
+            uiLogic = new logic_1.default();
+        }
+    });
     $$("runId").attachEvent("onItemClick", () => {
         switch ($$("tabbar").getValue()) {
             case "lab1":
@@ -301,8 +308,5 @@ webix.ready(() => {
                 return;
             default: break;
         }
-    });
-    $$(ui_1.uploaderId).attachEvent("onAfterFileAdd", (e) => {
-        debugger;
     });
 });

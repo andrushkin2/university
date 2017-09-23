@@ -17,8 +17,12 @@ export default class UiLogic {
         this.image.style.display = "none";
         this.canvas = canvas;
         this.context = context;
-        (<webix.ui.uploader>$$(uploaderId)).attachEvent("onAfterFileAdd", (e?: File) => {
-            debugger;
+        (<webix.ui.uploader>$$(uploaderId)).attachEvent("onAfterFileAdd", (e?) => {
+            this.loadFile(e.file).then(data => this.insertImageToCanvas(data)).then(() => {
+                debugger;
+            }).catch(reason => {
+                new webix.message(reason.message || reason.text || "Error was happened");
+            });
         });
     }
     private insertImageToCanvas(urlData: string) {
@@ -50,6 +54,6 @@ export default class UiLogic {
                 }
             });
         }
-        return Promise.reject<Error>(new Error("File not found"));
+        return Promise.reject(new Error("File not found"));
     }
 }

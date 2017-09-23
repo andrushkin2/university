@@ -16,7 +16,11 @@ class UiLogic {
         this.canvas = canvas;
         this.context = context;
         $$(ui_1.uploaderId).attachEvent("onAfterFileAdd", (e) => {
-            debugger;
+            this.loadFile(e.file).then(data => this.insertImageToCanvas(data)).then(() => {
+                debugger;
+            }).catch(reason => {
+                new webix.message(reason.message || reason.text || "Error was happened");
+            });
         });
     }
     insertImageToCanvas(urlData) {
