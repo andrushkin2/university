@@ -1,7 +1,21 @@
-import { canvasId, uploaderId } from "./ui";
+import { canvasId, uploaderId, buttonId } from "./ui";
+
+interface IKeyValue<T> {
+    [key: string]: T;
+}
+
+interface IColorsData {
+    maxValue: number;
+    map: IKeyValue<number | undefined>;
+}
+
+interface IChannelsData {
+    red: number[];
+    green: number[];
+    blue: number[];
+}
 
 export default class UiLogic {
-    private image = new Image();
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
     constructor() {
@@ -14,7 +28,6 @@ export default class UiLogic {
         if (context === null) {
             throw new Error("Cannot get context of canvas");
         }
-        this.image.style.display = "none";
         this.canvas = canvas;
         this.context = context;
         (<webix.ui.uploader>$$(uploaderId)).attachEvent("onAfterFileAdd", (e?) => {
@@ -24,15 +37,24 @@ export default class UiLogic {
                 new webix.message(reason.message || reason.text || "Error was happened");
             });
         });
+        (<webix.ui.button>$$(buttonId)).attachEvent("onItemClick", (e?) => {
+            let data = this.getInfoFromContext();
+            console.log(data);
+        });
+    }
+    private clearCanvas() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
     private insertImageToCanvas(urlData: string) {
         return new Promise((resolve, reject) => {
-            this.image.src = urlData;
-            this.image.onload = () => {
-                this.context.drawImage(this.image, 0, 0);
+            let image = new Image();
+            image.src = urlData;
+            image.onload = () => {
+                this.clearCanvas();
+                this.context.drawImage(image, 0, 0, 1000, 500);
                 resolve({});
             };
-            this.image.onerror = e => {
+            image.onerror = e => {
                 reject(e);
             };
         });
@@ -55,5 +77,41 @@ export default class UiLogic {
             });
         }
         return Promise.reject(new Error("File not found"));
+    }
+    private getChannels(data: Uint8ClampedArray) {
+        let res: IChannelsData = { red: [], green: [], blue: [] };
+        for (let i = 0, len = data.length; i < len; i += 4) {
+            res.red.push(data[i]);
+            res.green.push(data[i + 1]);
+            res.blue.push(data[i + 2]);
+        }
+        return res;
+    }
+    private getInfoFromContext() {
+        let imageData = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height),
+            channels = this.getChannels(imageData.data);
+        return {
+            red: this.getPixelColorfull(channels.red),
+            green: this.getPixelColorfull(channels.green),
+            blue: this.getPixelColorfull(channels.blue)
+        };
+    }
+    private getPixelColorfull(colorsChannel: number[]) {
+        let reduceFunc = (result: IColorsData, current: number) => {
+                let value = result.map[current];
+                if (value === undefined) {
+                    result.map[current] = 1;
+                } else {
+                    value++;
+                }
+                if (result.maxValue < current) {
+                    result.maxValue = current;
+                }
+                return result;
+            };
+        return colorsChannel.reduce(reduceFunc, {
+            maxValue: 0,
+            map: {}
+        });
     }
 }

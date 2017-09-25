@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let uploaderId = "imageUploader", canvasId = "canvasImage1", ui = {
+let uploaderId = "imageUploader", canvasTemplate = (canvasID) => {
+    return `<div style="text-align: center;">
+            <canvas id="${canvasID}" width="1000" height="500"></canvas>
+        </div>`;
+}, canvasId = "canvasImage1", buttonId = "buttonId", ui = {
     id: "lab5",
     rows: [
         { type: "header", template: "Functions", height: 50 },
@@ -13,6 +17,11 @@ let uploaderId = "imageUploader", canvasId = "canvasImage1", ui = {
                     autosend: false,
                     multiple: false
                 },
+                {
+                    view: "button",
+                    id: buttonId,
+                    value: "CLick me"
+                },
                 {}
             ]
         },
@@ -20,7 +29,7 @@ let uploaderId = "imageUploader", canvasId = "canvasImage1", ui = {
             rows: [
                 { type: "header", template: "Image", height: 50 },
                 {
-                    template: `<div><canvas id="${canvasId}" width="1000" height="500"></canvas></div>`
+                    template: canvasTemplate(canvasId)
                 }
             ]
         }
@@ -28,4 +37,5 @@ let uploaderId = "imageUploader", canvasId = "canvasImage1", ui = {
 };
 exports.uploaderId = uploaderId;
 exports.canvasId = canvasId;
+exports.buttonId = buttonId;
 exports.ui = ui;

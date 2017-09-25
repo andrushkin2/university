@@ -1,5 +1,11 @@
 let uploaderId: string = "imageUploader",
+    canvasTemplate = (canvasID: string) => {
+        return `<div style="text-align: center;">
+            <canvas id="${canvasID}" width="1000" height="500"></canvas>
+        </div>`;
+    },
     canvasId: string = "canvasImage1",
+    buttonId: string = "buttonId",
     ui = {
     id: "lab5",
     rows: [
@@ -13,6 +19,11 @@ let uploaderId: string = "imageUploader",
                     autosend: false,
                     multiple: false
                 },
+                <webix.ui.buttonConfig>{
+                    view: "button",
+                    id: buttonId,
+                    value: "CLick me"
+                },
                 {}
             ]
         },
@@ -20,11 +31,11 @@ let uploaderId: string = "imageUploader",
             rows: [
                 { type: "header", template: "Image", height: 50 },
                 {
-                    template: `<div><canvas id="${canvasId}" width="1000" height="500"></canvas></div>`
+                    template: canvasTemplate(canvasId)
                 }
             ]
         }
     ]
 };
 
-export { ui, uploaderId, canvasId };
+export { ui, uploaderId, canvasId, buttonId };
