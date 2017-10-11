@@ -20,10 +20,28 @@ class UiLogic {
                 new webix.message(reason.message || reason.text || "Error was happened");
             });
         });
-        $$(ui_1.buttonId).attachEvent("onItemClick", (e) => {
+        $$(ui_1.buttonId).attachEvent("onItemClick", () => {
             let data = this.getInfoFromContext();
-            console.log(data);
+            this.drawChartData(ui_1.redChartId, data.red.map);
+            this.drawChartData(ui_1.greenChartId, data.green.map);
+            this.drawChartData(ui_1.blueChartId, data.blue.map);
         });
+    }
+    drawChartData(chartId, data) {
+        let chart = $$(chartId);
+        chart.clearAll();
+        chart.parse(this.getChartData(data), "json");
+    }
+    getChartData(data) {
+        let result = [], keys = Object.keys(data);
+        for (let i = 0, len = keys.length; i < len; i++) {
+            let key = keys[i], item = data[key];
+            result.push({
+                pixel: parseInt(key),
+                value: data[key]
+            });
+        }
+        return result;
     }
     clearCanvas() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -86,7 +104,7 @@ class UiLogic {
                 result.map[current] = 1;
             }
             else {
-                value++;
+                result.map[current] = value + 1;
             }
             if (result.maxValue < current) {
                 result.maxValue = current;

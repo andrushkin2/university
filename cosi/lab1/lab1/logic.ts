@@ -1,4 +1,4 @@
-import { canvasId, uploaderId, buttonId } from "./ui";
+import { canvasId, uploaderId, buttonId, redChartId, IChartData, greenChartId, blueChartId } from "./ui";
 
 interface IKeyValue<T> {
     [key: string]: T;
@@ -37,10 +37,30 @@ export default class UiLogic {
                 new webix.message(reason.message || reason.text || "Error was happened");
             });
         });
-        (<webix.ui.button>$$(buttonId)).attachEvent("onItemClick", (e?) => {
+        (<webix.ui.button>$$(buttonId)).attachEvent("onItemClick", () => {
             let data = this.getInfoFromContext();
-            console.log(data);
+            this.drawChartData(redChartId, data.red.map);
+            this.drawChartData(greenChartId, data.green.map);
+            this.drawChartData(blueChartId, data.blue.map);
         });
+    }
+    private drawChartData(chartId: string, data: IKeyValue<number>) {
+        let chart = (<webix.ui.chart>$$(chartId));
+        chart.clearAll();
+        chart.parse(this.getChartData(data), "json");
+    }
+    private getChartData(data: IKeyValue<number>) {
+        let result: IChartData[] = [],
+            keys = Object.keys(data);
+        for (let i = 0, len  = keys.length; i < len; i++) {
+            let key = keys[i],
+                item = data[key];
+            result.push({
+                pixel: parseInt(key),
+                value: data[key]
+            });
+        }
+        return result;
     }
     private clearCanvas() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -102,7 +122,7 @@ export default class UiLogic {
                 if (value === undefined) {
                     result.map[current] = 1;
                 } else {
-                    value++;
+                    result.map[current] = value + 1;
                 }
                 if (result.maxValue < current) {
                     result.maxValue = current;
