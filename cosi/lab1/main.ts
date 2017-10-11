@@ -1,6 +1,7 @@
 import { Complex, CreateSamples, DFT, FFT, Convolution, Correlation, ConvolutionFourier, CorrelationFourier, GetPhaseAndAmplitude, FWHT } from "./test";
 import { ui, canvasId, uploaderId } from "./lab1/ui";
 import UiLogic from "./lab1/logic";
+import { UI as modUi } from "./mod/ui";
 
 let getXData = (count: number): number[] => {
         let i: number = 0,
@@ -269,9 +270,8 @@ window["lab"] = {
     }
 };
 
-webix.ready(() => {
-    webix.ui({
-        type: "space",
+let cosiUi = {
+        id: "cosiId",
         rows: [
             {
                 view: "toolbar",
@@ -279,12 +279,12 @@ webix.ready(() => {
                     { template: "Transform", type: "header", width: 100, borderless: true },
                     { view: "button", id: "runId", value: "Run", width: 100, align: "left" },
                     {
-                    view: "segmented", id: "tabbar", value: "lab1", multiview: true,  options: [
-                            { value: "Lab 1",  id: "lab1"},
-                            { value: "Lab 2",  id: "lab2"},
-                            { value: "Lab 3",  id: "lab3"},
-                            { value: "Lab 4",  id: "lab4"},
-                            { value: "Lab 1 gen.2",  id: "lab5"}
+                        view: "segmented", id: "tabbar", value: "lab1", multiview: true, options: [
+                            { value: "Lab 1", id: "lab1" },
+                            { value: "Lab 2", id: "lab2" },
+                            { value: "Lab 3", id: "lab3" },
+                            { value: "Lab 4", id: "lab4" },
+                            { value: "Lab 1 gen.2", id: "lab5" }
                         ]
                     },
                     {}
@@ -305,12 +305,12 @@ webix.ready(() => {
                                 getChartObject(fftId),
                                 { template: "DFT reverse", height: 30 },
                                 getChartObject(dftId),
-                                { type: "header", template: "Phase", height: 50},
+                                { type: "header", template: "Phase", height: 50 },
                                 { template: "FFT phase", height: 30 },
                                 getChartObject(fftPhaseId),
                                 { template: "DFT phase", height: 30 },
                                 getChartObject(dftPhaseId),
-                                { type: "header", template: "Magnitude", height: 50},
+                                { type: "header", template: "Magnitude", height: 50 },
                                 { template: "DFT magnitude", height: 30 },
                                 getChartObject(dftMagnitudeId),
                                 { template: "FFT magnitude", height: 30 },
@@ -347,9 +347,9 @@ webix.ready(() => {
                                 getChartObject(lab3Data1Id),
                                 { template: "Revert function", height: 30 },
                                 getChartObject(lab3Data4Id),
-                                { type: "header", template: "Phase", height: 50},
+                                { type: "header", template: "Phase", height: 50 },
                                 getChartObject(lab3Data2Id),
-                                { type: "header", template: "Magnitude", height: 50},
+                                { type: "header", template: "Magnitude", height: 50 },
                                 getChartObject(lab3Data3Id)
                             ]
                         },
@@ -361,9 +361,9 @@ webix.ready(() => {
                                 getChartObject(lab4Data1),
                                 { template: "With noise", height: 30 },
                                 getChartObject(lab4Data2),
-                                { type: "header", template: "KIH filter", height: 50},
+                                { type: "header", template: "KIH filter", height: 50 },
                                 getChartObject(lab4Data3),
-                                { type: "header", template: "BIH filter", height: 50},
+                                { type: "header", template: "BIH filter", height: 50 },
                                 getChartObject(lab4Data4)
                             ]
                         },
@@ -372,7 +372,37 @@ webix.ready(() => {
                 }
             }
         ]
-    });
+    },
+    testUi = {
+        type: "space",
+        rows: [
+            {
+                view: "toolbar",
+                cols: [
+                    {
+                        view: "segmented", id: "subjectsId", value: "cosiId", multiview: true, options: [
+                            { value: "COSI", id: "cosiId" },
+                            { value: "MOD", id: "modId" }
+                        ]
+                    }
+                ]
+            },
+            {
+                view: "scrollview",
+                scroll: "y",
+                body: {
+                    id: "subjectId",
+                    cells: [
+                        cosiUi,
+                        modUi
+                    ]
+                }
+            }
+        ]
+    };
+
+webix.ready(() => {
+    webix.ui(testUi);
 
     let uiLogic: UiLogic;
     (<webix.ui.segmented>$$("tabbar")).attachEvent("onAfterTabClick", (e) => {

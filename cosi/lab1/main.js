@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
 const ui_1 = require("./lab1/ui");
 const logic_1 = require("./lab1/logic");
+const ui_2 = require("./mod/ui");
 let getXData = (count) => {
     let i = 0, res = [];
     for (i; i < count; i++) {
@@ -182,110 +183,137 @@ window["lab"] = {
         runLab();
     }
 };
-webix.ready(() => {
-    webix.ui({
-        type: "space",
-        rows: [
-            {
-                view: "toolbar",
-                cols: [
-                    { template: "Transform", type: "header", width: 100, borderless: true },
-                    { view: "button", id: "runId", value: "Run", width: 100, align: "left" },
+let cosiUi = {
+    id: "cosiId",
+    rows: [
+        {
+            view: "toolbar",
+            cols: [
+                { template: "Transform", type: "header", width: 100, borderless: true },
+                { view: "button", id: "runId", value: "Run", width: 100, align: "left" },
+                {
+                    view: "segmented", id: "tabbar", value: "lab1", multiview: true, options: [
+                        { value: "Lab 1", id: "lab1" },
+                        { value: "Lab 2", id: "lab2" },
+                        { value: "Lab 3", id: "lab3" },
+                        { value: "Lab 4", id: "lab4" },
+                        { value: "Lab 1 gen.2", id: "lab5" }
+                    ]
+                },
+                {}
+            ]
+        },
+        {
+            view: "scrollview",
+            scroll: "y",
+            body: {
+                id: "mymultiview",
+                cells: [
                     {
-                        view: "segmented", id: "tabbar", value: "lab1", multiview: true, options: [
-                            { value: "Lab 1", id: "lab1" },
-                            { value: "Lab 2", id: "lab2" },
-                            { value: "Lab 3", id: "lab3" },
-                            { value: "Lab 4", id: "lab4" },
-                            { value: "Lab 1 gen.2", id: "lab5" }
+                        id: "lab1",
+                        rows: [
+                            { type: "header", template: "Start state", height: 50 },
+                            getChartObject(firstChartId),
+                            { template: "FFT reverse", height: 30 },
+                            getChartObject(fftId),
+                            { template: "DFT reverse", height: 30 },
+                            getChartObject(dftId),
+                            { type: "header", template: "Phase", height: 50 },
+                            { template: "FFT phase", height: 30 },
+                            getChartObject(fftPhaseId),
+                            { template: "DFT phase", height: 30 },
+                            getChartObject(dftPhaseId),
+                            { type: "header", template: "Magnitude", height: 50 },
+                            { template: "DFT magnitude", height: 30 },
+                            getChartObject(dftMagnitudeId),
+                            { template: "FFT magnitude", height: 30 },
+                            getChartObject(fftMagnitudeId)
                         ]
                     },
-                    {}
+                    {
+                        id: "lab2",
+                        rows: [
+                            { type: "header", template: "Functions", height: 50 },
+                            { template: "y = cos(3x) + sin(2x)", height: 30 },
+                            getChartObject(lab2Data1Id),
+                            { template: "y =cos(5x)", height: 30 },
+                            getChartObject(lab2Data2Id),
+                            //  Convolution
+                            { type: "header", template: "Convolution", height: 50 },
+                            { template: "Using formula", height: 30 },
+                            getChartObject(lab2Conv1Id),
+                            { template: "Using FFT", height: 30 },
+                            getChartObject(lab2Conv2Id),
+                            //  Correlation
+                            { type: "header", template: "Correlation", height: 50 },
+                            { template: "Using formula", height: 30 },
+                            getChartObject(lab2Corr1Id),
+                            { template: "Using FFT", height: 30 },
+                            getChartObject(lab2Corr2Id)
+                        ]
+                    },
+                    {
+                        id: "lab3",
+                        rows: [
+                            { type: "header", template: "Function", height: 50 },
+                            { template: "y = cos(3x) + sin(2x)", height: 30 },
+                            getChartObject(lab3Data1Id),
+                            { template: "Revert function", height: 30 },
+                            getChartObject(lab3Data4Id),
+                            { type: "header", template: "Phase", height: 50 },
+                            getChartObject(lab3Data2Id),
+                            { type: "header", template: "Magnitude", height: 50 },
+                            getChartObject(lab3Data3Id)
+                        ]
+                    },
+                    {
+                        id: "lab4",
+                        rows: [
+                            { type: "header", template: "Function", height: 50 },
+                            { template: "y = cos(3x) + sin(2x)", height: 30 },
+                            getChartObject(lab4Data1),
+                            { template: "With noise", height: 30 },
+                            getChartObject(lab4Data2),
+                            { type: "header", template: "KIH filter", height: 50 },
+                            getChartObject(lab4Data3),
+                            { type: "header", template: "BIH filter", height: 50 },
+                            getChartObject(lab4Data4)
+                        ]
+                    },
+                    ui_1.ui
                 ]
-            },
-            {
-                view: "scrollview",
-                scroll: "y",
-                body: {
-                    id: "mymultiview",
-                    cells: [
-                        {
-                            id: "lab1",
-                            rows: [
-                                { type: "header", template: "Start state", height: 50 },
-                                getChartObject(firstChartId),
-                                { template: "FFT reverse", height: 30 },
-                                getChartObject(fftId),
-                                { template: "DFT reverse", height: 30 },
-                                getChartObject(dftId),
-                                { type: "header", template: "Phase", height: 50 },
-                                { template: "FFT phase", height: 30 },
-                                getChartObject(fftPhaseId),
-                                { template: "DFT phase", height: 30 },
-                                getChartObject(dftPhaseId),
-                                { type: "header", template: "Magnitude", height: 50 },
-                                { template: "DFT magnitude", height: 30 },
-                                getChartObject(dftMagnitudeId),
-                                { template: "FFT magnitude", height: 30 },
-                                getChartObject(fftMagnitudeId)
-                            ]
-                        },
-                        {
-                            id: "lab2",
-                            rows: [
-                                { type: "header", template: "Functions", height: 50 },
-                                { template: "y = cos(3x) + sin(2x)", height: 30 },
-                                getChartObject(lab2Data1Id),
-                                { template: "y =cos(5x)", height: 30 },
-                                getChartObject(lab2Data2Id),
-                                //  Convolution
-                                { type: "header", template: "Convolution", height: 50 },
-                                { template: "Using formula", height: 30 },
-                                getChartObject(lab2Conv1Id),
-                                { template: "Using FFT", height: 30 },
-                                getChartObject(lab2Conv2Id),
-                                //  Correlation
-                                { type: "header", template: "Correlation", height: 50 },
-                                { template: "Using formula", height: 30 },
-                                getChartObject(lab2Corr1Id),
-                                { template: "Using FFT", height: 30 },
-                                getChartObject(lab2Corr2Id)
-                            ]
-                        },
-                        {
-                            id: "lab3",
-                            rows: [
-                                { type: "header", template: "Function", height: 50 },
-                                { template: "y = cos(3x) + sin(2x)", height: 30 },
-                                getChartObject(lab3Data1Id),
-                                { template: "Revert function", height: 30 },
-                                getChartObject(lab3Data4Id),
-                                { type: "header", template: "Phase", height: 50 },
-                                getChartObject(lab3Data2Id),
-                                { type: "header", template: "Magnitude", height: 50 },
-                                getChartObject(lab3Data3Id)
-                            ]
-                        },
-                        {
-                            id: "lab4",
-                            rows: [
-                                { type: "header", template: "Function", height: 50 },
-                                { template: "y = cos(3x) + sin(2x)", height: 30 },
-                                getChartObject(lab4Data1),
-                                { template: "With noise", height: 30 },
-                                getChartObject(lab4Data2),
-                                { type: "header", template: "KIH filter", height: 50 },
-                                getChartObject(lab4Data3),
-                                { type: "header", template: "BIH filter", height: 50 },
-                                getChartObject(lab4Data4)
-                            ]
-                        },
-                        ui_1.ui
+            }
+        }
+    ]
+}, testUi = {
+    type: "space",
+    rows: [
+        {
+            view: "toolbar",
+            cols: [
+                {
+                    view: "segmented", id: "subjectsId", value: "cosiId", multiview: true, options: [
+                        { value: "COSI", id: "cosiId" },
+                        { value: "MOD", id: "modId" }
                     ]
                 }
+            ]
+        },
+        {
+            view: "scrollview",
+            scroll: "y",
+            body: {
+                id: "subjectId",
+                cells: [
+                    cosiUi,
+                    ui_2.UI
+                ]
             }
-        ]
-    });
+        }
+    ]
+};
+webix.ready(() => {
+    webix.ui(testUi);
     let uiLogic;
     $$("tabbar").attachEvent("onAfterTabClick", (e) => {
         if (uiLogic === undefined) {
