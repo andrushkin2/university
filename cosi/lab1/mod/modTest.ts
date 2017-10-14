@@ -8,6 +8,11 @@ interface IData {
     xN: number;
 }
 
+export interface IChartData {
+    x: number;
+    y: number;
+}
+
 let mult = (a: number, b: number) => a * b,
     div = (a: number, b: number) => a / b,
     mod = (a: number, b: number) => a % b,
@@ -33,7 +38,7 @@ let mult = (a: number, b: number) => a * b,
         }
     };
 
-export default class ModLab {
+export default class ModLabUtils {
     public getData(worker: DataWorker, count: number) {
         let result: number[] = [];
         for (let i = 0; i < count; i++) {
@@ -83,7 +88,7 @@ export default class ModLab {
     public getMx(data: number[]) {
         return data.reduce((result, current) => result + current, 0) / data.length;
     }
-    public getdX(data: number[], mX: number) {
+    public getDx(data: number[], mX: number) {
         let dX = 0;
         for (let i = 0, len = data.length; i < len; i++) {
             let value = data[i] = mX;
@@ -106,5 +111,39 @@ export default class ModLab {
             }
         }
         return 2 * result / len;
+    }
+    private getMin(data: number[]) {
+        let reduceFunc = (res: number, curr: number) => curr < res ? curr : res;
+        return data.reduce(reduceFunc, Infinity);
+    }
+    private getMax(data: number[]) {
+        let reduceFunc = (res: number, curr: number) => curr > res ? curr : res;
+        return data.reduce(reduceFunc, -Infinity);
+    }
+    public getChartData(data: number[]) {
+        let partsCount = 20,
+            partLength = (this.getMax(data) - this.getMin(data)) / partsCount,
+            frequency: number[] = [],
+            dataLength = data.length,
+            xValues: number[] = [partLength],
+            result: IChartData[] = [];
+
+        for (let i = 1; i < partsCount; i++) {
+            xValues[i] = xValues[i - 1] + partLength;
+        }
+        for (let i = 0; i < partsCount; i++) {
+            frequency[i] = 0;
+            for (let j = 0; j < dataLength; j++) {
+                let dataItem = data[j];
+                if (dataItem >= i * partLength && dataItem < ((i + 1) * partLength)) {
+                    frequency[i]++;
+                }
+            }
+            frequency[i] /= dataLength;
+        }
+        for (let i = 0; i < partsCount; i++) {
+            result.push({ x: xValues[i], y: frequency[i] });
+        }
+        return result;
     }
 }

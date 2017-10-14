@@ -4,6 +4,7 @@ const test_1 = require("./test");
 const ui_1 = require("./lab1/ui");
 const logic_1 = require("./lab1/logic");
 const ui_2 = require("./mod/ui");
+const madLab_1 = require("./mod/madLab");
 let getXData = (count) => {
     let i = 0, res = [];
     for (i; i < count; i++) {
@@ -314,10 +315,15 @@ let cosiUi = {
 };
 webix.ready(() => {
     webix.ui(testUi);
-    let uiLogic;
+    let uiLogic, modLab;
     $$("tabbar").attachEvent("onAfterTabClick", (e) => {
         if (uiLogic === undefined) {
             uiLogic = new logic_1.default();
+        }
+    });
+    $$("subjectsId").attachEvent("onAfterTabClick", (e) => {
+        if (modLab === undefined) {
+            modLab = new madLab_1.default();
         }
     });
     $$("runId").attachEvent("onItemClick", () => {

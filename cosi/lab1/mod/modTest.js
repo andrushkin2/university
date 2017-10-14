@@ -17,7 +17,7 @@ let mult = (a, b) => a * b, div = (a, b) => a / b, mod = (a, b) => a % b, makeSt
         result.push(dataItem);
     }
 };
-class ModLab {
+class ModLabUtils {
     getData(worker, count) {
         let result = [];
         for (let i = 0; i < count; i++) {
@@ -63,7 +63,7 @@ class ModLab {
     getMx(data) {
         return data.reduce((result, current) => result + current, 0) / data.length;
     }
-    getdX(data, mX) {
+    getDx(data, mX) {
         let dX = 0;
         for (let i = 0, len = data.length; i < len; i++) {
             let value = data[i] = mX;
@@ -85,5 +85,33 @@ class ModLab {
         }
         return 2 * result / len;
     }
+    getMin(data) {
+        let reduceFunc = (res, curr) => curr < res ? curr : res;
+        return data.reduce(reduceFunc, Infinity);
+    }
+    getMax(data) {
+        let reduceFunc = (res, curr) => curr > res ? curr : res;
+        return data.reduce(reduceFunc, -Infinity);
+    }
+    getChartData(data) {
+        let partsCount = 20, partLength = (this.getMax(data) - this.getMin(data)) / partsCount, frequency = [], dataLength = data.length, xValues = [partLength], result = [];
+        for (let i = 1; i < partsCount; i++) {
+            xValues[i] = xValues[i - 1] + partLength;
+        }
+        for (let i = 0; i < partsCount; i++) {
+            frequency[i] = 0;
+            for (let j = 0; j < dataLength; j++) {
+                let dataItem = data[j];
+                if (dataItem >= i * partLength && dataItem < ((i + 1) * partLength)) {
+                    frequency[i]++;
+                }
+            }
+            frequency[i] /= dataLength;
+        }
+        for (let i = 0; i < partsCount; i++) {
+            result.push({ x: xValues[i], y: frequency[i] });
+        }
+        return result;
+    }
 }
-exports.default = ModLab;
+exports.default = ModLabUtils;

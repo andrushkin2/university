@@ -234,27 +234,221 @@ exports.ui = ui;
 },{}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let buttonId = "modButtonId1", ui = {
+class DataWorker {
+    constructor(a, m, r0) {
+        this.a = a;
+        this.m = m;
+        this.r0 = r0;
+        this.rPrev = r0;
+    }
+    next() {
+        this.rPrev = (this.a * this.rPrev) % this.m;
+        return this.rPrev / this.m;
+    }
+    current() {
+        return this.rPrev / this.m;
+    }
+    currentR() {
+        return this.rPrev;
+    }
+    getM() {
+        return this.m;
+    }
+}
+exports.default = DataWorker;
+
+},{}],4:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const ui_1 = require("./ui");
+const dataWorker_1 = require("./dataWorker");
+const modTest_1 = require("./modTest");
+class ModLab {
+    constructor() {
+        $$(ui_1.buttonId).attachEvent("onItemClick", () => {
+            let worker = new dataWorker_1.default(1567, 68030, 2797), data = this.utils.getData(worker, 200000), period = this.utils.findPeriod(data, worker.current()), chartData = this.utils.getChartData(period.data);
+            this.chart.show();
+            this.updateChart(chartData);
+        });
+        this.utils = new modTest_1.default();
+        this.chart = $$(ui_1.chartId);
+        this.chart.hide();
+    }
+    updateChart(data) {
+        this.chart.clearAll();
+        this.chart.parse(data, "json");
+    }
+}
+exports.default = ModLab;
+
+},{"./dataWorker":3,"./modTest":5,"./ui":6}],5:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+let mult = (a, b) => a * b, div = (a, b) => a / b, mod = (a, b) => a % b, makeStep = (index, prevResult, a, m) => {
+    let multRes = mult(a, prevResult), rN = mod(multRes, m), xN = div(rN, m);
+    return {
+        index: index,
+        prevR: prevResult,
+        mult: multRes,
+        rN: rN,
+        xN: xN
+    };
+}, getData = (count, a, m, startR) => {
+    let result = [], prevR = undefined;
+    for (let i = 0; i < count; i++) {
+        let dataItem = makeStep(i, prevR === undefined ? startR : prevR, a, m);
+        prevR = dataItem.rN;
+        result.push(dataItem);
+    }
+};
+class ModLabUtils {
+    getData(worker, count) {
+        let result = [];
+        for (let i = 0; i < count; i++) {
+            result.push(worker.next());
+        }
+        return result;
+    }
+    findPeriod(data, currentX) {
+        let i1 = -1, i2 = -1, i3 = 0, isFirstPoinFound = false, period, aPeriod;
+        for (let i = 0, len = data.length; i < len; i++) {
+            if (data[i] === currentX) {
+                if (!isFirstPoinFound) {
+                    isFirstPoinFound = true;
+                    i1 = i;
+                    continue;
+                }
+                else {
+                    i2 = i;
+                    break;
+                }
+            }
+        }
+        period = i2 - i1;
+        while (data[i3] !== data[i3 + period]) {
+            i3++;
+        }
+        aPeriod = i3 + period;
+        if (i1 === -1 || i2 === -1) {
+            return {
+                period: undefined,
+                aPeriod: undefined,
+                data: data
+            };
+        }
+        else {
+            return {
+                period: period,
+                aPeriod: aPeriod,
+                data: data.slice(aPeriod, data.length)
+            };
+        }
+    }
+    getMx(data) {
+        return data.reduce((result, current) => result + current, 0) / data.length;
+    }
+    getDx(data, mX) {
+        let dX = 0;
+        for (let i = 0, len = data.length; i < len; i++) {
+            let value = data[i] = mX;
+            dX += mult(value, value);
+        }
+        dX /= (data.length - 1);
+        return dX;
+    }
+    checkUniformity(data) {
+        let result = 0, len = data.length;
+        for (let i = 0; i < len; i += 2) {
+            if (i + 1 >= len) {
+                break;
+            }
+            let curr = data[i], next = data[i + 1];
+            if (curr * curr + next * next < 1.0) {
+                result++;
+            }
+        }
+        return 2 * result / len;
+    }
+    getMin(data) {
+        let reduceFunc = (res, curr) => curr < res ? curr : res;
+        return data.reduce(reduceFunc, Infinity);
+    }
+    getMax(data) {
+        let reduceFunc = (res, curr) => curr > res ? curr : res;
+        return data.reduce(reduceFunc, -Infinity);
+    }
+    getChartData(data) {
+        let partsCount = 20, partLength = (this.getMax(data) - this.getMin(data)) / partsCount, frequency = [], dataLength = data.length, xValues = [partLength], result = [];
+        for (let i = 1; i < partsCount; i++) {
+            xValues[i] = xValues[i - 1] + partLength;
+        }
+        for (let i = 0; i < partsCount; i++) {
+            frequency[i] = 0;
+            for (let j = 0; j < dataLength; j++) {
+                let dataItem = data[j];
+                if (dataItem >= i * partLength && dataItem < ((i + 1) * partLength)) {
+                    frequency[i]++;
+                }
+            }
+            frequency[i] /= dataLength;
+        }
+        for (let i = 0; i < partsCount; i++) {
+            result.push({ x: xValues[i], y: frequency[i] });
+        }
+        return result;
+    }
+}
+exports.default = ModLabUtils;
+
+},{}],6:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+let buttonId = "modButtonId1", chartId = "modChart1Id", ui = {
     id: "modId",
+    css: "bg_panel_raised",
+    type: "space",
     rows: [
         {
             type: "toolbar",
+            css: "bg_panel",
             cols: [
                 { template: "MOD", type: "header", width: 100, borderless: true },
                 {
                     view: "button",
+                    css: "button_primary button_raised",
                     id: buttonId,
+                    width: 100,
                     value: "Run"
                 },
                 {}
             ]
-        }
+        },
+        {
+            view: "chart",
+            css: "bg_panel",
+            id: chartId,
+            type: "bar",
+            label: function (value) {
+                return parseFloat(value.y).toFixed(4);
+            },
+            value: "#y#",
+            barWidth: 35,
+            radius: 0,
+            gradient: "falling",
+            xAxis: {
+                template: function (data) {
+                    return parseFloat(data.x).toFixed(4);
+                }
+            }
+        },
+        {}
     ]
 };
 exports.buttonId = buttonId;
+exports.chartId = chartId;
 exports.UI = ui;
 
-},{}],4:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Complex {
@@ -426,13 +620,14 @@ exports.CorrelationFourier = correlationFourier;
 exports.FWHT = fwht;
 exports.GetPhaseAndAmplitude = getPhaseAndAmplitude;
 
-},{}],5:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
 const ui_1 = require("./lab1/ui");
 const logic_1 = require("./lab1/logic");
 const ui_2 = require("./mod/ui");
+const madLab_1 = require("./mod/madLab");
 let getXData = (count) => {
     let i = 0, res = [];
     for (i; i < count; i++) {
@@ -743,10 +938,15 @@ let cosiUi = {
 };
 webix.ready(() => {
     webix.ui(testUi);
-    let uiLogic;
+    let uiLogic, modLab;
     $$("tabbar").attachEvent("onAfterTabClick", (e) => {
         if (uiLogic === undefined) {
             uiLogic = new logic_1.default();
+        }
+    });
+    $$("subjectsId").attachEvent("onAfterTabClick", (e) => {
+        if (modLab === undefined) {
+            modLab = new madLab_1.default();
         }
     });
     $$("runId").attachEvent("onItemClick", () => {
@@ -768,4 +968,4 @@ webix.ready(() => {
     });
 });
 
-},{"./lab1/logic":1,"./lab1/ui":2,"./mod/ui":3,"./test":4}]},{},[5]);
+},{"./lab1/logic":1,"./lab1/ui":2,"./mod/madLab":4,"./mod/ui":6,"./test":7}]},{},[8]);

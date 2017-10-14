@@ -2,6 +2,7 @@ import { Complex, CreateSamples, DFT, FFT, Convolution, Correlation, Convolution
 import { ui, canvasId, uploaderId } from "./lab1/ui";
 import UiLogic from "./lab1/logic";
 import { UI as modUi } from "./mod/ui";
+import ModLab from "./mod/madLab";
 
 let getXData = (count: number): number[] => {
         let i: number = 0,
@@ -404,10 +405,16 @@ let cosiUi = {
 webix.ready(() => {
     webix.ui(testUi);
 
-    let uiLogic: UiLogic;
+    let uiLogic: UiLogic,
+        modLab: ModLab;
     (<webix.ui.segmented>$$("tabbar")).attachEvent("onAfterTabClick", (e) => {
         if (uiLogic === undefined) {
             uiLogic = new UiLogic();
+        }
+    });
+    (<webix.ui.segmented>$$("subjectsId")).attachEvent("onAfterTabClick", (e) => {
+        if (modLab === undefined) {
+            modLab = new ModLab();
         }
     });
     (<webix.ui.button>$$("runId")).attachEvent("onItemClick", () => {
