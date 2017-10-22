@@ -6,13 +6,47 @@ const modTest_1 = require("./modTest");
 class ModLab {
     constructor() {
         $$(ui_1.buttonId).attachEvent("onItemClick", () => {
-            let worker = new dataWorker_1.default(1567, 68030, 2797), data = this.utils.getData(worker, 200000), period = this.utils.findPeriod(data, worker.current()), chartData = this.utils.getChartData(period.data);
+            let startData = this.validateForm(this.formData.getValues());
+            if (!startData) {
+                webix.message("Start data is not valid");
+                return;
+            }
+            let worker = new dataWorker_1.default(startData["a"], startData["m"], startData["r0"]), data = this.utils.getData(worker, 200000), current = worker.current(), period = this.utils.findPeriod(data, current), chartData = this.utils.getChartData(period.data), mX = this.utils.getMx(period.data), dX = this.utils.getDx(period.data, mX);
+            this.formOutputData.setValues({
+                period: period.period || "Invalid",
+                aPeriod: period.aPeriod || "Invalid",
+                mX: mX || "Invalid",
+                dX: dX || "Invalid",
+                uniformity: this.utils.checkUniformity(period.data) || "Invalid"
+            });
             this.chart.show();
             this.updateChart(chartData);
         });
+        this.formData = $$(ui_1.formDataId);
+        this.formOutputData = $$(ui_1.formOutputDataId);
         this.utils = new modTest_1.default();
         this.chart = $$(ui_1.chartId);
         this.chart.hide();
+    }
+    validateForm(data) {
+        let a = parseInt(data["a"]) || 0, m = parseInt(data["m"]) || 0, r0 = parseInt(data["r0"]) || 0;
+        if (!a || a === 0) {
+            webix.message("Property A cannot be '0' or empty");
+            return false;
+        }
+        if (!m || m === 0) {
+            webix.message("Property M cannot be '0' or empty");
+            return false;
+        }
+        if (!r0 || r0 === 0) {
+            webix.message("Property R0 cannot be '0' or empty");
+            return false;
+        }
+        return {
+            a: a,
+            m: m,
+            r0: r0
+        };
     }
     updateChart(data) {
         this.chart.clearAll();

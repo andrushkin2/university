@@ -254,6 +254,10 @@ class DataWorker {
     getM() {
         return this.m;
     }
+    getFirstR() {
+        let first = (this.a * this.r0) % this.m;
+        return first / this.m;
+    }
 }
 exports.default = DataWorker;
 
@@ -266,13 +270,47 @@ const modTest_1 = require("./modTest");
 class ModLab {
     constructor() {
         $$(ui_1.buttonId).attachEvent("onItemClick", () => {
-            let worker = new dataWorker_1.default(1567, 68030, 2797), data = this.utils.getData(worker, 200000), period = this.utils.findPeriod(data, worker.current()), chartData = this.utils.getChartData(period.data);
+            let startData = this.validateForm(this.formData.getValues());
+            if (!startData) {
+                webix.message("Start data is not valid");
+                return;
+            }
+            let worker = new dataWorker_1.default(startData["a"], startData["m"], startData["r0"]), data = this.utils.getData(worker, 200000), current = worker.current(), period = this.utils.findPeriod(data, current), chartData = this.utils.getChartData(period.data), mX = this.utils.getMx(period.data), dX = this.utils.getDx(period.data, mX);
+            this.formOutputData.setValues({
+                period: period.period || "Invalid",
+                aPeriod: period.aPeriod || "Invalid",
+                mX: mX || "Invalid",
+                dX: dX || "Invalid",
+                uniformity: this.utils.checkUniformity(period.data) || "Invalid"
+            });
             this.chart.show();
             this.updateChart(chartData);
         });
+        this.formData = $$(ui_1.formDataId);
+        this.formOutputData = $$(ui_1.formOutputDataId);
         this.utils = new modTest_1.default();
         this.chart = $$(ui_1.chartId);
         this.chart.hide();
+    }
+    validateForm(data) {
+        let a = parseInt(data["a"]) || 0, m = parseInt(data["m"]) || 0, r0 = parseInt(data["r0"]) || 0;
+        if (!a || a === 0) {
+            webix.message("Property A cannot be '0' or empty");
+            return false;
+        }
+        if (!m || m === 0) {
+            webix.message("Property M cannot be '0' or empty");
+            return false;
+        }
+        if (!r0 || r0 === 0) {
+            webix.message("Property R0 cannot be '0' or empty");
+            return false;
+        }
+        return {
+            a: a,
+            m: m,
+            r0: r0
+        };
     }
     updateChart(data) {
         this.chart.clearAll();
@@ -403,10 +441,11 @@ exports.default = ModLabUtils;
 },{}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let buttonId = "modButtonId1", chartId = "modChart1Id", ui = {
+let buttonId = "modButtonId1", chartId = "modChart1Id", formDataId = "formDataId", formOutputDataId = "formOutputDataId", ui = {
     id: "modId",
     css: "bg_panel_raised",
     type: "space",
+    autoheight: true,
     rows: [
         {
             type: "toolbar",
@@ -420,7 +459,77 @@ let buttonId = "modButtonId1", chartId = "modChart1Id", ui = {
                     width: 100,
                     value: "Run"
                 },
+                {
+                    view: "form",
+                    id: formDataId,
+                    cols: [
+                        {
+                            view: "text",
+                            value: "",
+                            name: "a",
+                            label: "A:",
+                            labelAlign: "left"
+                        },
+                        {
+                            view: "text",
+                            value: "",
+                            name: "m",
+                            label: "M:",
+                            labelAlign: "left"
+                        },
+                        {
+                            view: "text",
+                            value: "",
+                            name: "r0",
+                            label: "R0:",
+                            labelAlign: "left"
+                        },
+                        {}
+                    ]
+                },
                 {}
+            ]
+        },
+        {
+            view: "form",
+            id: formOutputDataId,
+            disabled: true,
+            cols: [
+                {
+                    view: "text",
+                    value: "",
+                    name: "period",
+                    label: "Period:",
+                    labelAlign: "left"
+                },
+                {
+                    view: "text",
+                    value: "",
+                    name: "aPeriod",
+                    label: "Aperiod:",
+                    labelAlign: "left"
+                },
+                {
+                    view: "text",
+                    value: "",
+                    name: "mX",
+                    label: "Mx:",
+                    labelAlign: "left"
+                },
+                {
+                    view: "text",
+                    value: "",
+                    name: "dX",
+                    label: "Dx:",
+                    labelAlign: "left"
+                },
+                {
+                    view: "text",
+                    value: "",
+                    name: "uniformity",
+                    label: "Uniformity:",
+                    labelAlign: "left"
+                }
             ]
         },
         {
@@ -439,6 +548,11 @@ let buttonId = "modButtonId1", chartId = "modChart1Id", ui = {
                 template: function (data) {
                     return parseFloat(data.x).toFixed(4);
                 }
+            },
+            yAxis: {
+                template: function (data) {
+                    return data;
+                }
             }
         },
         {}
@@ -446,6 +560,8 @@ let buttonId = "modButtonId1", chartId = "modChart1Id", ui = {
 };
 exports.buttonId = buttonId;
 exports.chartId = chartId;
+exports.formDataId = formDataId;
+exports.formOutputDataId = formOutputDataId;
 exports.UI = ui;
 
 },{}],7:[function(require,module,exports){
