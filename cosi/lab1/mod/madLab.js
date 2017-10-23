@@ -19,6 +19,8 @@ class ModLab {
                 dX: dX || "Invalid",
                 uniformity: this.utils.checkUniformity(period.data) || "Invalid"
             });
+            this.chart.config.yAxis.start = this.utils.getMin(period.data);
+            this.chart.config.yAxis.end = this.utils.getMax(period.data);
             this.chart.show();
             this.updateChart(chartData);
         });

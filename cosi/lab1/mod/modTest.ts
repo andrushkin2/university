@@ -50,13 +50,13 @@ export default class ModLabUtils {
         let i1: number = -1,
             i2: number = -1,
             i3: number = 0,
-            isFirstPoinFound: boolean = false,
+            isFirstPointFound: boolean = false,
             period: number,
             aPeriod: number;
         for (let i = 0, len = data.length; i < len; i++) {
             if (data[i] === currentX) {
-                if (!isFirstPoinFound) {
-                    isFirstPoinFound = true;
+                if (!isFirstPointFound) {
+                    isFirstPointFound = true;
                     i1 = i;
                     continue;
                 }
@@ -81,7 +81,7 @@ export default class ModLabUtils {
             return {
                 period: period,
                 aPeriod: aPeriod,
-                data: data.slice(aPeriod, data.length)
+                data: data.slice(i1, i2)
             };
         }
     }
@@ -91,7 +91,7 @@ export default class ModLabUtils {
     public getDx(data: number[], mX: number) {
         let dX = 0;
         for (let i = 0, len = data.length; i < len; i++) {
-            let value = data[i] = mX;
+            let value = data[i] - mX;
             dX += mult(value, value);
         }
         dX /= (data.length - 1);
@@ -112,11 +112,11 @@ export default class ModLabUtils {
         }
         return 2 * result / len;
     }
-    private getMin(data: number[]) {
+    public getMin(data: number[]) {
         let reduceFunc = (res: number, curr: number) => curr < res ? curr : res;
         return data.reduce(reduceFunc, Infinity);
     }
-    private getMax(data: number[]) {
+    public getMax(data: number[]) {
         let reduceFunc = (res: number, curr: number) => curr > res ? curr : res;
         return data.reduce(reduceFunc, -Infinity);
     }
@@ -125,17 +125,17 @@ export default class ModLabUtils {
             partLength = (this.getMax(data) - this.getMin(data)) / partsCount,
             frequency: number[] = [],
             dataLength = data.length,
-            xValues: number[] = [partLength],
+            xValues: number[] = [this.getMin(data)],
             result: IChartData[] = [];
 
-        for (let i = 1; i < partsCount; i++) {
+        for (let i = 1; i <= partsCount; i++) {
             xValues[i] = xValues[i - 1] + partLength;
         }
         for (let i = 0; i < partsCount; i++) {
             frequency[i] = 0;
             for (let j = 0; j < dataLength; j++) {
                 let dataItem = data[j];
-                if (dataItem >= i * partLength && dataItem < ((i + 1) * partLength)) {
+                if (dataItem >= xValues[i] && dataItem < (xValues[i + 1])) {
                     frequency[i]++;
                 }
             }

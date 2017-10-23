@@ -21,6 +21,7 @@ let buttonId = "modButtonId1", chartId = "modChart1Id", formDataId = "formDataId
                 {
                     view: "form",
                     id: formDataId,
+                    gravity: 1.3,
                     cols: [
                         {
                             view: "text",

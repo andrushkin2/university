@@ -26,11 +26,11 @@ class ModLabUtils {
         return result;
     }
     findPeriod(data, currentX) {
-        let i1 = -1, i2 = -1, i3 = 0, isFirstPoinFound = false, period, aPeriod;
+        let i1 = -1, i2 = -1, i3 = 0, isFirstPointFound = false, period, aPeriod;
         for (let i = 0, len = data.length; i < len; i++) {
             if (data[i] === currentX) {
-                if (!isFirstPoinFound) {
-                    isFirstPoinFound = true;
+                if (!isFirstPointFound) {
+                    isFirstPointFound = true;
                     i1 = i;
                     continue;
                 }
@@ -56,7 +56,7 @@ class ModLabUtils {
             return {
                 period: period,
                 aPeriod: aPeriod,
-                data: data.slice(aPeriod, data.length)
+                data: data.slice(i1, i2)
             };
         }
     }
@@ -66,7 +66,7 @@ class ModLabUtils {
     getDx(data, mX) {
         let dX = 0;
         for (let i = 0, len = data.length; i < len; i++) {
-            let value = data[i] = mX;
+            let value = data[i] - mX;
             dX += mult(value, value);
         }
         dX /= (data.length - 1);
@@ -94,15 +94,15 @@ class ModLabUtils {
         return data.reduce(reduceFunc, -Infinity);
     }
     getChartData(data) {
-        let partsCount = 20, partLength = (this.getMax(data) - this.getMin(data)) / partsCount, frequency = [], dataLength = data.length, xValues = [partLength], result = [];
-        for (let i = 1; i < partsCount; i++) {
+        let partsCount = 20, partLength = (this.getMax(data) - this.getMin(data)) / partsCount, frequency = [], dataLength = data.length, xValues = [this.getMin(data)], result = [];
+        for (let i = 1; i <= partsCount; i++) {
             xValues[i] = xValues[i - 1] + partLength;
         }
         for (let i = 0; i < partsCount; i++) {
             frequency[i] = 0;
             for (let j = 0; j < dataLength; j++) {
                 let dataItem = data[j];
-                if (dataItem >= i * partLength && dataItem < ((i + 1) * partLength)) {
+                if (dataItem >= xValues[i] && dataItem < (xValues[i + 1])) {
                     frequency[i]++;
                 }
             }

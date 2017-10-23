@@ -23,8 +23,4 @@ export default class DataWorker {
     public getM() {
         return this.m;
     }
-    public getFirstR() {
-        let first = (this.a * this.r0) % this.m;
-        return first / this.m;
-    }
 }

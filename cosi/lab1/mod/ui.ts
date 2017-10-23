@@ -23,6 +23,7 @@ let buttonId: string = "modButtonId1",
                     <webix.ui.formConfig>{
                         view: "form",
                         id: formDataId,
+                        gravity: 1.3,
                         cols: [
                             <webix.ui.textConfig>{
                                 view: "text",
