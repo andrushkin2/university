@@ -1,0 +1,16 @@
+D:/kosiak_man/test.vhd {1 {vcom -work work -87 -explicit D:/kosiak_man/test.vhd
+Model Technology ModelSim SE vcom 5.7f Compiler 2003.09 Sep 15 2003
+-- Loading package standard
+-- Compiling entity test_test
+-- Loading package std_logic_1164
+-- Compiling architecture bench of test_test
+-- Loading entity hohoh
+
+} {} {}} D:/kosiak_man/uvelichenie_razmera.vhd {1 {vcom -work work -87 -explicit D:/kosiak_man/uvelichenie_razmera.vhd
+Model Technology ModelSim SE vcom 5.7f Compiler 2003.09 Sep 15 2003
+-- Loading package standard
+-- Loading package std_logic_1164
+-- Compiling entity hohoh
+-- Compiling architecture ha of hohoh
+
+} {} {}}
