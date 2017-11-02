@@ -140,17 +140,17 @@ Explicit = 1
 [vsim]
 ; Simulator resolution
 ; Set to fs, ps, ns, us, ms, or sec with optional prefix of 1, 10, or 100.
-resolution = 1ns
+Resolution = ns
 
 ; User time unit for run commands
 ; Set to default, fs, ps, ns, us, ms, or sec. The default is to use the
 ; unit specified for Resolution. For example, if Resolution is 100ps,
 ; then UserTimeUnit defaults to ps.
 ; Should generally be set to default.
-UserTimeUnit = ns
+UserTimeUnit = default
 
 ; Default run length
-RunLength = 100 ns
+RunLength = 100
 
 ; Maximum iterations that can be run without advancing simulation time
 IterationLimit = 5000
@@ -348,9 +348,9 @@ Project_Version = 5
 Project_DefaultLib = work
 Project_SortMethod = unused
 Project_Files_Count = 2
-Project_File_0 = //Mac/Home/Documents/git/university/kidsvt/kosiak_man/uvelichenie_razmera.vhd
-Project_File_P_0 = vhdl_novitalcheck 0 file_type VHDL group_id 0 vhdl_nodebug 0 vhdl_1164 1 vhdl_noload 0 vhdl_synth 0 folder {Top Level} last_compile 1507830988 vhdl_disableopt 0 vhdl_vital 0 vhdl_warn1 1 vhdl_warn2 1 vhdl_showsource 0 vhdl_explicit 1 vhdl_warn3 1 vhdl_warn4 1 vhdl_warn5 1 ood 0 compile_to work compile_order 1 dont_compile 0 vhdl_use93 0
+Project_File_0 = //Mac/Home/Documents/git/university/kidsvt/kosiak_man/text.vhd
+Project_File_P_0 = vhdl_novitalcheck 0 file_type VHDL group_id 0 vhdl_nodebug 0 vhdl_1164 1 vhdl_noload 0 vhdl_synth 0 folder {Top Level} last_compile 1509647071 vhdl_disableopt 0 vhdl_vital 0 vhdl_warn1 1 vhdl_explicit 1 vhdl_showsource 0 vhdl_warn2 1 vhdl_warn3 1 vhdl_warn4 1 ood 0 vhdl_warn5 1 compile_to work compile_order 0 dont_compile 0 vhdl_use93 0
 Project_File_1 = //Mac/Home/Documents/git/university/kidsvt/kosiak_man/test.vhd
-Project_File_P_1 = vhdl_novitalcheck 0 file_type VHDL group_id 0 vhdl_nodebug 0 vhdl_1164 1 vhdl_noload 0 vhdl_synth 0 folder {Top Level} last_compile 1505414502 vhdl_disableopt 0 vhdl_vital 0 vhdl_warn1 1 vhdl_warn2 1 vhdl_showsource 0 vhdl_explicit 1 vhdl_warn3 1 vhdl_warn4 1 vhdl_warn5 1 ood 0 compile_to work compile_order 0 dont_compile 0 vhdl_use93 0
+Project_File_P_1 = vhdl_novitalcheck 0 file_type VHDL group_id 0 vhdl_nodebug 0 vhdl_1164 1 vhdl_noload 0 vhdl_synth 0 folder {Top Level} last_compile 1505414502 vhdl_disableopt 0 vhdl_vital 0 vhdl_warn1 1 vhdl_warn2 1 vhdl_showsource 0 vhdl_explicit 1 vhdl_warn3 1 vhdl_warn4 1 vhdl_warn5 1 ood 0 compile_to work compile_order 1 dont_compile 0 vhdl_use93 0
 Project_Sim_Count = 0
 Project_Folder_Count = 0
