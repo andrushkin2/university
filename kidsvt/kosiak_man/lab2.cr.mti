@@ -1,4 +1,29 @@
-//Mac/Home/Documents/git/university/kidsvt/kosiak_man/test.vhd {1 {vcom -work work -87 -explicit //Mac/Home/Documents/git/university/kidsvt/kosiak_man/test.vhd
+//Mac/Home/Documents/git/university/kidsvt/kosiak_man/text.vhd {1 {vcom -work work -87 -explicit //Mac/Home/Documents/git/university/kidsvt/kosiak_man/text.vhd
+Model Technology ModelSim SE vcom 5.7f Compiler 2003.09 Sep 15 2003
+-- Loading package standard
+-- Loading package std_logic_1164
+-- Compiling entity n
+-- Compiling architecture arch_n of n
+-- Compiling entity na2
+-- Compiling architecture arch_na2 of na2
+-- Compiling entity no2
+-- Compiling architecture arch_no2 of no2
+-- Compiling entity nex2
+-- Compiling architecture arch_nex2 of nex2
+-- Compiling entity nao3
+-- Compiling architecture arch_nao3 of nao3
+-- Compiling entity naoa2
+-- Compiling architecture arch_naoa2 of naoa2
+-- Compiling entity hohoh
+-- Compiling architecture ha of hohoh
+-- Loading entity nex2
+-- Loading entity n
+-- Loading entity no2
+-- Loading entity na2
+-- Loading entity nao3
+-- Loading entity naoa2
+
+} {} {}} //Mac/Home/Documents/git/university/kidsvt/kosiak_man/test.vhd {1 {vcom -work work -87 -explicit //Mac/Home/Documents/git/university/kidsvt/kosiak_man/test.vhd
 Model Technology ModelSim SE vcom 5.7f Compiler 2003.09 Sep 15 2003
 -- Loading package standard
 -- Compiling entity test_test
