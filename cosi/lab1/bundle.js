@@ -260,6 +260,123 @@ exports.default = DataWorker;
 },{}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const uniformUi_1 = require("./uniformUi");
+let distributionListId = "distributionListId", ui = {
+    view: "tabview",
+    cells: [
+        {
+            header: "Uniform",
+            body: uniformUi_1.uniformUi
+        },
+        {
+            header: "Form",
+            body: {}
+        }
+    ]
+};
+exports.distributionListId = distributionListId;
+exports.ui = ui;
+
+},{"./uniformUi":6}],5:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+let getButton = (buttonId) => ({
+    view: "button",
+    css: "button_primary button_raised",
+    id: buttonId,
+    width: 100,
+    value: "Run"
+}), getTextField = (name, label, value = "") => ({
+    view: "text",
+    value: value,
+    height: 40,
+    name: name,
+    label: label,
+    labelAlign: "left"
+}), getForm = (id, items, isDisabled = false) => ({
+    view: "form",
+    disabled: isDisabled,
+    id: id,
+    height: 50,
+    gravity: 1.3,
+    cols: items
+}), getChart = (id) => ({
+    view: "chart",
+    css: "bg_panel",
+    id: id,
+    type: "bar",
+    label: function (value) {
+        return parseFloat(value.y).toFixed(4);
+    },
+    value: "#y#",
+    barWidth: 35,
+    radius: 0,
+    gradient: "falling",
+    xAxis: {
+        template: function (data) {
+            return parseFloat(data.x).toFixed(4);
+        }
+    },
+    yAxis: {
+        template: function (data) {
+            return data;
+        }
+    }
+});
+exports.getButton = getButton;
+exports.getTextField = getTextField;
+exports.getForm = getForm;
+exports.getChart = getChart;
+
+},{}],6:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const uiItems_1 = require("./uiItems");
+let defaultData = {
+    a: 5,
+    b: 10,
+    n: 1000
+}, uniformRunButtonId = "uniformRunID", uniformFormId = "uniformFormId", uniformOutPutFormId = "uniformOutputFromId", uniformChartId = "uniformChartId", uniformUi = {
+    type: "space",
+    rows: [
+        {
+            type: "toolbar",
+            css: "bg_panel",
+            cols: [
+                uiItems_1.getButton(uniformRunButtonId),
+                uiItems_1.getForm(uniformFormId, [
+                    uiItems_1.getTextField("a", "A:", defaultData.a),
+                    uiItems_1.getTextField("b", "B:", defaultData.b),
+                    uiItems_1.getTextField("an", "N:", defaultData.n)
+                ]),
+                {}
+            ]
+        },
+        uiItems_1.getForm(uniformOutPutFormId, [
+            uiItems_1.getTextField("mX", "Mx:"),
+            uiItems_1.getTextField("dX", "Dx:")
+        ], true),
+        uiItems_1.getChart(uniformChartId),
+        {}
+    ]
+}, initFunction = () => {
+    let form = $$(uniformFormId);
+    $$(uniformRunButtonId).attachEvent("onItemClick", function () {
+        let data = form.getValues();
+        if (!data.a) {
+            webix.message("a is not valid");
+        }
+    });
+};
+exports.uniformRunButtonId = uniformRunButtonId;
+exports.uniformFormId = uniformFormId;
+exports.uniformOutPutFormId = uniformOutPutFormId;
+exports.uniformChartId = uniformChartId;
+exports.uniformUi = uniformUi;
+
+},{"./uiItems":5}],7:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
 const dataWorker_1 = require("./dataWorker");
 const modTest_1 = require("./modTest");
@@ -317,7 +434,7 @@ class ModLab {
 }
 exports.default = ModLab;
 
-},{"./dataWorker":3,"./modTest":5,"./ui":6}],5:[function(require,module,exports){
+},{"./dataWorker":3,"./modTest":8,"./ui":9}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let mult = (a, b) => a * b, div = (a, b) => a / b, mod = (a, b) => a % b, makeStep = (index, prevResult, a, m) => {
@@ -492,125 +609,153 @@ class ModLabUtils {
 }
 exports.default = ModLabUtils;
 
-},{}],6:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let buttonId = "modButtonId1", chartId = "modChart1Id", formDataId = "formDataId", formOutputDataId = "formOutputDataId", ui = {
+const mainUi_1 = require("./lab2/mainUi");
+let buttonId = "modButtonId1", chartId = "modChart1Id", formDataId = "formDataId", formOutputDataId = "formOutputDataId", tabbarId = "modLabsSegmentedId", modLab1Id = "modLab1Id", modLab2Id = "modLab2Id", ui = {
     id: "modId",
     css: "bg_panel_raised",
     type: "space",
     autoheight: true,
     rows: [
         {
-            type: "toolbar",
-            css: "bg_panel",
+            view: "toolbar",
             cols: [
-                { template: "MOD", type: "header", width: 100, borderless: true },
                 {
-                    view: "button",
-                    css: "button_primary button_raised",
-                    id: buttonId,
-                    width: 100,
-                    value: "Run"
-                },
-                {
-                    view: "form",
-                    id: formDataId,
-                    gravity: 1.3,
-                    cols: [
-                        {
-                            view: "text",
-                            value: "",
-                            name: "a",
-                            label: "A:",
-                            labelAlign: "left"
-                        },
-                        {
-                            view: "text",
-                            value: "",
-                            name: "m",
-                            label: "M:",
-                            labelAlign: "left"
-                        },
-                        {
-                            view: "text",
-                            value: "",
-                            name: "r0",
-                            label: "R0:",
-                            labelAlign: "left"
-                        },
-                        {}
+                    view: "segmented", id: tabbarId, value: modLab1Id, multiview: true, options: [
+                        { value: "Lab 1", id: modLab1Id },
+                        { value: "Lab 2", id: modLab2Id }
                     ]
                 },
                 {}
             ]
         },
         {
-            view: "form",
-            id: formOutputDataId,
-            disabled: true,
-            cols: [
+            cells: [
                 {
-                    view: "text",
-                    value: "",
-                    name: "period",
-                    label: "Period:",
-                    labelAlign: "left"
+                    id: modLab1Id,
+                    rows: [
+                        {
+                            type: "toolbar",
+                            css: "bg_panel",
+                            cols: [
+                                { template: "MOD", type: "header", width: 100, borderless: true },
+                                {
+                                    view: "button",
+                                    css: "button_primary button_raised",
+                                    id: buttonId,
+                                    width: 100,
+                                    value: "Run"
+                                },
+                                {
+                                    view: "form",
+                                    id: formDataId,
+                                    gravity: 1.3,
+                                    cols: [
+                                        {
+                                            view: "text",
+                                            value: "",
+                                            name: "a",
+                                            label: "A:",
+                                            labelAlign: "left"
+                                        },
+                                        {
+                                            view: "text",
+                                            value: "",
+                                            name: "m",
+                                            label: "M:",
+                                            labelAlign: "left"
+                                        },
+                                        {
+                                            view: "text",
+                                            value: "",
+                                            name: "r0",
+                                            label: "R0:",
+                                            labelAlign: "left"
+                                        },
+                                        {}
+                                    ]
+                                },
+                                {}
+                            ]
+                        },
+                        {
+                            view: "form",
+                            id: formOutputDataId,
+                            disabled: true,
+                            cols: [
+                                {
+                                    view: "text",
+                                    value: "",
+                                    name: "period",
+                                    label: "Period:",
+                                    labelAlign: "left"
+                                },
+                                {
+                                    view: "text",
+                                    value: "",
+                                    name: "aPeriod",
+                                    label: "Aperiod:",
+                                    labelAlign: "left"
+                                },
+                                {
+                                    view: "text",
+                                    value: "",
+                                    name: "mX",
+                                    label: "Mx:",
+                                    labelAlign: "left"
+                                },
+                                {
+                                    view: "text",
+                                    value: "",
+                                    name: "dX",
+                                    label: "Dx:",
+                                    labelAlign: "left"
+                                },
+                                {
+                                    view: "text",
+                                    value: "",
+                                    name: "uniformity",
+                                    label: "Uniformity:",
+                                    labelAlign: "left"
+                                }
+                            ]
+                        },
+                        {
+                            view: "chart",
+                            css: "bg_panel",
+                            id: chartId,
+                            type: "bar",
+                            label: function (value) {
+                                return parseFloat(value.y).toFixed(4);
+                            },
+                            value: "#y#",
+                            barWidth: 35,
+                            radius: 0,
+                            gradient: "falling",
+                            xAxis: {
+                                template: function (data) {
+                                    return parseFloat(data.x).toFixed(4);
+                                }
+                            },
+                            yAxis: {
+                                template: function (data) {
+                                    return data;
+                                }
+                            }
+                        },
+                        {}
+                    ]
                 },
                 {
-                    view: "text",
-                    value: "",
-                    name: "aPeriod",
-                    label: "Aperiod:",
-                    labelAlign: "left"
-                },
-                {
-                    view: "text",
-                    value: "",
-                    name: "mX",
-                    label: "Mx:",
-                    labelAlign: "left"
-                },
-                {
-                    view: "text",
-                    value: "",
-                    name: "dX",
-                    label: "Dx:",
-                    labelAlign: "left"
-                },
-                {
-                    view: "text",
-                    value: "",
-                    name: "uniformity",
-                    label: "Uniformity:",
-                    labelAlign: "left"
+                    id: modLab2Id,
+                    rows: [
+                        mainUi_1.ui
+                    ]
                 }
             ]
-        },
-        {
-            view: "chart",
-            css: "bg_panel",
-            id: chartId,
-            type: "bar",
-            label: function (value) {
-                return parseFloat(value.y).toFixed(4);
-            },
-            value: "#y#",
-            barWidth: 35,
-            radius: 0,
-            gradient: "falling",
-            xAxis: {
-                template: function (data) {
-                    return parseFloat(data.x).toFixed(4);
-                }
-            },
-            yAxis: {
-                template: function (data) {
-                    return data;
-                }
-            }
-        },
-        {}
+        }
     ]
 };
 exports.buttonId = buttonId;
@@ -619,7 +764,7 @@ exports.formDataId = formDataId;
 exports.formOutputDataId = formOutputDataId;
 exports.UI = ui;
 
-},{}],7:[function(require,module,exports){
+},{"./lab2/mainUi":4}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Complex {
@@ -791,7 +936,7 @@ exports.CorrelationFourier = correlationFourier;
 exports.FWHT = fwht;
 exports.GetPhaseAndAmplitude = getPhaseAndAmplitude;
 
-},{}],8:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
@@ -1139,4 +1284,4 @@ webix.ready(() => {
     });
 });
 
-},{"./lab1/logic":1,"./lab1/ui":2,"./mod/madLab":4,"./mod/ui":6,"./test":7}]},{},[8]);
+},{"./lab1/logic":1,"./lab1/ui":2,"./mod/madLab":7,"./mod/ui":9,"./test":10}]},{},[11]);
