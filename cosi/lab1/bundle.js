@@ -433,6 +433,62 @@ class ModLabUtils {
         }
         return result;
     }
+    getRandom() {
+        return Math.random();
+    }
+    uniformDistribution(a, b, count) {
+        let result = [];
+        for (let i = 0; i < count; i++) {
+            result.push(a + (b - a) * this.getRandom());
+        }
+        result;
+    }
+    gaussDistribution(m, sko, count, n) {
+        let result = [], getSumOfRandom = (len) => {
+            let temp = 0;
+            for (let i = 0; i < len; i++) {
+                temp += this.getRandom();
+            }
+            return temp;
+        };
+        for (let i = 0; i < count; i++) {
+            result.push(m + sko * Math.sqrt(12.0 / n) * (getSumOfRandom(n) - n / 2));
+        }
+        return result;
+    }
+    exponentialDistribution(alpha, count) {
+        let result = [];
+        for (let i = 0; i < count; i++) {
+            result.push(-Math.log(this.getRandom()) / alpha);
+        }
+        return result;
+    }
+    gammaDistribution(alpha, ny, count) {
+        let result = [], getMultOfRandom = (len) => {
+            let temp = 1;
+            for (let i = 0; i < len; i++) {
+                temp *= this.getRandom();
+            }
+            return temp;
+        };
+        for (let i = 0; i < count; i++) {
+            result.push(-Math.log(getMultOfRandom(ny)) / alpha);
+        }
+        return result;
+    }
+    triangleDistribution(a, b, count) {
+        let result = [];
+        for (let i = 0; i < count; i++) {
+            result.push(a + (b - a) * Math.max(this.getRandom(), this.getRandom()));
+        }
+    }
+    simpsonDistribution(a, b, count) {
+        let result = [], getValue = (a1, b1) => a1 / 2 + (b1 / 2 - a1 / 2) * this.getRandom();
+        for (let i = 0; i < count; i++) {
+            result.push(getValue(a, b) + getValue(a, b));
+        }
+        return result;
+    }
 }
 exports.default = ModLabUtils;
 

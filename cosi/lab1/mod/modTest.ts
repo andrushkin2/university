@@ -146,4 +146,63 @@ export default class ModLabUtils {
         }
         return result;
     }
+    public getRandom() {
+        return Math.random();
+    }
+    public uniformDistribution(a: number, b: number, count: number) {
+        let result: number[] = [];
+        for (let i = 0; i < count; i++) {
+            result.push(a + (b - a) * this.getRandom());
+        }
+        result;
+    }
+    public gaussDistribution(m: number, sko: number, count: number, n: number) {
+        let result: number[] = [],
+            getSumOfRandom = (len: number) => {
+                let temp = 0;
+                for (let i = 0; i < len; i++) {
+                    temp += this.getRandom();
+                }
+                return temp;
+            };
+        for (let i = 0; i < count; i++) {
+            result.push(m + sko * Math.sqrt(12.0 / n) * (getSumOfRandom(n) - n / 2));
+        }
+        return result;
+    }
+    public exponentialDistribution(alpha: number, count: number) {
+        let result: number[] = [];
+        for (let i = 0; i < count; i++) {
+            result.push(-Math.log(this.getRandom()) / alpha);
+        }
+        return result;
+    }
+    public gammaDistribution(alpha: number, ny: number, count: number) {
+        let result: number[] = [],
+            getMultOfRandom = (len: number) => {
+                let temp = 1;
+                for (let i = 0; i < len; i++) {
+                    temp *= this.getRandom();
+                }
+                return temp;
+            };
+        for (let i = 0; i < count; i++) {
+            result.push(-Math.log(getMultOfRandom(ny)) / alpha);
+        }
+        return result;
+    }
+    public triangleDistribution(a: number, b: number, count: number) {
+        let result: number[] = [];
+        for (let i = 0; i < count; i++) {
+            result.push(a + (b - a) * Math.max(this.getRandom(), this.getRandom()));
+        }
+    }
+    public simpsonDistribution(a: number, b: number, count: number) {
+        let result: number[] = [],
+            getValue = (a1: number, b1: number) => a1 / 2 + (b1 / 2 - a1 / 2) * this.getRandom();
+        for (let i = 0; i < count; i++) {
+            result.push(getValue(a, b) + getValue(a, b));
+        }
+        return result;
+    }
 }
