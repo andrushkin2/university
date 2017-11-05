@@ -1,6 +1,12 @@
 import { buttonId, chartId, formDataId, formOutputDataId } from "./ui";
 import DataWorker from "./dataWorker";
 import ModLabUtils, { IChartData } from "./modTest";
+import { initFunction as initUniformLab } from "./lab2/uniformUi";
+import { initFunction as initGaussLab } from "./lab2/gaussUi";
+import { initFunction as initExponentialLab } from "./lab2/exponentialUi";
+import { initFunction as initGammaLab } from "./lab2/gammaUi";
+import { initFunction as initTriangleLab } from "./lab2/triangleUi";
+import { initFunction as initSimpsonLab } from "./lab2/simpsonUi";
 
 type IButton = webix.ui.button;
 type IChart = webix.ui.chart;
@@ -48,6 +54,12 @@ export default class ModLab {
         this.utils = new ModLabUtils();
         this.chart = <IChart>$$(chartId);
         this.chart.hide();
+        initUniformLab();
+        initGaussLab();
+        initExponentialLab();
+        initGammaLab();
+        initTriangleLab();
+        initSimpsonLab();
     }
     private validateForm(data: IFormData<string>) {
         let a = parseInt(data["a"]) || 0,

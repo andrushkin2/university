@@ -3,6 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
 const dataWorker_1 = require("./dataWorker");
 const modTest_1 = require("./modTest");
+const uniformUi_1 = require("./lab2/uniformUi");
+const gaussUi_1 = require("./lab2/gaussUi");
+const exponentialUi_1 = require("./lab2/exponentialUi");
+const gammaUi_1 = require("./lab2/gammaUi");
+const triangleUi_1 = require("./lab2/triangleUi");
+const simpsonUi_1 = require("./lab2/simpsonUi");
 class ModLab {
     constructor() {
         $$(ui_1.buttonId).attachEvent("onItemClick", () => {
@@ -29,6 +35,12 @@ class ModLab {
         this.utils = new modTest_1.default();
         this.chart = $$(ui_1.chartId);
         this.chart.hide();
+        uniformUi_1.initFunction();
+        gaussUi_1.initFunction();
+        exponentialUi_1.initFunction();
+        gammaUi_1.initFunction();
+        triangleUi_1.initFunction();
+        simpsonUi_1.initFunction();
     }
     validateForm(data) {
         let a = parseInt(data["a"]) || 0, m = parseInt(data["m"]) || 0, r0 = parseInt(data["r0"]) || 0;

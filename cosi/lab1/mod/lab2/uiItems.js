@@ -9,7 +9,7 @@ let getButton = (buttonId) => ({
 }), getTextField = (name, label, value = "") => ({
     view: "text",
     value: value,
-    height: 40,
+    height: 50,
     name: name,
     label: label,
     labelAlign: "left"

@@ -260,7 +260,147 @@ exports.default = DataWorker;
 },{}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const uiItems_1 = require("./uiItems");
+const modTest_1 = require("../modTest");
+let defaultData = {
+    alpha: 10,
+    count: 10000
+}, exponentialRunButtonId = "exponentialRunID", exponentialFormId = "exponentialFormId", exponentialOutPutFormId = "exponentialOutputFromId", exponentialChartId = "exponentialChartId", exponentialUi = {
+    type: "space",
+    rows: [
+        {
+            type: "toolbar",
+            css: "bg_panel",
+            cols: [
+                uiItems_1.getButton(exponentialRunButtonId),
+                uiItems_1.getForm(exponentialFormId, [
+                    uiItems_1.getTextField("alpha", "Alpha:", defaultData.alpha),
+                    uiItems_1.getTextField("count", "Count:", defaultData.count)
+                ]),
+                {}
+            ]
+        },
+        uiItems_1.getForm(exponentialOutPutFormId, [
+            uiItems_1.getTextField("mX", "Mx:"),
+            uiItems_1.getTextField("dX", "Dx:")
+        ], true),
+        uiItems_1.getChart(exponentialChartId),
+        {}
+    ]
+}, initFunction = () => {
+    let form = $$(exponentialFormId), formOutput = $$(exponentialOutPutFormId), chart = $$(exponentialChartId), utils = new modTest_1.default();
+    $$(exponentialRunButtonId).attachEvent("onItemClick", function () {
+        let data = form.getValues(), results = utils.exponentialDistribution(parseInt(data.alpha), parseInt(data.count)), mX = utils.getMx(results), dX = utils.getDx(results, mX), chartData = utils.getChartData(results);
+        formOutput.setValues({ mX, dX });
+        chart.show();
+        chart.clearAll();
+        chart.parse(chartData, "json");
+    });
+};
+exports.exponentialUi = exponentialUi;
+exports.initFunction = initFunction;
+
+},{"../modTest":13,"./uiItems":10}],5:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const uiItems_1 = require("./uiItems");
+const modTest_1 = require("../modTest");
+let defaultData = {
+    alpha: 2.5,
+    ny: 18,
+    count: 10000
+}, gammaRunButtonId = "gammaRunID", gammaFormId = "gammaFormId", gammaOutPutFormId = "gammaOutputFromId", gammaChartId = "gammaChartId", gammaUi = {
+    type: "space",
+    rows: [
+        {
+            type: "toolbar",
+            css: "bg_panel",
+            cols: [
+                uiItems_1.getButton(gammaRunButtonId),
+                uiItems_1.getForm(gammaFormId, [
+                    uiItems_1.getTextField("alpha", "Alpha:", defaultData.alpha),
+                    uiItems_1.getTextField("ny", "Ny:", defaultData.ny),
+                    uiItems_1.getTextField("count", "Count:", defaultData.count)
+                ]),
+                {}
+            ]
+        },
+        uiItems_1.getForm(gammaOutPutFormId, [
+            uiItems_1.getTextField("mX", "Mx:"),
+            uiItems_1.getTextField("dX", "Dx:")
+        ], true),
+        uiItems_1.getChart(gammaChartId),
+        {}
+    ]
+}, initFunction = () => {
+    let form = $$(gammaFormId), formOutput = $$(gammaOutPutFormId), chart = $$(gammaChartId), utils = new modTest_1.default();
+    $$(gammaRunButtonId).attachEvent("onItemClick", function () {
+        let data = form.getValues(), results = utils.gammaDistribution(parseInt(data.alpha), parseInt(data.ny), parseInt(data.count)), mX = utils.getMx(results), dX = utils.getDx(results, mX), chartData = utils.getChartData(results);
+        formOutput.setValues({ mX, dX });
+        chart.show();
+        chart.clearAll();
+        chart.parse(chartData, "json");
+    });
+};
+exports.gammaUi = gammaUi;
+exports.initFunction = initFunction;
+
+},{"../modTest":13,"./uiItems":10}],6:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const uiItems_1 = require("./uiItems");
+const modTest_1 = require("../modTest");
+let defaultData = {
+    m: 5,
+    a: 10,
+    n: 6,
+    count: 10000
+}, gaussRunButtonId = "gaussRunID", gaussFormId = "gaussFormId", gaussOutPutFormId = "gaussOutputFromId", gaussChartId = "gaussChartId", gaussUi = {
+    type: "space",
+    rows: [
+        {
+            type: "toolbar",
+            css: "bg_panel",
+            cols: [
+                uiItems_1.getButton(gaussRunButtonId),
+                uiItems_1.getForm(gaussFormId, [
+                    uiItems_1.getTextField("m", "M:", defaultData.m),
+                    uiItems_1.getTextField("a", "A:", defaultData.a),
+                    uiItems_1.getTextField("n", "N:", defaultData.n),
+                    uiItems_1.getTextField("count", "Count:", defaultData.count)
+                ]),
+                {}
+            ]
+        },
+        uiItems_1.getForm(gaussOutPutFormId, [
+            uiItems_1.getTextField("mX", "Mx:"),
+            uiItems_1.getTextField("dX", "Dx:")
+        ], true),
+        uiItems_1.getChart(gaussChartId),
+        {}
+    ]
+}, initFunction = () => {
+    let form = $$(gaussFormId), formOutput = $$(gaussOutPutFormId), chart = $$(gaussChartId), utils = new modTest_1.default();
+    $$(gaussRunButtonId).attachEvent("onItemClick", function () {
+        let data = form.getValues(), results = utils.gaussDistribution(parseInt(data.m), parseInt(data.a), parseInt(data.count), parseInt(data.n)), mX = utils.getMx(results), dX = utils.getDx(results, mX), chartData = utils.getChartData(results);
+        formOutput.setValues({ mX, dX });
+        chart.show();
+        chart.clearAll();
+        chart.parse(chartData, "json");
+    });
+};
+exports.gaussUi = gaussUi;
+exports.initFunction = initFunction;
+
+},{"../modTest":13,"./uiItems":10}],7:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const uniformUi_1 = require("./uniformUi");
+const gaussUi_1 = require("./gaussUi");
+const exponentialUi_1 = require("./exponentialUi");
+const triangleUi_1 = require("./triangleUi");
+const gammaUi_1 = require("./gammaUi");
+const simpsonUi_1 = require("./simpsonUi");
 let distributionListId = "distributionListId", ui = {
     view: "tabview",
     cells: [
@@ -269,15 +409,121 @@ let distributionListId = "distributionListId", ui = {
             body: uniformUi_1.uniformUi
         },
         {
-            header: "Form",
-            body: {}
+            header: "Gauss",
+            body: gaussUi_1.gaussUi
+        },
+        {
+            header: "Exponential",
+            body: exponentialUi_1.exponentialUi
+        },
+        {
+            header: "Gamma",
+            body: gammaUi_1.gammaUi
+        },
+        {
+            header: "Triangle",
+            body: triangleUi_1.triangleUi
+        },
+        {
+            header: "Simpson",
+            body: simpsonUi_1.simpsonUi
         }
     ]
 };
 exports.distributionListId = distributionListId;
 exports.ui = ui;
 
-},{"./uniformUi":6}],5:[function(require,module,exports){
+},{"./exponentialUi":4,"./gammaUi":5,"./gaussUi":6,"./simpsonUi":8,"./triangleUi":9,"./uniformUi":11}],8:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const uiItems_1 = require("./uiItems");
+const modTest_1 = require("../modTest");
+let defaultData = {
+    a: 18,
+    b: 30,
+    count: 10000
+}, simpsonRunButtonId = "simpsonRunID", simpsonFormId = "simpsonFormId", simpsonOutPutFormId = "simpsonOutputFromId", simpsonChartId = "simpsonChartId", simpsonUi = {
+    type: "space",
+    rows: [
+        {
+            type: "toolbar",
+            css: "bg_panel",
+            cols: [
+                uiItems_1.getButton(simpsonRunButtonId),
+                uiItems_1.getForm(simpsonFormId, [
+                    uiItems_1.getTextField("a", "A:", defaultData.a),
+                    uiItems_1.getTextField("b", "B:", defaultData.b),
+                    uiItems_1.getTextField("count", "Count:", defaultData.count)
+                ]),
+                {}
+            ]
+        },
+        uiItems_1.getForm(simpsonOutPutFormId, [
+            uiItems_1.getTextField("mX", "Mx:"),
+            uiItems_1.getTextField("dX", "Dx:")
+        ], true),
+        uiItems_1.getChart(simpsonChartId),
+        {}
+    ]
+}, initFunction = () => {
+    let form = $$(simpsonFormId), formOutput = $$(simpsonOutPutFormId), chart = $$(simpsonChartId), utils = new modTest_1.default();
+    $$(simpsonRunButtonId).attachEvent("onItemClick", function () {
+        let data = form.getValues(), results = utils.simpsonDistribution(parseInt(data.a), parseInt(data.b), parseInt(data.count)), mX = utils.getMx(results), dX = utils.getDx(results, mX), chartData = utils.getChartData(results);
+        formOutput.setValues({ mX, dX });
+        chart.show();
+        chart.clearAll();
+        chart.parse(chartData, "json");
+    });
+};
+exports.simpsonUi = simpsonUi;
+exports.initFunction = initFunction;
+
+},{"../modTest":13,"./uiItems":10}],9:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const uiItems_1 = require("./uiItems");
+const modTest_1 = require("../modTest");
+let defaultData = {
+    a: 2.5,
+    b: 18,
+    count: 10000
+}, triangleRunButtonId = "triangleRunID", triangleFormId = "triangleFormId", triangleOutPutFormId = "triangleOutputFromId", triangleChartId = "triangleChartId", triangleUi = {
+    type: "space",
+    rows: [
+        {
+            type: "toolbar",
+            css: "bg_panel",
+            cols: [
+                uiItems_1.getButton(triangleRunButtonId),
+                uiItems_1.getForm(triangleFormId, [
+                    uiItems_1.getTextField("a", "A:", defaultData.a),
+                    uiItems_1.getTextField("b", "B:", defaultData.b),
+                    uiItems_1.getTextField("count", "Count:", defaultData.count)
+                ]),
+                {}
+            ]
+        },
+        uiItems_1.getForm(triangleOutPutFormId, [
+            uiItems_1.getTextField("mX", "Mx:"),
+            uiItems_1.getTextField("dX", "Dx:")
+        ], true),
+        uiItems_1.getChart(triangleChartId),
+        {}
+    ]
+}, initFunction = () => {
+    let form = $$(triangleFormId), formOutput = $$(triangleOutPutFormId), chart = $$(triangleChartId), utils = new modTest_1.default();
+    $$(triangleRunButtonId).attachEvent("onItemClick", function () {
+        let data = form.getValues(), results = utils.triangleDistribution(parseInt(data.a), parseInt(data.b), parseInt(data.count)), mX = utils.getMx(results), dX = utils.getDx(results, mX), chartData = utils.getChartData(results);
+        formOutput.setValues({ mX, dX });
+        chart.show();
+        chart.clearAll();
+        chart.parse(chartData, "json");
+    });
+};
+exports.triangleUi = triangleUi;
+exports.initFunction = initFunction;
+
+},{"../modTest":13,"./uiItems":10}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let getButton = (buttonId) => ({
@@ -289,7 +535,7 @@ let getButton = (buttonId) => ({
 }), getTextField = (name, label, value = "") => ({
     view: "text",
     value: value,
-    height: 40,
+    height: 50,
     name: name,
     label: label,
     labelAlign: "left"
@@ -328,10 +574,11 @@ exports.getTextField = getTextField;
 exports.getForm = getForm;
 exports.getChart = getChart;
 
-},{}],6:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
+const modTest_1 = require("../modTest");
 let defaultData = {
     a: 5,
     b: 10,
@@ -347,7 +594,7 @@ let defaultData = {
                 uiItems_1.getForm(uniformFormId, [
                     uiItems_1.getTextField("a", "A:", defaultData.a),
                     uiItems_1.getTextField("b", "B:", defaultData.b),
-                    uiItems_1.getTextField("an", "N:", defaultData.n)
+                    uiItems_1.getTextField("n", "N:", defaultData.n)
                 ]),
                 {}
             ]
@@ -360,12 +607,13 @@ let defaultData = {
         {}
     ]
 }, initFunction = () => {
-    let form = $$(uniformFormId);
+    let form = $$(uniformFormId), formOutput = $$(uniformOutPutFormId), chart = $$(uniformChartId), utils = new modTest_1.default();
     $$(uniformRunButtonId).attachEvent("onItemClick", function () {
-        let data = form.getValues();
-        if (!data.a) {
-            webix.message("a is not valid");
-        }
+        let data = form.getValues(), results = utils.uniformDistribution(parseInt(data.a), parseInt(data.b), parseInt(data.n)), mX = utils.getMx(results), dX = utils.getDx(results, mX), chartData = utils.getChartData(results);
+        formOutput.setValues({ mX, dX });
+        chart.show();
+        chart.clearAll();
+        chart.parse(chartData, "json");
     });
 };
 exports.uniformRunButtonId = uniformRunButtonId;
@@ -373,13 +621,20 @@ exports.uniformFormId = uniformFormId;
 exports.uniformOutPutFormId = uniformOutPutFormId;
 exports.uniformChartId = uniformChartId;
 exports.uniformUi = uniformUi;
+exports.initFunction = initFunction;
 
-},{"./uiItems":5}],7:[function(require,module,exports){
+},{"../modTest":13,"./uiItems":10}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
 const dataWorker_1 = require("./dataWorker");
 const modTest_1 = require("./modTest");
+const uniformUi_1 = require("./lab2/uniformUi");
+const gaussUi_1 = require("./lab2/gaussUi");
+const exponentialUi_1 = require("./lab2/exponentialUi");
+const gammaUi_1 = require("./lab2/gammaUi");
+const triangleUi_1 = require("./lab2/triangleUi");
+const simpsonUi_1 = require("./lab2/simpsonUi");
 class ModLab {
     constructor() {
         $$(ui_1.buttonId).attachEvent("onItemClick", () => {
@@ -406,6 +661,12 @@ class ModLab {
         this.utils = new modTest_1.default();
         this.chart = $$(ui_1.chartId);
         this.chart.hide();
+        uniformUi_1.initFunction();
+        gaussUi_1.initFunction();
+        exponentialUi_1.initFunction();
+        gammaUi_1.initFunction();
+        triangleUi_1.initFunction();
+        simpsonUi_1.initFunction();
     }
     validateForm(data) {
         let a = parseInt(data["a"]) || 0, m = parseInt(data["m"]) || 0, r0 = parseInt(data["r0"]) || 0;
@@ -434,7 +695,7 @@ class ModLab {
 }
 exports.default = ModLab;
 
-},{"./dataWorker":3,"./modTest":8,"./ui":9}],8:[function(require,module,exports){
+},{"./dataWorker":3,"./lab2/exponentialUi":4,"./lab2/gammaUi":5,"./lab2/gaussUi":6,"./lab2/simpsonUi":8,"./lab2/triangleUi":9,"./lab2/uniformUi":11,"./modTest":13,"./ui":14}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let mult = (a, b) => a * b, div = (a, b) => a / b, mod = (a, b) => a % b, makeStep = (index, prevResult, a, m) => {
@@ -558,7 +819,7 @@ class ModLabUtils {
         for (let i = 0; i < count; i++) {
             result.push(a + (b - a) * this.getRandom());
         }
-        result;
+        return result;
     }
     gaussDistribution(m, sko, count, n) {
         let result = [], getSumOfRandom = (len) => {
@@ -598,6 +859,7 @@ class ModLabUtils {
         for (let i = 0; i < count; i++) {
             result.push(a + (b - a) * Math.max(this.getRandom(), this.getRandom()));
         }
+        return result;
     }
     simpsonDistribution(a, b, count) {
         let result = [], getValue = (a1, b1) => a1 / 2 + (b1 / 2 - a1 / 2) * this.getRandom();
@@ -609,7 +871,7 @@ class ModLabUtils {
 }
 exports.default = ModLabUtils;
 
-},{}],9:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mainUi_1 = require("./lab2/mainUi");
@@ -764,7 +1026,7 @@ exports.formDataId = formDataId;
 exports.formOutputDataId = formOutputDataId;
 exports.UI = ui;
 
-},{"./lab2/mainUi":4}],10:[function(require,module,exports){
+},{"./lab2/mainUi":7}],15:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Complex {
@@ -936,7 +1198,7 @@ exports.CorrelationFourier = correlationFourier;
 exports.FWHT = fwht;
 exports.GetPhaseAndAmplitude = getPhaseAndAmplitude;
 
-},{}],11:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
@@ -1284,4 +1546,4 @@ webix.ready(() => {
     });
 });
 
-},{"./lab1/logic":1,"./lab1/ui":2,"./mod/madLab":7,"./mod/ui":9,"./test":10}]},{},[11]);
+},{"./lab1/logic":1,"./lab1/ui":2,"./mod/madLab":12,"./mod/ui":14,"./test":15}]},{},[16]);

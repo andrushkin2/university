@@ -154,7 +154,7 @@ export default class ModLabUtils {
         for (let i = 0; i < count; i++) {
             result.push(a + (b - a) * this.getRandom());
         }
-        result;
+        return result;
     }
     public gaussDistribution(m: number, sko: number, count: number, n: number) {
         let result: number[] = [],
@@ -196,6 +196,7 @@ export default class ModLabUtils {
         for (let i = 0; i < count; i++) {
             result.push(a + (b - a) * Math.max(this.getRandom(), this.getRandom()));
         }
+        return result;
     }
     public simpsonDistribution(a: number, b: number, count: number) {
         let result: number[] = [],

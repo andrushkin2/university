@@ -4,56 +4,56 @@ import ModLabUtils from "../modTest";
 interface IFormData {
     a: number | string;
     b: number | string;
-    n: number | string;
+    count: number | string;
 }
 interface IFormDataGet {
     a: string;
     b: string;
-    n: string;
+    count: string;
 }
 
 let defaultData: IFormData = {
-        a: 5,
-        b: 10,
-        n: 1000
-    },
-    uniformRunButtonId = "uniformRunID",
-    uniformFormId = "uniformFormId",
-    uniformOutPutFormId = "uniformOutputFromId",
-    uniformChartId = "uniformChartId",
-    uniformUi = {
+    a: 18,
+    b: 30,
+    count: 10000
+},
+    simpsonRunButtonId = "simpsonRunID",
+    simpsonFormId = "simpsonFormId",
+    simpsonOutPutFormId = "simpsonOutputFromId",
+    simpsonChartId = "simpsonChartId",
+    simpsonUi = {
         type: "space",
         rows: [
             {
                 type: "toolbar",
                 css: "bg_panel",
                 cols: [
-                    getButton(uniformRunButtonId),
-                    getForm(uniformFormId, [
+                    getButton(simpsonRunButtonId),
+                    getForm(simpsonFormId, [
                         getTextField("a", "A:", defaultData.a),
                         getTextField("b", "B:", defaultData.b),
-                        getTextField("n", "N:", defaultData.n)
+                        getTextField("count", "Count:", defaultData.count)
                     ]),
                     {}
                 ]
             },
-            getForm(uniformOutPutFormId, [
+            getForm(simpsonOutPutFormId, [
                 getTextField("mX", "Mx:"),
                 getTextField("dX", "Dx:")
             ], true),
-            getChart(uniformChartId),
+            getChart(simpsonChartId),
             {}
         ]
     },
     initFunction = () => {
-        let form = <webix.ui.form>$$(uniformFormId),
-            formOutput = <webix.ui.form>$$(uniformOutPutFormId),
-            chart = <webix.ui.chart>$$(uniformChartId),
+        let form = <webix.ui.form>$$(simpsonFormId),
+            formOutput = <webix.ui.form>$$(simpsonOutPutFormId),
+            chart = <webix.ui.chart>$$(simpsonChartId),
             utils = new ModLabUtils();
 
-        (<webix.ui.button>$$(uniformRunButtonId)).attachEvent("onItemClick", function() {
+        (<webix.ui.button>$$(simpsonRunButtonId)).attachEvent("onItemClick", function () {
             let data = form.getValues() as IFormDataGet,
-                results = utils.uniformDistribution(parseInt(data.a), parseInt(data.b), parseInt(data.n)),
+                results = utils.simpsonDistribution(parseInt(data.a), parseInt(data.b), parseInt(data.count)),
                 mX = utils.getMx(results),
                 dX = utils.getDx(results, mX),
                 chartData = utils.getChartData(results);
@@ -64,4 +64,4 @@ let defaultData: IFormData = {
         });
     };
 
-export { uniformRunButtonId, uniformFormId, uniformOutPutFormId, uniformChartId, uniformUi, initFunction };
+export { initFunction, simpsonUi };

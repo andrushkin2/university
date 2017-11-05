@@ -9,7 +9,7 @@ let getButton = (buttonId: string) => (<webix.ui.buttonConfig>{
     getTextField = (name: string, label: string, value: string | number = "") => (<webix.ui.textConfig>{
         view: "text",
         value: value,
-        height: 40,
+        height: 50,
         name: name,
         label: label,
         labelAlign: "left"

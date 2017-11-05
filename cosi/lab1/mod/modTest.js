@@ -121,7 +121,7 @@ class ModLabUtils {
         for (let i = 0; i < count; i++) {
             result.push(a + (b - a) * this.getRandom());
         }
-        result;
+        return result;
     }
     gaussDistribution(m, sko, count, n) {
         let result = [], getSumOfRandom = (len) => {
@@ -161,6 +161,7 @@ class ModLabUtils {
         for (let i = 0; i < count; i++) {
             result.push(a + (b - a) * Math.max(this.getRandom(), this.getRandom()));
         }
+        return result;
     }
     simpsonDistribution(a, b, count) {
         let result = [], getValue = (a1, b1) => a1 / 2 + (b1 / 2 - a1 / 2) * this.getRandom();
