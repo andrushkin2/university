@@ -290,7 +290,7 @@ let defaultData = {
 }, initFunction = () => {
     let form = $$(exponentialFormId), formOutput = $$(exponentialOutPutFormId), chart = $$(exponentialChartId), utils = new modTest_1.default();
     $$(exponentialRunButtonId).attachEvent("onItemClick", function () {
-        let data = form.getValues(), results = utils.exponentialDistribution(parseInt(data.alpha), parseInt(data.count)), mX = utils.getMx(results), dX = utils.getDx(results, mX), chartData = utils.getChartData(results);
+        let data = form.getValues(), results = utils.exponentialDistribution(parseFloat(data.alpha), parseInt(data.count)), mX = utils.getMx(results), dX = utils.getDx(results, mX), chartData = utils.getChartData(results);
         formOutput.setValues({ mX, dX });
         chart.show();
         chart.clearAll();
