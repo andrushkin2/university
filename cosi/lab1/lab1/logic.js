@@ -26,7 +26,16 @@ class UiLogic {
         });
         $$(ui_1.buttonResetId).attachEvent("onItemClick", () => {
             let data = this.getContextData();
-            this.resetData(data.data);
+            this.updateContextData(data.data, this.firstData);
+            this.putContextData(data);
+            let info = this.getInfoFromContext(this.getContextData());
+            this.drawChartData(ui_1.redChartId, info.red.map);
+            this.drawChartData(ui_1.greenChartId, info.green.map);
+            this.drawChartData(ui_1.blueChartId, info.blue.map);
+        });
+        $$(ui_1.buttonRobertsId).attachEvent("onItemClick", () => {
+            let data = this.getContextData(), newData = this.runRobertsTransform(data.data);
+            this.updateContextData(data.data, newData);
             this.putContextData(data);
             let info = this.getInfoFromContext(this.getContextData());
             this.drawChartData(ui_1.redChartId, info.red.map);
@@ -39,8 +48,7 @@ class UiLogic {
                 return;
             }
             let formData = logToolbarForm.getValues(), data = this.getContextData();
-            debugger;
-            this.logCorrection(data.data, parseFloat(formData.c), parseFloat(formData.y));
+            this.logCorrection(data.data, parseFloat(formData.c));
             this.putContextData(data);
             let info = this.getInfoFromContext(this.getContextData());
             this.drawChartData(ui_1.redChartId, info.red.map);
@@ -48,12 +56,12 @@ class UiLogic {
             this.drawChartData(ui_1.blueChartId, info.blue.map);
         });
     }
-    resetData(data) {
+    updateContextData(data, newData) {
         for (let i = 0, len = data.length; i < len; i += 4) {
-            data[i] = this.firstData[i];
-            data[i + 1] = this.firstData[i + 1];
-            data[i + 2] = this.firstData[i + 2];
-            data[i + 3] = this.firstData[i + 3];
+            data[i] = newData[i];
+            data[i + 1] = newData[i + 1];
+            data[i + 2] = newData[i + 2];
+            data[i + 3] = newData[i + 3];
         }
     }
     drawChartData(chartId, data) {
@@ -121,14 +129,46 @@ class UiLogic {
         }
         return res;
     }
-    logCorrection(data, c, y) {
-        let getValue = (value, c, y) => c * Math.log(1 + value);
+    logCorrection(data, c) {
+        let getValue = (value, cVal) => cVal * Math.log(1 + value);
         for (let i = 0, len = data.length; i < len; i += 4) {
-            data[i] = getValue(data[i], c, y);
-            data[i + 1] = getValue(data[i + 1], c, y);
-            data[i + 2] = getValue(data[i + 2], c, y);
+            data[i] = getValue(data[i], c);
+            data[i + 1] = getValue(data[i + 1], c);
+            data[i + 2] = getValue(data[i + 2], c);
         }
         return data;
+    }
+    flatArrayToMatrix(data) {
+        let itemsInRow = this.canvas.width * 4, rows = this.canvas.height, yIndex = 0, rowIndex = 0, result = [];
+        while (rowIndex < rows) {
+            let maxIndex = itemsInRow * rowIndex + itemsInRow, tempArr = [];
+            while (yIndex < maxIndex) {
+                tempArr.push([data[yIndex], data[yIndex + 1], data[yIndex + 2], data[yIndex + 3]]);
+                yIndex += 4;
+            }
+            result[rowIndex] = tempArr;
+            rowIndex++;
+        }
+        return result;
+    }
+    runRobertsTransform(data) {
+        let arr = this.flatArrayToMatrix(data), result = [], calcNewValue = (xCurr, x1y1, xy1, x1y) => Math.sqrt(Math.pow(xy1 - x1y, 2) + Math.pow(xCurr - x1y1, 2)), culcLayers = (xy, xy1, x1y, x1y1) => {
+            for (let i = 0; i < 3; i++) {
+                result.push(calcNewValue(xy[i], x1y1[i], xy1[i], x1y[i]));
+            }
+            result.push(xy[3]);
+        }, runCircle = (subArr, nextArr) => {
+            for (let i = 0, subLen = subArr.length - 1; i < subLen; i++) {
+                culcLayers(subArr[i], subArr[i + 1], nextArr[i], nextArr[i + 1]);
+            }
+            let lastIndex = subArr.length - 1;
+            culcLayers(subArr[lastIndex], subArr[lastIndex], nextArr[lastIndex], nextArr[lastIndex]);
+        };
+        for (let i = 0, len = arr.length - 1; i < len; i++) {
+            runCircle(arr[i], arr[i + 1]);
+        }
+        runCircle(arr[arr.length - 1], arr[arr.length - 1]);
+        return result;
     }
     getContextData() {
         return this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);

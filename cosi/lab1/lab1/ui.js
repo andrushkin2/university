@@ -5,7 +5,7 @@ let uploaderId = "imageUploader", canvasTemplate = (canvasID) => {
     return `<div style="text-align: center;width: 100%; height: 100%; overflow-y: auto;">
             <canvas id="${canvasID}" width="1000" height="500"></canvas>
         </div>`;
-}, canvasId = "canvasImage1", buttonId = "buttonId", buttonLogParseId = "buttonLogParseId", buttonResetId = "buttonResetId", redChartId = "redChart", logToolbarId = "logToolbarId", logToolbarFormId = "logToolbarFormId", greenChartId = "greenChart", blueChartId = "blueChart", ui = {
+}, canvasId = "canvasImage1", buttonId = "buttonId", buttonLogParseId = "buttonLogParseId", buttonRobertsId = "buttonRobertsId", buttonResetId = "buttonResetId", redChartId = "redChart", logToolbarId = "logToolbarId", logToolbarFormId = "logToolbarFormId", greenChartId = "greenChart", blueChartId = "blueChart", ui = {
     id: "lab5",
     type: "space",
     rows: [
@@ -34,6 +34,12 @@ let uploaderId = "imageUploader", canvasTemplate = (canvasID) => {
                     id: buttonLogParseId,
                     value: "Log func"
                 },
+                {
+                    view: "button",
+                    width: 100,
+                    id: buttonRobertsId,
+                    value: "Rebert's func"
+                },
                 {},
                 {
                     view: "button",
@@ -49,8 +55,7 @@ let uploaderId = "imageUploader", canvasTemplate = (canvasID) => {
             hidden: true,
             cols: [
                 uiItems_1.getForm(logToolbarFormId, [
-                    uiItems_1.getTextField("c", "C:", "15"),
-                    uiItems_1.getTextField("y", "Y:", 3)
+                    uiItems_1.getTextField("c", "C:", "15")
                 ]),
                 {},
                 {
@@ -91,11 +96,15 @@ let uploaderId = "imageUploader", canvasTemplate = (canvasID) => {
                                         id: redChartId,
                                         view: "chart",
                                         type: "bar",
-                                        preset: "stick",
+                                        css: "bg_panel",
+                                        border: false,
                                         value: "#value#",
                                         color: "red",
                                         width: 300,
                                         xAxis: {
+                                            lines: function (value) {
+                                                return value.pixel % 32 === 0;
+                                            },
                                             template: function (value) {
                                                 return value.pixel % 32 === 0 ? value.pixel : "";
                                             }
@@ -105,11 +114,15 @@ let uploaderId = "imageUploader", canvasTemplate = (canvasID) => {
                                         id: greenChartId,
                                         view: "chart",
                                         type: "bar",
-                                        preset: "stick",
+                                        css: "bg_panel",
                                         value: "#value#",
+                                        border: false,
                                         color: "green",
                                         width: 300,
                                         xAxis: {
+                                            lines: function (value) {
+                                                return value.pixel % 32 === 0;
+                                            },
                                             template: function (value) {
                                                 return value.pixel % 32 === 0 ? value.pixel : "";
                                             }
@@ -119,11 +132,15 @@ let uploaderId = "imageUploader", canvasTemplate = (canvasID) => {
                                         id: blueChartId,
                                         view: "chart",
                                         type: "bar",
-                                        preset: "stick",
+                                        border: false,
+                                        css: "bg_panel",
                                         value: "#value#",
                                         color: "blue",
                                         width: 300,
                                         xAxis: {
+                                            lines: function (value) {
+                                                return value.pixel % 32 === 0;
+                                            },
                                             template: function (value) {
                                                 return value.pixel % 32 === 0 ? value.pixel : "";
                                             }
@@ -142,6 +159,7 @@ exports.uploaderId = uploaderId;
 exports.canvasId = canvasId;
 exports.buttonId = buttonId;
 exports.buttonLogParseId = buttonLogParseId;
+exports.buttonRobertsId = buttonRobertsId;
 exports.buttonResetId = buttonResetId;
 exports.redChartId = redChartId;
 exports.logToolbarId = logToolbarId;

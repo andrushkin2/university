@@ -1,4 +1,4 @@
-import { canvasId, uploaderId, buttonId, redChartId, IChartData, greenChartId, buttonResetId, blueChartId, buttonLogParseId, logToolbarFormId, logToolbarId } from "./ui";
+import { canvasId, uploaderId, buttonId, redChartId, IChartData, greenChartId, buttonResetId, blueChartId, buttonLogParseId, logToolbarFormId, logToolbarId, buttonRobertsId } from "./ui";
 
 interface IKeyValue<T> {
     [key: string]: T;
@@ -46,7 +46,17 @@ export default class UiLogic {
         });
         (<webix.ui.button>$$(buttonResetId)).attachEvent("onItemClick", () => {
             let data = this.getContextData();
-            this.resetData(data.data);
+            this.updateContextData(data.data, this.firstData);
+            this.putContextData(data);
+            let info = this.getInfoFromContext(this.getContextData());
+            this.drawChartData(redChartId, info.red.map);
+            this.drawChartData(greenChartId, info.green.map);
+            this.drawChartData(blueChartId, info.blue.map);
+        });
+        (<webix.ui.button>$$(buttonRobertsId)).attachEvent("onItemClick", () => {
+            let data = this.getContextData(),
+                newData = this.runRobertsTransform(data.data);
+            this.updateContextData(data.data, newData);
             this.putContextData(data);
             let info = this.getInfoFromContext(this.getContextData());
             this.drawChartData(redChartId, info.red.map);
@@ -60,8 +70,7 @@ export default class UiLogic {
             }
             let formData = logToolbarForm.getValues(),
                 data = this.getContextData();
-                debugger;
-            this.logCorrection(data.data, parseFloat(formData.c), parseFloat(formData.y));
+            this.logCorrection(data.data, parseFloat(formData.c));
             this.putContextData(data);
             let info = this.getInfoFromContext(this.getContextData());
             this.drawChartData(redChartId, info.red.map);
@@ -69,12 +78,12 @@ export default class UiLogic {
             this.drawChartData(blueChartId, info.blue.map);
         });
     }
-    private resetData(data: Uint8ClampedArray) {
+    private updateContextData(data: Uint8ClampedArray, newData: Uint8ClampedArray | number[]) {
         for (let i = 0, len = data.length; i < len; i += 4) {
-            data[i] = this.firstData[i];
-            data[i + 1] = this.firstData[i + 1];
-            data[i + 2] = this.firstData[i + 2];
-            data[i + 3] = this.firstData[i + 3];
+            data[i] = newData[i];
+            data[i + 1] = newData[i + 1];
+            data[i + 2] = newData[i + 2];
+            data[i + 3] = newData[i + 3];
         }
     }
     private drawChartData(chartId: string, data: IKeyValue<number>) {
@@ -143,14 +152,55 @@ export default class UiLogic {
         }
         return res;
     }
-    private logCorrection(data: Uint8ClampedArray, c: number, y: number) {
-        let getValue = (value: number, c: number, y: number) => c * Math.log(1 + value);
+    private logCorrection(data: Uint8ClampedArray, c: number) {
+        let getValue = (value: number, cVal: number) => cVal * Math.log(1 + value);
         for (let i = 0, len = data.length; i < len; i += 4) {
-            data[i] = getValue(data[i], c, y);
-            data[i + 1] = getValue(data[i + 1], c, y);
-            data[i + 2] = getValue(data[i + 2], c, y);
+            data[i] = getValue(data[i], c);
+            data[i + 1] = getValue(data[i + 1], c);
+            data[i + 2] = getValue(data[i + 2], c);
         }
         return data;
+    }
+    private flatArrayToMatrix(data: Uint8ClampedArray) {
+        let itemsInRow = this.canvas.width * 4,
+            rows = this.canvas.height,
+            yIndex = 0,
+            rowIndex = 0,
+            result: number[][][] = [];
+        while (rowIndex < rows) {
+            let maxIndex = itemsInRow * rowIndex + itemsInRow,
+                tempArr: number[][] = [];
+            while (yIndex < maxIndex) {
+                tempArr.push([data[yIndex], data[yIndex + 1], data[yIndex + 2], data[yIndex + 3]]);
+                yIndex += 4;
+            }
+            result[rowIndex] = tempArr;
+            rowIndex++;
+        }
+        return result;
+    }
+    private runRobertsTransform(data: Uint8ClampedArray) {
+        let arr = this.flatArrayToMatrix(data),
+            result: number[] = [],
+            calcNewValue = (xCurr: number, x1y1: number, xy1: number, x1y: number) => Math.sqrt(Math.pow(xy1 - x1y, 2) + Math.pow(xCurr - x1y1, 2)),
+            culcLayers = (xy: number[], xy1: number[], x1y: number[], x1y1: number[]) => {
+                for (let i = 0; i < 3; i++) {
+                    result.push(calcNewValue(xy[i], x1y1[i], xy1[i], x1y[i]));
+                }
+                result.push(xy[3]);
+            },
+            runCircle = (subArr: number[][], nextArr: number[][]) => {
+                for (let i = 0, subLen = subArr.length - 1; i < subLen; i++) {
+                    culcLayers(subArr[i], subArr[i + 1], nextArr[i], nextArr[i + 1]);
+                }
+                let lastIndex = subArr.length - 1;
+                culcLayers(subArr[lastIndex], subArr[lastIndex], nextArr[lastIndex], nextArr[lastIndex]);
+            };
+        for (let i = 0, len = arr.length - 1; i < len; i++) {
+            runCircle(arr[i], arr[i + 1]);
+        }
+        runCircle(arr[arr.length - 1], arr[arr.length - 1]);
+        return result;
     }
     private getContextData() {
         return this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);

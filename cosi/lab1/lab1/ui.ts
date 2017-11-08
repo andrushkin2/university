@@ -14,6 +14,7 @@ let uploaderId: string = "imageUploader",
     canvasId: string = "canvasImage1",
     buttonId: string = "buttonId",
     buttonLogParseId: string = "buttonLogParseId",
+    buttonRobertsId: string = "buttonRobertsId",
     buttonResetId: string = "buttonResetId",
     redChartId: string = "redChart",
     logToolbarId: string = "logToolbarId",
@@ -49,6 +50,12 @@ let uploaderId: string = "imageUploader",
                         id: buttonLogParseId,
                         value: "Log func"
                     },
+                    <webix.ui.buttonConfig>{
+                        view: "button",
+                        width: 100,
+                        id: buttonRobertsId,
+                        value: "Rebert's func"
+                    },
                     {},
                     <webix.ui.buttonConfig>{
                         view: "button",
@@ -64,8 +71,7 @@ let uploaderId: string = "imageUploader",
                 hidden: true,
                 cols: [
                     getForm(logToolbarFormId, [
-                        getTextField("c", "C:", "15"),
-                        getTextField("y", "Y:", 3)
+                        getTextField("c", "C:", "15")
                     ]),
                     {},
                     <webix.ui.buttonConfig>{
@@ -106,11 +112,15 @@ let uploaderId: string = "imageUploader",
                                             id: redChartId,
                                             view: "chart",
                                             type: "bar",
-                                            preset: "stick",
+                                            css: "bg_panel",
+                                            border: false,
                                             value: "#value#",
                                             color: "red",
                                             width: 300,
                                             xAxis: {
+                                                lines: function (value: IChartData) {
+                                                    return value.pixel % 32 === 0;
+                                                },
                                                 template: function (value: IChartData) {
                                                     return value.pixel % 32 === 0 ? value.pixel : "";
                                                 }
@@ -120,11 +130,15 @@ let uploaderId: string = "imageUploader",
                                             id: greenChartId,
                                             view: "chart",
                                             type: "bar",
-                                            preset: "stick",
+                                            css: "bg_panel",
                                             value: "#value#",
+                                            border: false,
                                             color: "green",
                                             width: 300,
                                             xAxis: {
+                                                lines: function (value: IChartData) {
+                                                    return value.pixel % 32 === 0;
+                                                },
                                                 template: function (value: IChartData) {
                                                     return value.pixel % 32 === 0 ? value.pixel : "";
                                                 }
@@ -134,11 +148,15 @@ let uploaderId: string = "imageUploader",
                                             id: blueChartId,
                                             view: "chart",
                                             type: "bar",
-                                            preset: "stick",
+                                            border: false,
+                                            css: "bg_panel",
                                             value: "#value#",
                                             color: "blue",
                                             width: 300,
                                             xAxis: {
+                                                lines: function (value: IChartData) {
+                                                    return value.pixel % 32 === 0;
+                                                },
                                                 template: function (value: IChartData) {
                                                     return value.pixel % 32 === 0 ? value.pixel : "";
                                                 }
@@ -154,4 +172,4 @@ let uploaderId: string = "imageUploader",
         ]
     };
 
-export { ui, uploaderId, canvasId, buttonId, redChartId, greenChartId, blueChartId, buttonLogParseId, buttonResetId, logToolbarFormId, logToolbarId };
+export { ui, uploaderId, canvasId, buttonId, redChartId, greenChartId, blueChartId, buttonLogParseId, buttonResetId, logToolbarFormId, logToolbarId, buttonRobertsId };
