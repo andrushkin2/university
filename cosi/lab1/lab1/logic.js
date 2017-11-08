@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
 class UiLogic {
     constructor() {
-        let canvas = document.querySelector(`#${ui_1.canvasId}`), context;
+        let canvas = document.querySelector(`#${ui_1.canvasId}`), context, logToolbar = $$(ui_1.logToolbarId), logToolbarForm = $$(ui_1.logToolbarFormId);
         if (canvas === null) {
             throw new Error(`Cannot find canvas element with ID: ${ui_1.canvasId}`);
         }
@@ -14,18 +14,47 @@ class UiLogic {
         this.canvas = canvas;
         this.context = context;
         $$(ui_1.uploaderId).attachEvent("onAfterFileAdd", (e) => {
-            this.loadFile(e.file).then(data => this.insertImageToCanvas(data)).then(() => {
-                debugger;
-            }).catch(reason => {
+            this.loadFile(e.file).then(data => this.insertImageToCanvas(data)).catch(reason => {
                 new webix.message(reason.message || reason.text || "Error was happened");
             });
         });
         $$(ui_1.buttonId).attachEvent("onItemClick", () => {
-            let data = this.getInfoFromContext();
+            let data = this.getInfoFromContext(this.getContextData());
             this.drawChartData(ui_1.redChartId, data.red.map);
             this.drawChartData(ui_1.greenChartId, data.green.map);
             this.drawChartData(ui_1.blueChartId, data.blue.map);
         });
+        $$(ui_1.buttonResetId).attachEvent("onItemClick", () => {
+            let data = this.getContextData();
+            this.resetData(data.data);
+            this.putContextData(data);
+            let info = this.getInfoFromContext(this.getContextData());
+            this.drawChartData(ui_1.redChartId, info.red.map);
+            this.drawChartData(ui_1.greenChartId, info.green.map);
+            this.drawChartData(ui_1.blueChartId, info.blue.map);
+        });
+        $$(ui_1.buttonLogParseId).attachEvent("onItemClick", () => {
+            if (!logToolbar.isVisible()) {
+                logToolbar.show();
+                return;
+            }
+            let formData = logToolbarForm.getValues(), data = this.getContextData();
+            debugger;
+            this.logCorrection(data.data, parseFloat(formData.c), parseFloat(formData.y));
+            this.putContextData(data);
+            let info = this.getInfoFromContext(this.getContextData());
+            this.drawChartData(ui_1.redChartId, info.red.map);
+            this.drawChartData(ui_1.greenChartId, info.green.map);
+            this.drawChartData(ui_1.blueChartId, info.blue.map);
+        });
+    }
+    resetData(data) {
+        for (let i = 0, len = data.length; i < len; i += 4) {
+            data[i] = this.firstData[i];
+            data[i + 1] = this.firstData[i + 1];
+            data[i + 2] = this.firstData[i + 2];
+            data[i + 3] = this.firstData[i + 3];
+        }
     }
     drawChartData(chartId, data) {
         let chart = $$(chartId);
@@ -52,7 +81,10 @@ class UiLogic {
             image.src = urlData;
             image.onload = () => {
                 this.clearCanvas();
-                this.context.drawImage(image, 0, 0, 1000, 500);
+                this.canvas.width = image.width;
+                this.canvas.height = image.height;
+                this.context.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+                this.firstData = this.getContextData().data.slice(0);
                 resolve({});
             };
             image.onerror = e => {
@@ -89,8 +121,23 @@ class UiLogic {
         }
         return res;
     }
-    getInfoFromContext() {
-        let imageData = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height), channels = this.getChannels(imageData.data);
+    logCorrection(data, c, y) {
+        let getValue = (value, c, y) => c * Math.log(1 + value);
+        for (let i = 0, len = data.length; i < len; i += 4) {
+            data[i] = getValue(data[i], c, y);
+            data[i + 1] = getValue(data[i + 1], c, y);
+            data[i + 2] = getValue(data[i + 2], c, y);
+        }
+        return data;
+    }
+    getContextData() {
+        return this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
+    }
+    putContextData(data) {
+        this.context.putImageData(data, 0, 0);
+    }
+    getInfoFromContext(imageData) {
+        let channels = this.getChannels(imageData.data);
         return {
             red: this.getPixelColorfull(channels.red),
             green: this.getPixelColorfull(channels.green),

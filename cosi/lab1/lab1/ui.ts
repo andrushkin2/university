@@ -1,3 +1,5 @@
+import { getForm, getTextField } from "../mod/lab2/uiItems";
+
 export interface IChartData {
     pixel: number;
     value: number;
@@ -5,13 +7,17 @@ export interface IChartData {
 
 let uploaderId: string = "imageUploader",
     canvasTemplate = (canvasID: string) => {
-        return `<div style="text-align: center;">
+        return `<div style="text-align: center;width: 100%; height: 100%; overflow-y: auto;">
             <canvas id="${canvasID}" width="1000" height="500"></canvas>
         </div>`;
     },
     canvasId: string = "canvasImage1",
     buttonId: string = "buttonId",
+    buttonLogParseId: string = "buttonLogParseId",
+    buttonResetId: string = "buttonResetId",
     redChartId: string = "redChart",
+    logToolbarId: string = "logToolbarId",
+    logToolbarFormId: string = "logToolbarFormId",
     greenChartId: string = "greenChart",
     blueChartId: string = "blueChart",
     ui = {
@@ -35,9 +41,41 @@ let uploaderId: string = "imageUploader",
                         view: "button",
                         width: 100,
                         id: buttonId,
-                        value: "Click me"
+                        value: "Parse picture"
                     },
-                    {}
+                    <webix.ui.buttonConfig>{
+                        view: "button",
+                        width: 100,
+                        id: buttonLogParseId,
+                        value: "Log func"
+                    },
+                    {},
+                    <webix.ui.buttonConfig>{
+                        view: "button",
+                        width: 100,
+                        id: buttonResetId,
+                        value: "Reset"
+                    }
+                ]
+            },
+            <webix.ui.toolbarConfig>{
+                id: logToolbarId,
+                type: "toolbar",
+                hidden: true,
+                cols: [
+                    getForm(logToolbarFormId, [
+                        getTextField("c", "C:", "15"),
+                        getTextField("y", "Y:", 3)
+                    ]),
+                    {},
+                    <webix.ui.buttonConfig>{
+                        view: "button",
+                        width: 100,
+                        value: "Close",
+                        click: function() {
+                            $$(logToolbarId).hide();
+                        }
+                    }
                 ]
             },
             {
@@ -50,8 +88,13 @@ let uploaderId: string = "imageUploader",
                         body: {
                             type: "space",
                             rows: [
-                                {
-                                    template: canvasTemplate(canvasId)
+                                <webix.ui.scrollviewConfig>{
+                                    view: "scrollview",
+                                    height: 600,
+                                    scroll: true,
+                                    body: {
+                                        template: canvasTemplate(canvasId)
+                                    }
                                 },
                                 { type: "header", template: "Charts", height: 50 },
                                 <webix.ui.layoutConfig>{
@@ -111,4 +154,4 @@ let uploaderId: string = "imageUploader",
         ]
     };
 
-export { ui, uploaderId, canvasId, buttonId, redChartId, greenChartId, blueChartId };
+export { ui, uploaderId, canvasId, buttonId, redChartId, greenChartId, blueChartId, buttonLogParseId, buttonResetId, logToolbarFormId, logToolbarId };

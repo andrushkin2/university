@@ -1,4 +1,4 @@
-import { canvasId, uploaderId, buttonId, redChartId, IChartData, greenChartId, blueChartId } from "./ui";
+import { canvasId, uploaderId, buttonId, redChartId, IChartData, greenChartId, buttonResetId, blueChartId, buttonLogParseId, logToolbarFormId, logToolbarId } from "./ui";
 
 interface IKeyValue<T> {
     [key: string]: T;
@@ -17,10 +17,13 @@ interface IChannelsData {
 
 export default class UiLogic {
     private canvas: HTMLCanvasElement;
+    private firstData: Uint8ClampedArray;
     private context: CanvasRenderingContext2D;
     constructor() {
         let canvas = <HTMLCanvasElement | null>document.querySelector(`#${canvasId}`),
-            context: CanvasRenderingContext2D | null;
+            context: CanvasRenderingContext2D | null,
+            logToolbar: webix.ui.toolbar = (<webix.ui.toolbar>$$(logToolbarId)),
+            logToolbarForm: webix.ui.form = (<webix.ui.form>$$(logToolbarFormId));
         if (canvas === null) {
             throw new Error(`Cannot find canvas element with ID: ${canvasId}`);
         }
@@ -31,18 +34,48 @@ export default class UiLogic {
         this.canvas = canvas;
         this.context = context;
         (<webix.ui.uploader>$$(uploaderId)).attachEvent("onAfterFileAdd", (e?) => {
-            this.loadFile(e.file).then(data => this.insertImageToCanvas(data)).then(() => {
-                debugger;
-            }).catch(reason => {
+            this.loadFile(e.file).then(data => this.insertImageToCanvas(data)).catch(reason => {
                 new webix.message(reason.message || reason.text || "Error was happened");
             });
         });
         (<webix.ui.button>$$(buttonId)).attachEvent("onItemClick", () => {
-            let data = this.getInfoFromContext();
+            let data = this.getInfoFromContext(this.getContextData());
             this.drawChartData(redChartId, data.red.map);
             this.drawChartData(greenChartId, data.green.map);
             this.drawChartData(blueChartId, data.blue.map);
         });
+        (<webix.ui.button>$$(buttonResetId)).attachEvent("onItemClick", () => {
+            let data = this.getContextData();
+            this.resetData(data.data);
+            this.putContextData(data);
+            let info = this.getInfoFromContext(this.getContextData());
+            this.drawChartData(redChartId, info.red.map);
+            this.drawChartData(greenChartId, info.green.map);
+            this.drawChartData(blueChartId, info.blue.map);
+        });
+        (<webix.ui.button>$$(buttonLogParseId)).attachEvent("onItemClick", () => {
+            if (!logToolbar.isVisible()) {
+                logToolbar.show();
+                return;
+            }
+            let formData = logToolbarForm.getValues(),
+                data = this.getContextData();
+                debugger;
+            this.logCorrection(data.data, parseFloat(formData.c), parseFloat(formData.y));
+            this.putContextData(data);
+            let info = this.getInfoFromContext(this.getContextData());
+            this.drawChartData(redChartId, info.red.map);
+            this.drawChartData(greenChartId, info.green.map);
+            this.drawChartData(blueChartId, info.blue.map);
+        });
+    }
+    private resetData(data: Uint8ClampedArray) {
+        for (let i = 0, len = data.length; i < len; i += 4) {
+            data[i] = this.firstData[i];
+            data[i + 1] = this.firstData[i + 1];
+            data[i + 2] = this.firstData[i + 2];
+            data[i + 3] = this.firstData[i + 3];
+        }
     }
     private drawChartData(chartId: string, data: IKeyValue<number>) {
         let chart = (<webix.ui.chart>$$(chartId));
@@ -52,7 +85,7 @@ export default class UiLogic {
     private getChartData(data: IKeyValue<number>) {
         let result: IChartData[] = [],
             keys = Object.keys(data);
-        for (let i = 0, len  = keys.length; i < len; i++) {
+        for (let i = 0, len = keys.length; i < len; i++) {
             let key = keys[i],
                 item = data[key];
             result.push({
@@ -71,7 +104,10 @@ export default class UiLogic {
             image.src = urlData;
             image.onload = () => {
                 this.clearCanvas();
-                this.context.drawImage(image, 0, 0, 1000, 500);
+                this.canvas.width = image.width;
+                this.canvas.height = image.height;
+                this.context.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+                this.firstData = this.getContextData().data.slice(0);
                 resolve({});
             };
             image.onerror = e => {
@@ -107,9 +143,23 @@ export default class UiLogic {
         }
         return res;
     }
-    private getInfoFromContext() {
-        let imageData = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height),
-            channels = this.getChannels(imageData.data);
+    private logCorrection(data: Uint8ClampedArray, c: number, y: number) {
+        let getValue = (value: number, c: number, y: number) => c * Math.log(1 + value);
+        for (let i = 0, len = data.length; i < len; i += 4) {
+            data[i] = getValue(data[i], c, y);
+            data[i + 1] = getValue(data[i + 1], c, y);
+            data[i + 2] = getValue(data[i + 2], c, y);
+        }
+        return data;
+    }
+    private getContextData() {
+        return this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
+    }
+    private putContextData(data: ImageData) {
+        this.context.putImageData(data, 0, 0);
+    }
+    private getInfoFromContext(imageData: ImageData) {
+        let channels = this.getChannels(imageData.data);
         return {
             red: this.getPixelColorfull(channels.red),
             green: this.getPixelColorfull(channels.green),
