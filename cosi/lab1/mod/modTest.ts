@@ -47,10 +47,10 @@ export default class ModLabUtils {
         return result;
     }
     public findPeriod(data: number[], currentX: number) {
-        let i1: number = -1,
-            i2: number = -1,
-            i3: number = 0,
-            isFirstPointFound: boolean = false,
+        let i1 = -1,
+            i2 = -1,
+            i3 = 0,
+            isFirstPointFound = false,
             period: number,
             aPeriod: number;
         for (let i = 0, len = data.length; i < len; i++) {
@@ -98,7 +98,7 @@ export default class ModLabUtils {
         return dX;
     }
     public checkUniformity(data: number[]) {
-        let result: number = 0,
+        let result = 0,
             len = data.length;
         for (let i = 0; i < len; i += 2) {
             if (i + 1 >= len) {

@@ -1,12 +1,12 @@
 import { ui as lab2UI } from "./lab2/mainUi";
 
-let buttonId: string = "modButtonId1",
-    chartId: string = "modChart1Id",
-    formDataId: string = "formDataId",
-    formOutputDataId: string = "formOutputDataId",
-    tabbarId: string = "modLabsSegmentedId",
-    modLab1Id: string = "modLab1Id",
-    modLab2Id: string = "modLab2Id",
+let buttonId = "modButtonId1",
+    chartId = "modChart1Id",
+    formDataId = "formDataId",
+    formOutputDataId = "formOutputDataId",
+    tabbarId = "modLabsSegmentedId",
+    modLab1Id = "modLab1Id",
+    modLab2Id = "modLab2Id",
     ui = {
         id: "modId",
         css: "bg_panel_raised",

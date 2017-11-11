@@ -5,22 +5,22 @@ export interface IChartData {
     value: number;
 }
 
-let uploaderId: string = "imageUploader",
+let uploaderId = "imageUploader",
     canvasTemplate = (canvasID: string) => {
         return `<div style="text-align: center;width: 100%; height: 100%; overflow-y: auto;">
             <canvas id="${canvasID}" width="1000" height="500"></canvas>
         </div>`;
     },
-    canvasId: string = "canvasImage1",
-    buttonId: string = "buttonId",
-    buttonLogParseId: string = "buttonLogParseId",
-    buttonRobertsId: string = "buttonRobertsId",
-    buttonResetId: string = "buttonResetId",
-    redChartId: string = "redChart",
-    logToolbarId: string = "logToolbarId",
-    logToolbarFormId: string = "logToolbarFormId",
-    greenChartId: string = "greenChart",
-    blueChartId: string = "blueChart",
+    canvasId = "canvasImage1",
+    buttonId = "buttonId",
+    buttonLogParseId = "buttonLogParseId",
+    buttonRobertsId = "buttonRobertsId",
+    buttonResetId = "buttonResetId",
+    redChartId = "redChart",
+    logToolbarId = "logToolbarId",
+    logToolbarFormId = "logToolbarFormId",
+    greenChartId = "greenChart",
+    blueChartId = "blueChart",
     ui = {
         id: "lab5",
         type: "space",

@@ -1,23 +1,45 @@
 {
+    "defaultSeverity": "warning",
     "rules": {
+        "adjacent-overload-signatures": true,
+        "no-inferrable-types": true,
+        "no-namespace": true,
+        "no-boolean-literal-compare": true,
+        "restrict-plus-operands": true,
+        "no-misused-new": true,
+        "no-use-before-declare": true,
+        "type-literal-delimiter": true,
+        "no-this-assignment": true,
+        "no-invalid-template-strings": true,
+        "unified-signatures": true,
+        "no-for-in-array": true,
         "class-name": true,
         "indent": [true, "spaces"],
         "no-duplicate-variable": true,
         "no-eval": true,
         "no-arg": true,
         "curly": true,
-        "no-unreachable": true,     //DEPRECATED, TSC has --allowUnreachableCode=false (added to tsconfig)
+        "no-unreachable": true,
         "no-internal-module": true,
         "no-trailing-whitespace": true,
         "no-var-keyword": false,
-        "no-unused-variable": true, //DEPRECATED, TSC has --noUnusedParameters and --noUnusedLocals instead (not in tsconfig yet)
+        "no-unused-variable": true,
         "no-shadowed-variable": true,
+        "no-debugger": true,
         "no-construct": true,
+        "no-duplicate-super": true,
+        "switch-default": true,
+        "use-isnan": true,
+        "no-sparse-arrays": true,
+        "no-unsafe-finally": true,
+        "max-classes-per-file": [true, 10],
+        "cyclomatic-complexity": [true, 25], //the number probably should be smaller, let's just check it
         "one-line": [true, "check-open-brace", "check-whitespace"],
         "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
         "quotemark": [true, "double"],
         "semicolon": [true, "always"],
         "array-type": [true, "array"],
+        "no-string-throw": true,
         "interface-name": [true, "always-prefix"],
         "triple-equals": true,
         "typedef-whitespace": [true, {
@@ -34,6 +56,7 @@
             "check-operator",
             "check-separator",
             "check-type",
+            "check-type-operator",
             "check-module"
         ]
     }

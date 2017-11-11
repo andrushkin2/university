@@ -17,4 +17,3 @@ def tsc():
 
 if __name__ == "__main__":
     tsc()
-

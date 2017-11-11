@@ -57,7 +57,7 @@ let defaultData: IFormData = {
                 mX = utils.getMx(results),
                 dX = utils.getDx(results, mX),
                 chartData = utils.getChartData(results);
-            formOutput.setValues({ mX, dX })
+            formOutput.setValues({ mX, dX });
             chart.show();
             chart.clearAll();
             chart.parse(chartData, "json");

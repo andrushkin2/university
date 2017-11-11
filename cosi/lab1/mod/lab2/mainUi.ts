@@ -5,7 +5,7 @@ import { triangleUi } from "./triangleUi";
 import { gammaUi } from "./gammaUi";
 import { simpsonUi } from "./simpsonUi";
 
-let distributionListId: string = "distributionListId",
+let distributionListId = "distributionListId",
     ui = <webix.ui.tabviewConfig>{
         view: "tabview",
         cells: [

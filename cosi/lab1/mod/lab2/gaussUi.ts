@@ -57,11 +57,11 @@ let defaultData: IFormData = {
 
         (<webix.ui.button>$$(gaussRunButtonId)).attachEvent("onItemClick", function () {
             let data = form.getValues() as IFormDataGet,
-                results = utils.gaussDistribution(parseInt(data.m), parseInt(data.a),parseInt(data.count), parseInt(data.n)),
+                results = utils.gaussDistribution(parseInt(data.m), parseInt(data.a), parseInt(data.count), parseInt(data.n)),
                 mX = utils.getMx(results),
                 dX = utils.getDx(results, mX),
                 chartData = utils.getChartData(results);
-            formOutput.setValues({ mX, dX })
+            formOutput.setValues({ mX, dX });
             chart.show();
             chart.clearAll();
             chart.parse(chartData, "json");
