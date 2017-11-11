@@ -15,6 +15,7 @@ let uploaderId = "imageUploader",
     buttonId = "buttonId",
     buttonLogParseId = "buttonLogParseId",
     buttonRobertsId = "buttonRobertsId",
+    buttonLab2Id = "buttonLab2Id",
     buttonResetId = "buttonResetId",
     redChartId = "redChart",
     logToolbarId = "logToolbarId",
@@ -55,6 +56,12 @@ let uploaderId = "imageUploader",
                         width: 100,
                         id: buttonRobertsId,
                         value: "Rebert's func"
+                    },
+                    <webix.ui.buttonConfig>{
+                        view: "button",
+                        width: 100,
+                        id: buttonLab2Id,
+                        value: "Lab 2"
                     },
                     {},
                     <webix.ui.buttonConfig>{
@@ -172,4 +179,4 @@ let uploaderId = "imageUploader",
         ]
     };
 
-export { ui, uploaderId, canvasId, buttonId, redChartId, greenChartId, blueChartId, buttonLogParseId, buttonResetId, logToolbarFormId, logToolbarId, buttonRobertsId };
+export { ui, uploaderId, canvasId, buttonId, redChartId, greenChartId, blueChartId, buttonLogParseId, buttonResetId, logToolbarFormId, logToolbarId, buttonRobertsId, buttonLab2Id };

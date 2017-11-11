@@ -1,4 +1,4 @@
-import { canvasId, uploaderId, buttonId, redChartId, IChartData, greenChartId, buttonResetId, blueChartId, buttonLogParseId, logToolbarFormId, logToolbarId, buttonRobertsId } from "./ui";
+import { canvasId, uploaderId, buttonId, redChartId, IChartData, greenChartId, buttonResetId, blueChartId, buttonLogParseId, logToolbarFormId, logToolbarId, buttonRobertsId, buttonLab2Id } from "./ui";
 
 interface IKeyValue<T> {
     [key: string]: T;
@@ -62,6 +62,21 @@ export default class UiLogic {
             this.drawChartData(redChartId, info.red.map);
             this.drawChartData(greenChartId, info.green.map);
             this.drawChartData(blueChartId, info.blue.map);
+        });
+        (<webix.ui.button>$$(buttonLab2Id)).attachEvent("onItemClick", () => {
+            let data = this.getContextData(),
+                newData = this.toGrayscale(data.data);
+            debugger;
+            this.updateContextData(data.data, newData);
+            this.putContextData(data);
+            debugger;
+            let median = this.medianFilter(newData);
+            this.updateContextData(data.data, this.toFlatArray(median));
+            this.putContextData(data);
+            debugger;
+            let blackWhite = this.toBlackAndWhite(median);
+            this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
+            this.putContextData(data);
         });
         (<webix.ui.button>$$(buttonLogParseId)).attachEvent("onItemClick", () => {
             if (!logToolbar.isVisible()) {
@@ -233,5 +248,102 @@ export default class UiLogic {
             maxValue: 0,
             map: {}
         });
+    }
+    private toFlatArray(data: number[][][]) {
+        let res: number[] = [];
+        for (let i = 0, len = data.length; i < len; i++) {
+            let row = data[i];
+            for (let j = 0, subLen = row.length; j < subLen; j++) {
+                let pixel = row[j];
+                res.push(pixel[0]);
+                res.push(pixel[1]);
+                res.push(pixel[2]);
+                res.push(pixel[3]);
+            }
+        }
+        return res;
+    }
+    private toGrayscale(data: Uint8ClampedArray) {
+        let result: Uint8ClampedArray = new Uint8ClampedArray(data.length);
+        for (let i = 0, len = data.length; i < len; i += 4) {
+            let avg: number = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            result[i] = avg;
+            result[i + 1] = avg;
+            result[i + 2] = avg;
+            result[i + 3] = data[i + 3];
+        }
+        return result;
+    }
+    private getPixelsAround(data: number[][][], i: number, j: number) {
+        let current = data[i][j],
+            left: number[] | undefined = data[i][j - 1],
+            right: number[] | undefined = data[i][j + 1],
+            isHasInTop: boolean = data[i - 1] !== undefined,
+            isHasInBottom: boolean = data[i + 1] !== undefined,
+            top: number[] | undefined = isHasInTop ? data[i - 1][j] : undefined,
+            bottom: number[] | undefined = isHasInBottom ? data[i + 1][j] : undefined,
+            topLeft: number[] = isHasInTop ? data[i - 1][j - 1] || top || current : left || current,
+            topRight: number[] = isHasInTop ? data[i - 1][j + 1] || top || current : right || current,
+            bottomLeft: number[] = isHasInBottom ? data[i + 1][j - 1] || bottom || current : left || current,
+            bottomRight: number[] = isHasInBottom ? data[i + 1][j + 1] || bottom || current : right || current;
+        return [
+            [topLeft, top || current, topRight],
+            [left || current, current, right || current],
+            [bottomLeft, bottom || current, bottomRight]
+        ];
+    }
+    private calcMedium(pixels: number[][][]) {
+        let red: number[] = [],
+            green: number[] = [],
+            blue: number[] = [];
+        for (let i = 0, len = pixels.length; i < len; i++) {
+            let row = pixels[i];
+            for (let j = 0, subLen = row.length; j < subLen; j++) {
+                let pixel = row[j];
+                red.push(pixel[0]);
+                green.push(pixel[1]);
+                blue.push(pixel[2]);
+            }
+        }
+        red.sort();
+        green.sort();
+        blue.sort();
+        let determinate = Math.round(red.length / 2);
+        return [red[determinate], green[determinate], blue[determinate]];
+    }
+    private medianFilter(data: Uint8ClampedArray) {
+        let arr: number[][][] = this.flatArrayToMatrix(data),
+            result: number[][][] = [];
+        for (let i = 0, len = arr.length; i < len; i++) {
+            let item = arr[i],
+                rowItems: number[][] = [];
+            for (let j = 0, subLen = item.length; j < subLen; j++) {
+                let pixel = item[j],
+                    mediumValue = this.calcMedium(this.getPixelsAround(arr, i, j));
+                rowItems.push([mediumValue[0], mediumValue[1], mediumValue[2], pixel[3]]);
+            }
+            result[i] = rowItems;
+        }
+        return result;
+    }
+    private toBlackAndWhite(data: number[][][], p = 195) {
+        let result: number[][] = [],
+            resultData: number[][][] = [];
+        for (let i = 0, len = data.length; i < len; i++) {
+            let item = data[i];
+            result[i] = [];
+            resultData[i] = [];
+            for (let j = 0, subLen = item.length; j < subLen; j++) {
+                let pixel: number[] = data[i][j],
+                    k: number = (pixel[0] + pixel[1] + pixel[2]) / 3,
+                    newValue: number = k > p ? 255 : 0;
+                result[i][j] = newValue;
+                resultData[i][j] = [newValue, newValue, newValue, pixel[3]];
+            }
+        }
+        return {
+            data: resultData,
+            bitMap: result
+        };
     }
 }

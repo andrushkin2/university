@@ -43,6 +43,20 @@ class UiLogic {
             this.drawChartData(ui_1.greenChartId, info.green.map);
             this.drawChartData(ui_1.blueChartId, info.blue.map);
         });
+        $$(ui_1.buttonLab2Id).attachEvent("onItemClick", () => {
+            let data = this.getContextData(), newData = this.toGrayscale(data.data);
+            debugger;
+            this.updateContextData(data.data, newData);
+            this.putContextData(data);
+            debugger;
+            let median = this.medianFilter(newData);
+            this.updateContextData(data.data, this.toFlatArray(median));
+            this.putContextData(data);
+            debugger;
+            let blackWhite = this.toBlackAndWhite(median);
+            this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
+            this.putContextData(data);
+        });
         $$(ui_1.buttonLogParseId).attachEvent("onItemClick", () => {
             if (!logToolbar.isVisible()) {
                 logToolbar.show();
@@ -204,6 +218,85 @@ class UiLogic {
             map: {}
         });
     }
+    toFlatArray(data) {
+        let res = [];
+        for (let i = 0, len = data.length; i < len; i++) {
+            let row = data[i];
+            for (let j = 0, subLen = row.length; j < subLen; j++) {
+                let pixel = row[j];
+                res.push(pixel[0]);
+                res.push(pixel[1]);
+                res.push(pixel[2]);
+                res.push(pixel[3]);
+            }
+        }
+        return res;
+    }
+    toGrayscale(data) {
+        let result = new Uint8ClampedArray(data.length);
+        for (let i = 0, len = data.length; i < len; i += 4) {
+            let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            result[i] = avg;
+            result[i + 1] = avg;
+            result[i + 2] = avg;
+            result[i + 3] = data[i + 3];
+        }
+        return result;
+    }
+    getPixelsAround(data, i, j) {
+        let current = data[i][j], left = data[i][j - 1], right = data[i][j + 1], isHasInTop = data[i - 1] !== undefined, isHasInBottom = data[i + 1] !== undefined, top = isHasInTop ? data[i - 1][j] : undefined, bottom = isHasInBottom ? data[i + 1][j] : undefined, topLeft = isHasInTop ? data[i - 1][j - 1] || top || current : left || current, topRight = isHasInTop ? data[i - 1][j + 1] || top || current : right || current, bottomLeft = isHasInBottom ? data[i + 1][j - 1] || bottom || current : left || current, bottomRight = isHasInBottom ? data[i + 1][j + 1] || bottom || current : right || current;
+        return [
+            [topLeft, top || current, topRight],
+            [left || current, current, right || current],
+            [bottomLeft, bottom || current, bottomRight]
+        ];
+    }
+    calcMedium(pixels) {
+        let red = [], green = [], blue = [];
+        for (let i = 0, len = pixels.length; i < len; i++) {
+            let row = pixels[i];
+            for (let j = 0, subLen = row.length; j < subLen; j++) {
+                let pixel = row[j];
+                red.push(pixel[0]);
+                green.push(pixel[1]);
+                blue.push(pixel[2]);
+            }
+        }
+        red.sort();
+        green.sort();
+        blue.sort();
+        let determinate = Math.round(red.length / 2);
+        return [red[determinate], green[determinate], blue[determinate]];
+    }
+    medianFilter(data) {
+        let arr = this.flatArrayToMatrix(data), result = [];
+        for (let i = 0, len = arr.length; i < len; i++) {
+            let item = arr[i], rowItems = [];
+            for (let j = 0, subLen = item.length; j < subLen; j++) {
+                let pixel = item[j], mediumValue = this.calcMedium(this.getPixelsAround(arr, i, j));
+                rowItems.push([mediumValue[0], mediumValue[1], mediumValue[2], pixel[3]]);
+            }
+            result[i] = rowItems;
+        }
+        return result;
+    }
+    toBlackAndWhite(data, p = 195) {
+        let result = [], resultData = [];
+        for (let i = 0, len = data.length; i < len; i++) {
+            let item = data[i];
+            result[i] = [];
+            resultData[i] = [];
+            for (let j = 0, subLen = item.length; j < subLen; j++) {
+                let pixel = data[i][j], k = (pixel[0] + pixel[1] + pixel[2]) / 3, newValue = k > p ? 255 : 0;
+                result[i][j] = newValue;
+                resultData[i][j] = [newValue, newValue, newValue, pixel[3]];
+            }
+        }
+        return {
+            data: resultData,
+            bitMap: result
+        };
+    }
 }
 exports.default = UiLogic;
 
@@ -215,7 +308,7 @@ let uploaderId = "imageUploader", canvasTemplate = (canvasID) => {
     return `<div style="text-align: center;width: 100%; height: 100%; overflow-y: auto;">
             <canvas id="${canvasID}" width="1000" height="500"></canvas>
         </div>`;
-}, canvasId = "canvasImage1", buttonId = "buttonId", buttonLogParseId = "buttonLogParseId", buttonRobertsId = "buttonRobertsId", buttonResetId = "buttonResetId", redChartId = "redChart", logToolbarId = "logToolbarId", logToolbarFormId = "logToolbarFormId", greenChartId = "greenChart", blueChartId = "blueChart", ui = {
+}, canvasId = "canvasImage1", buttonId = "buttonId", buttonLogParseId = "buttonLogParseId", buttonRobertsId = "buttonRobertsId", buttonLab2Id = "buttonLab2Id", buttonResetId = "buttonResetId", redChartId = "redChart", logToolbarId = "logToolbarId", logToolbarFormId = "logToolbarFormId", greenChartId = "greenChart", blueChartId = "blueChart", ui = {
     id: "lab5",
     type: "space",
     rows: [
@@ -249,6 +342,12 @@ let uploaderId = "imageUploader", canvasTemplate = (canvasID) => {
                     width: 100,
                     id: buttonRobertsId,
                     value: "Rebert's func"
+                },
+                {
+                    view: "button",
+                    width: 100,
+                    id: buttonLab2Id,
+                    value: "Lab 2"
                 },
                 {},
                 {
@@ -370,6 +469,7 @@ exports.canvasId = canvasId;
 exports.buttonId = buttonId;
 exports.buttonLogParseId = buttonLogParseId;
 exports.buttonRobertsId = buttonRobertsId;
+exports.buttonLab2Id = buttonLab2Id;
 exports.buttonResetId = buttonResetId;
 exports.redChartId = redChartId;
 exports.logToolbarId = logToolbarId;

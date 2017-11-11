@@ -5,7 +5,7 @@ let uploaderId = "imageUploader", canvasTemplate = (canvasID) => {
     return `<div style="text-align: center;width: 100%; height: 100%; overflow-y: auto;">
             <canvas id="${canvasID}" width="1000" height="500"></canvas>
         </div>`;
-}, canvasId = "canvasImage1", buttonId = "buttonId", buttonLogParseId = "buttonLogParseId", buttonRobertsId = "buttonRobertsId", buttonResetId = "buttonResetId", redChartId = "redChart", logToolbarId = "logToolbarId", logToolbarFormId = "logToolbarFormId", greenChartId = "greenChart", blueChartId = "blueChart", ui = {
+}, canvasId = "canvasImage1", buttonId = "buttonId", buttonLogParseId = "buttonLogParseId", buttonRobertsId = "buttonRobertsId", buttonLab2Id = "buttonLab2Id", buttonResetId = "buttonResetId", redChartId = "redChart", logToolbarId = "logToolbarId", logToolbarFormId = "logToolbarFormId", greenChartId = "greenChart", blueChartId = "blueChart", ui = {
     id: "lab5",
     type: "space",
     rows: [
@@ -39,6 +39,12 @@ let uploaderId = "imageUploader", canvasTemplate = (canvasID) => {
                     width: 100,
                     id: buttonRobertsId,
                     value: "Rebert's func"
+                },
+                {
+                    view: "button",
+                    width: 100,
+                    id: buttonLab2Id,
+                    value: "Lab 2"
                 },
                 {},
                 {
@@ -160,6 +166,7 @@ exports.canvasId = canvasId;
 exports.buttonId = buttonId;
 exports.buttonLogParseId = buttonLogParseId;
 exports.buttonRobertsId = buttonRobertsId;
+exports.buttonLab2Id = buttonLab2Id;
 exports.buttonResetId = buttonResetId;
 exports.redChartId = redChartId;
 exports.logToolbarId = logToolbarId;
