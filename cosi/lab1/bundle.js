@@ -1,7 +1,53 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+class DisjointSet {
+    constructor(amount) {
+        this.elements = [];
+        this.elements = [];
+        for (let i = 0; i < amount; i++) {
+            this.elements[i] = new DisjointItem(i, 0, 1);
+        }
+    }
+    join(x, y) {
+        if ((x = this.find(x)) == (y = this.find(y))) {
+            return;
+        }
+        if (this.elements[x].rank < this.elements[y].rank) {
+            this.elements[x].p = y;
+        }
+        else {
+            this.elements[y].p = x;
+        }
+        if (this.elements[x].rank === this.elements[y].rank) {
+            ++this.elements[x].rank;
+        }
+    }
+    find(x) {
+        if (x = this.elements[x].p) {
+            return x;
+        }
+        this.elements[x].p = this.find(this.elements[x].p);
+        return this.elements[x].p;
+    }
+    size(x) {
+        return this.elements[x].size;
+    }
+}
+exports.default = DisjointSet;
+class DisjointItem {
+    constructor(p, rank = 0, size = 1) {
+        this.rank = rank,
+            this.size = size;
+        this.p = p;
+    }
+}
+
+},{}],2:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
+const disjointSet_1 = require("./disjointSet");
 class UiLogic {
     constructor() {
         let canvas = document.querySelector(`#${ui_1.canvasId}`), context, logToolbar = $$(ui_1.logToolbarId), logToolbarForm = $$(ui_1.logToolbarFormId);
@@ -56,6 +102,11 @@ class UiLogic {
             let blackWhite = this.toBlackAndWhite(median);
             this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
             this.putContextData(data);
+            let connectedData = this.connectedComponents(blackWhite.bitMap);
+            debugger;
+            this.updateContextData(data.data, this.toFlatArrayItems(connectedData));
+            this.putContextData(data);
+            debugger;
         });
         $$(ui_1.buttonLogParseId).attachEvent("onItemClick", () => {
             if (!logToolbar.isVisible()) {
@@ -92,6 +143,51 @@ class UiLogic {
                 pixel: parseInt(key),
                 value: data[key]
             });
+        }
+        return result;
+    }
+    getEmptyArray(rows, cols) {
+        let result = [];
+        for (let i = 0; i < rows; i++) {
+            let temp = [];
+            for (let y = 0; y < cols; y++) {
+                temp[y] = 0;
+            }
+            result[i] = temp;
+        }
+        return result;
+    }
+    connectedComponents(elements) {
+        let unions = new disjointSet_1.default(10000), rows = elements.length, cols = elements[0].length, label = 0, result = this.getEmptyArray(rows, cols);
+        for (let x = 1; x < rows; x++) {
+            for (let y = 1; y < cols; y++) {
+                if (elements[x][y]) {
+                    let a = result[x][y], b = result[x - 1][y], c = result[x][y - 1];
+                    if (!b && !c) {
+                        result[x][y] = ++label;
+                    }
+                    else if (b && !c) {
+                        result[x][y] = result[x - 1][y];
+                    }
+                    else if (!b && c) {
+                        result[x][y] = result[x][y - 1];
+                    }
+                    else {
+                        result[x][y] = (b < c) ? result[x - 1][y] : result[x][y - 1];
+                        if (b !== c) {
+                            unions.join(result[x - 1][y], result[x][y - 1]);
+                        }
+                    }
+                }
+            }
+        }
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                let element = result[i][j];
+                if (element) {
+                    result[i][j] = unions.find(element);
+                }
+            }
         }
         return result;
     }
@@ -232,6 +328,20 @@ class UiLogic {
         }
         return res;
     }
+    toFlatArrayItems(data) {
+        let res = [];
+        for (let i = 0, len = data.length; i < len; i++) {
+            let row = data[i];
+            for (let j = 0, subLen = row.length; j < subLen; j++) {
+                let pixel = row[j];
+                res.push(100);
+                res.push(pixel);
+                res.push(100);
+                res.push(255);
+            }
+        }
+        return res;
+    }
     toGrayscale(data) {
         let result = new Uint8ClampedArray(data.length);
         for (let i = 0, len = data.length; i < len; i += 4) {
@@ -300,7 +410,7 @@ class UiLogic {
 }
 exports.default = UiLogic;
 
-},{"./ui":2}],2:[function(require,module,exports){
+},{"./disjointSet":1,"./ui":3}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("../mod/lab2/uiItems");
@@ -478,7 +588,7 @@ exports.greenChartId = greenChartId;
 exports.blueChartId = blueChartId;
 exports.ui = ui;
 
-},{"../mod/lab2/uiItems":10}],3:[function(require,module,exports){
+},{"../mod/lab2/uiItems":11}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataWorker {
@@ -504,7 +614,7 @@ class DataWorker {
 }
 exports.default = DataWorker;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -547,7 +657,7 @@ let defaultData = {
 exports.exponentialUi = exponentialUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":13,"./uiItems":10}],5:[function(require,module,exports){
+},{"../modTest":14,"./uiItems":11}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -592,7 +702,7 @@ let defaultData = {
 exports.gammaUi = gammaUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":13,"./uiItems":10}],6:[function(require,module,exports){
+},{"../modTest":14,"./uiItems":11}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -639,7 +749,7 @@ let defaultData = {
 exports.gaussUi = gaussUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":13,"./uiItems":10}],7:[function(require,module,exports){
+},{"../modTest":14,"./uiItems":11}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uniformUi_1 = require("./uniformUi");
@@ -680,7 +790,7 @@ let distributionListId = "distributionListId", ui = {
 exports.distributionListId = distributionListId;
 exports.ui = ui;
 
-},{"./exponentialUi":4,"./gammaUi":5,"./gaussUi":6,"./simpsonUi":8,"./triangleUi":9,"./uniformUi":11}],8:[function(require,module,exports){
+},{"./exponentialUi":5,"./gammaUi":6,"./gaussUi":7,"./simpsonUi":9,"./triangleUi":10,"./uniformUi":12}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -725,7 +835,7 @@ let defaultData = {
 exports.simpsonUi = simpsonUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":13,"./uiItems":10}],9:[function(require,module,exports){
+},{"../modTest":14,"./uiItems":11}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -770,7 +880,7 @@ let defaultData = {
 exports.triangleUi = triangleUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":13,"./uiItems":10}],10:[function(require,module,exports){
+},{"../modTest":14,"./uiItems":11}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let getButton = (buttonId) => ({
@@ -821,7 +931,7 @@ exports.getTextField = getTextField;
 exports.getForm = getForm;
 exports.getChart = getChart;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -870,7 +980,7 @@ exports.uniformChartId = uniformChartId;
 exports.uniformUi = uniformUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":13,"./uiItems":10}],12:[function(require,module,exports){
+},{"../modTest":14,"./uiItems":11}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
@@ -942,7 +1052,7 @@ class ModLab {
 }
 exports.default = ModLab;
 
-},{"./dataWorker":3,"./lab2/exponentialUi":4,"./lab2/gammaUi":5,"./lab2/gaussUi":6,"./lab2/simpsonUi":8,"./lab2/triangleUi":9,"./lab2/uniformUi":11,"./modTest":13,"./ui":14}],13:[function(require,module,exports){
+},{"./dataWorker":4,"./lab2/exponentialUi":5,"./lab2/gammaUi":6,"./lab2/gaussUi":7,"./lab2/simpsonUi":9,"./lab2/triangleUi":10,"./lab2/uniformUi":12,"./modTest":14,"./ui":15}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let mult = (a, b) => a * b, div = (a, b) => a / b, mod = (a, b) => a % b, makeStep = (index, prevResult, a, m) => {
@@ -1118,7 +1228,7 @@ class ModLabUtils {
 }
 exports.default = ModLabUtils;
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mainUi_1 = require("./lab2/mainUi");
@@ -1273,7 +1383,7 @@ exports.formDataId = formDataId;
 exports.formOutputDataId = formOutputDataId;
 exports.UI = ui;
 
-},{"./lab2/mainUi":7}],15:[function(require,module,exports){
+},{"./lab2/mainUi":8}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Complex {
@@ -1445,7 +1555,7 @@ exports.CorrelationFourier = correlationFourier;
 exports.FWHT = fwht;
 exports.GetPhaseAndAmplitude = getPhaseAndAmplitude;
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
@@ -1793,4 +1903,4 @@ webix.ready(() => {
     });
 });
 
-},{"./lab1/logic":1,"./lab1/ui":2,"./mod/madLab":12,"./mod/ui":14,"./test":15}]},{},[16]);
+},{"./lab1/logic":2,"./lab1/ui":3,"./mod/madLab":13,"./mod/ui":15,"./test":16}]},{},[17]);

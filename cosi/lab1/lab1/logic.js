@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
+const disjointSet_1 = require("./disjointSet");
 class UiLogic {
     constructor() {
         let canvas = document.querySelector(`#${ui_1.canvasId}`), context, logToolbar = $$(ui_1.logToolbarId), logToolbarForm = $$(ui_1.logToolbarFormId);
@@ -55,6 +56,11 @@ class UiLogic {
             let blackWhite = this.toBlackAndWhite(median);
             this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
             this.putContextData(data);
+            let connectedData = this.connectedComponents(blackWhite.bitMap);
+            debugger;
+            this.updateContextData(data.data, this.toFlatArrayItems(connectedData));
+            this.putContextData(data);
+            debugger;
         });
         $$(ui_1.buttonLogParseId).attachEvent("onItemClick", () => {
             if (!logToolbar.isVisible()) {
@@ -91,6 +97,51 @@ class UiLogic {
                 pixel: parseInt(key),
                 value: data[key]
             });
+        }
+        return result;
+    }
+    getEmptyArray(rows, cols) {
+        let result = [];
+        for (let i = 0; i < rows; i++) {
+            let temp = [];
+            for (let y = 0; y < cols; y++) {
+                temp[y] = 0;
+            }
+            result[i] = temp;
+        }
+        return result;
+    }
+    connectedComponents(elements) {
+        let unions = new disjointSet_1.default(10000), rows = elements.length, cols = elements[0].length, label = 0, result = this.getEmptyArray(rows, cols);
+        for (let x = 1; x < rows; x++) {
+            for (let y = 1; y < cols; y++) {
+                if (elements[x][y]) {
+                    let a = result[x][y], b = result[x - 1][y], c = result[x][y - 1];
+                    if (!b && !c) {
+                        result[x][y] = ++label;
+                    }
+                    else if (b && !c) {
+                        result[x][y] = result[x - 1][y];
+                    }
+                    else if (!b && c) {
+                        result[x][y] = result[x][y - 1];
+                    }
+                    else {
+                        result[x][y] = (b < c) ? result[x - 1][y] : result[x][y - 1];
+                        if (b !== c) {
+                            unions.join(result[x - 1][y], result[x][y - 1]);
+                        }
+                    }
+                }
+            }
+        }
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                let element = result[i][j];
+                if (element) {
+                    result[i][j] = unions.find(element);
+                }
+            }
         }
         return result;
     }
@@ -227,6 +278,20 @@ class UiLogic {
                 res.push(pixel[1]);
                 res.push(pixel[2]);
                 res.push(pixel[3]);
+            }
+        }
+        return res;
+    }
+    toFlatArrayItems(data) {
+        let res = [];
+        for (let i = 0, len = data.length; i < len; i++) {
+            let row = data[i];
+            for (let j = 0, subLen = row.length; j < subLen; j++) {
+                let pixel = row[j];
+                res.push(100);
+                res.push(pixel);
+                res.push(100);
+                res.push(255);
             }
         }
         return res;

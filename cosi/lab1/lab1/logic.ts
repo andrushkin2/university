@@ -1,4 +1,5 @@
 import { canvasId, uploaderId, buttonId, redChartId, IChartData, greenChartId, buttonResetId, blueChartId, buttonLogParseId, logToolbarFormId, logToolbarId, buttonRobertsId, buttonLab2Id } from "./ui";
+import DisjointSet from "./disjointSet";
 
 interface IKeyValue<T> {
     [key: string]: T;
@@ -77,6 +78,11 @@ export default class UiLogic {
             let blackWhite = this.toBlackAndWhite(median);
             this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
             this.putContextData(data);
+            let connectedData = this.connectedComponents(blackWhite.bitMap);
+            debugger;
+            this.updateContextData(data.data, this.toFlatArrayItems(connectedData));
+            this.putContextData(data);
+            debugger;
         });
         (<webix.ui.button>$$(buttonLogParseId)).attachEvent("onItemClick", () => {
             if (!logToolbar.isVisible()) {
@@ -116,6 +122,55 @@ export default class UiLogic {
                 pixel: parseInt(key),
                 value: data[key]
             });
+        }
+        return result;
+    }
+    private getEmptyArray(rows: number, cols: number) {
+        let result: number[][] = [];
+        for (let i = 0; i < rows; i++) {
+            let temp: number[] = [];
+            for (let y = 0; y < cols; y++) {
+                temp[y] = 0;
+            }
+            result[i] = temp;
+        }
+        return result;
+    }
+    private connectedComponents(elements: number[][]) {
+        let unions = new DisjointSet(10000),
+            rows = elements.length,
+            cols = elements[0].length,
+            label = 0,
+            result = this.getEmptyArray(rows, cols);
+        for (let x = 1; x < rows; x++) {
+            for (let y = 1; y < cols; y++) {
+                if (elements[x][y]) {
+                    let a = result[x][y],
+                        b = result[x - 1][y],
+                        c = result[x][y - 1];
+                    if (!b && !c) {
+                        result[x][y] = ++label;
+                    } else if (b && !c) {
+                        result[x][y] = result[x - 1][y];
+                    } else if (!b && c) {
+                        result[x][y] = result[x][y - 1];
+                    } else {
+                        result[x][y] = (b < c) ? result[x - 1][y] : result[x][y - 1];
+                        if (b !== c) {
+                            unions.join(result[x - 1][y], result[x][y - 1]);
+                        }
+                    }
+                }
+            }
+        }
+
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                let element = result[i][j];
+                if (element) {
+                    result[i][j] = unions.find(element);
+                }
+            }
         }
         return result;
     }
@@ -259,6 +314,20 @@ export default class UiLogic {
                 res.push(pixel[1]);
                 res.push(pixel[2]);
                 res.push(pixel[3]);
+            }
+        }
+        return res;
+    }
+    private toFlatArrayItems(data: number[][]) {
+        let res: number[] = [];
+        for (let i = 0, len = data.length; i < len; i++) {
+            let row = data[i];
+            for (let j = 0, subLen = row.length; j < subLen; j++) {
+                let pixel = row[j];
+                res.push(100);
+                res.push(pixel);
+                res.push(100);
+                res.push(255);
             }
         }
         return res;
