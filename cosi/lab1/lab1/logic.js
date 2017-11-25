@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
-const disjointSet_1 = require("./disjointSet");
+const lab2Func_1 = require("./lab2Func");
 class UiLogic {
     constructor() {
-        let canvas = document.querySelector(`#${ui_1.canvasId}`), context, logToolbar = $$(ui_1.logToolbarId), logToolbarForm = $$(ui_1.logToolbarFormId);
+        let canvas = document.querySelector(`#${ui_1.canvasId}`), context, logToolbar = $$(ui_1.logToolbarId), logToolbarForm = $$(ui_1.logToolbarFormId), extraUtils = new lab2Func_1.default();
         if (canvas === null) {
             throw new Error(`Cannot find canvas element with ID: ${ui_1.canvasId}`);
         }
@@ -44,22 +44,25 @@ class UiLogic {
             this.drawChartData(ui_1.blueChartId, info.blue.map);
         });
         $$(ui_1.buttonLab2Id).attachEvent("onItemClick", () => {
-            let data = this.getContextData(), newData = this.toGrayscale(data.data);
-            debugger;
+            let data = this.getContextData(), newData = extraUtils.toGrayscale(data.data);
             this.updateContextData(data.data, newData);
             this.putContextData(data);
-            debugger;
-            let median = this.medianFilter(newData);
-            this.updateContextData(data.data, this.toFlatArray(median));
-            this.putContextData(data);
-            debugger;
-            let blackWhite = this.toBlackAndWhite(median);
+            // let median = this.medianFilter(newData);
+            // this.updateContextData(data.data, this.toFlatArray(median));
+            // this.putContextData(data);
+            let median = this.flatArrayToMatrix(newData);
+            let blackWhite = extraUtils.toBlackAndWhite(median);
             this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
             this.putContextData(data);
-            let connectedData = this.connectedComponents(blackWhite.bitMap);
-            debugger;
+            let connectedData = extraUtils.connectedComponents(blackWhite.bitMap);
             this.updateContextData(data.data, this.toFlatArrayItems(connectedData));
             this.putContextData(data);
+            debugger;
+            let signs = extraUtils.getSigns(connectedData);
+            debugger;
+            let vectors = extraUtils.getVectors(signs);
+            debugger;
+            extraUtils.kMedoids(vectors, vectors.length, 2, 20);
             debugger;
         });
         $$(ui_1.buttonLogParseId).attachEvent("onItemClick", () => {
@@ -97,51 +100,6 @@ class UiLogic {
                 pixel: parseInt(key),
                 value: data[key]
             });
-        }
-        return result;
-    }
-    getEmptyArray(rows, cols) {
-        let result = [];
-        for (let i = 0; i < rows; i++) {
-            let temp = [];
-            for (let y = 0; y < cols; y++) {
-                temp[y] = 0;
-            }
-            result[i] = temp;
-        }
-        return result;
-    }
-    connectedComponents(elements) {
-        let unions = new disjointSet_1.default(10000), rows = elements.length, cols = elements[0].length, label = 0, result = this.getEmptyArray(rows, cols);
-        for (let x = 1; x < rows; x++) {
-            for (let y = 1; y < cols; y++) {
-                if (elements[x][y]) {
-                    let a = result[x][y], b = result[x - 1][y], c = result[x][y - 1];
-                    if (!b && !c) {
-                        result[x][y] = ++label;
-                    }
-                    else if (b && !c) {
-                        result[x][y] = result[x - 1][y];
-                    }
-                    else if (!b && c) {
-                        result[x][y] = result[x][y - 1];
-                    }
-                    else {
-                        result[x][y] = (b < c) ? result[x - 1][y] : result[x][y - 1];
-                        if (b !== c) {
-                            unions.join(result[x - 1][y], result[x][y - 1]);
-                        }
-                    }
-                }
-            }
-        }
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < cols; j++) {
-                let element = result[i][j];
-                if (element) {
-                    result[i][j] = unions.find(element);
-                }
-            }
         }
         return result;
     }
@@ -296,17 +254,6 @@ class UiLogic {
         }
         return res;
     }
-    toGrayscale(data) {
-        let result = new Uint8ClampedArray(data.length);
-        for (let i = 0, len = data.length; i < len; i += 4) {
-            let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-            result[i] = avg;
-            result[i + 1] = avg;
-            result[i + 2] = avg;
-            result[i + 3] = data[i + 3];
-        }
-        return result;
-    }
     getPixelsAround(data, i, j) {
         let current = data[i][j], left = data[i][j - 1], right = data[i][j + 1], isHasInTop = data[i - 1] !== undefined, isHasInBottom = data[i + 1] !== undefined, top = isHasInTop ? data[i - 1][j] : undefined, bottom = isHasInBottom ? data[i + 1][j] : undefined, topLeft = isHasInTop ? data[i - 1][j - 1] || top || current : left || current, topRight = isHasInTop ? data[i - 1][j + 1] || top || current : right || current, bottomLeft = isHasInBottom ? data[i + 1][j - 1] || bottom || current : left || current, bottomRight = isHasInBottom ? data[i + 1][j + 1] || bottom || current : right || current;
         return [
@@ -343,23 +290,6 @@ class UiLogic {
             result[i] = rowItems;
         }
         return result;
-    }
-    toBlackAndWhite(data, p = 195) {
-        let result = [], resultData = [];
-        for (let i = 0, len = data.length; i < len; i++) {
-            let item = data[i];
-            result[i] = [];
-            resultData[i] = [];
-            for (let j = 0, subLen = item.length; j < subLen; j++) {
-                let pixel = data[i][j], k = (pixel[0] + pixel[1] + pixel[2]) / 3, newValue = k > p ? 255 : 0;
-                result[i][j] = newValue;
-                resultData[i][j] = [newValue, newValue, newValue, pixel[3]];
-            }
-        }
-        return {
-            data: resultData,
-            bitMap: result
-        };
     }
 }
 exports.default = UiLogic;

@@ -8,7 +8,7 @@ export default class DisjointSet {
         }
     }
     public join(x: number, y: number) {
-        if ((x = this.find(x)) == (y = this.find(y))) {
+        if ((x = this.find(x)) === (y = this.find(y))) {
             return;
         }
         if (this.elements[x].rank < this.elements[y].rank) {
@@ -33,7 +33,7 @@ export default class DisjointSet {
 }
 
 class DisjointItem {
-    constructor(p: number, rank = 0, size = 1){
+    constructor(p: number, rank = 0, size = 1) {
         this.rank = rank,
         this.size = size;
         this.p = p;

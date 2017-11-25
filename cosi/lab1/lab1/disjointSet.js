@@ -9,7 +9,7 @@ class DisjointSet {
         }
     }
     join(x, y) {
-        if ((x = this.find(x)) == (y = this.find(y))) {
+        if ((x = this.find(x)) === (y = this.find(y))) {
             return;
         }
         if (this.elements[x].rank < this.elements[y].rank) {

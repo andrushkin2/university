@@ -1,5 +1,6 @@
 import { canvasId, uploaderId, buttonId, redChartId, IChartData, greenChartId, buttonResetId, blueChartId, buttonLogParseId, logToolbarFormId, logToolbarId, buttonRobertsId, buttonLab2Id } from "./ui";
 import DisjointSet from "./disjointSet";
+import ExtraUtils from "./lab2Func";
 
 interface IKeyValue<T> {
     [key: string]: T;
@@ -24,7 +25,8 @@ export default class UiLogic {
         let canvas = <HTMLCanvasElement | null>document.querySelector(`#${canvasId}`),
             context: CanvasRenderingContext2D | null,
             logToolbar: webix.ui.toolbar = (<webix.ui.toolbar>$$(logToolbarId)),
-            logToolbarForm: webix.ui.form = (<webix.ui.form>$$(logToolbarFormId));
+            logToolbarForm: webix.ui.form = (<webix.ui.form>$$(logToolbarFormId)),
+            extraUtils = new ExtraUtils();
         if (canvas === null) {
             throw new Error(`Cannot find canvas element with ID: ${canvasId}`);
         }
@@ -66,22 +68,25 @@ export default class UiLogic {
         });
         (<webix.ui.button>$$(buttonLab2Id)).attachEvent("onItemClick", () => {
             let data = this.getContextData(),
-                newData = this.toGrayscale(data.data);
-            debugger;
+                newData = extraUtils.toGrayscale(data.data);
             this.updateContextData(data.data, newData);
             this.putContextData(data);
-            debugger;
-            let median = this.medianFilter(newData);
-            this.updateContextData(data.data, this.toFlatArray(median));
-            this.putContextData(data);
-            debugger;
-            let blackWhite = this.toBlackAndWhite(median);
+            // let median = this.medianFilter(newData);
+            // this.updateContextData(data.data, this.toFlatArray(median));
+            // this.putContextData(data);
+            let median = this.flatArrayToMatrix(newData);
+            let blackWhite = extraUtils.toBlackAndWhite(median);
             this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
             this.putContextData(data);
-            let connectedData = this.connectedComponents(blackWhite.bitMap);
-            debugger;
+            let connectedData = extraUtils.connectedComponents(blackWhite.bitMap);
             this.updateContextData(data.data, this.toFlatArrayItems(connectedData));
             this.putContextData(data);
+            debugger;
+            let signs = extraUtils.getSigns(connectedData);
+            debugger;
+            let vectors = extraUtils.getVectors(signs);
+            debugger;
+            extraUtils.kMedoids(vectors, vectors.length, 2, 20);
             debugger;
         });
         (<webix.ui.button>$$(buttonLogParseId)).attachEvent("onItemClick", () => {
@@ -122,55 +127,6 @@ export default class UiLogic {
                 pixel: parseInt(key),
                 value: data[key]
             });
-        }
-        return result;
-    }
-    private getEmptyArray(rows: number, cols: number) {
-        let result: number[][] = [];
-        for (let i = 0; i < rows; i++) {
-            let temp: number[] = [];
-            for (let y = 0; y < cols; y++) {
-                temp[y] = 0;
-            }
-            result[i] = temp;
-        }
-        return result;
-    }
-    private connectedComponents(elements: number[][]) {
-        let unions = new DisjointSet(10000),
-            rows = elements.length,
-            cols = elements[0].length,
-            label = 0,
-            result = this.getEmptyArray(rows, cols);
-        for (let x = 1; x < rows; x++) {
-            for (let y = 1; y < cols; y++) {
-                if (elements[x][y]) {
-                    let a = result[x][y],
-                        b = result[x - 1][y],
-                        c = result[x][y - 1];
-                    if (!b && !c) {
-                        result[x][y] = ++label;
-                    } else if (b && !c) {
-                        result[x][y] = result[x - 1][y];
-                    } else if (!b && c) {
-                        result[x][y] = result[x][y - 1];
-                    } else {
-                        result[x][y] = (b < c) ? result[x - 1][y] : result[x][y - 1];
-                        if (b !== c) {
-                            unions.join(result[x - 1][y], result[x][y - 1]);
-                        }
-                    }
-                }
-            }
-        }
-
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < cols; j++) {
-                let element = result[i][j];
-                if (element) {
-                    result[i][j] = unions.find(element);
-                }
-            }
         }
         return result;
     }
@@ -332,17 +288,6 @@ export default class UiLogic {
         }
         return res;
     }
-    private toGrayscale(data: Uint8ClampedArray) {
-        let result: Uint8ClampedArray = new Uint8ClampedArray(data.length);
-        for (let i = 0, len = data.length; i < len; i += 4) {
-            let avg: number = (data[i] + data[i + 1] + data[i + 2]) / 3;
-            result[i] = avg;
-            result[i + 1] = avg;
-            result[i + 2] = avg;
-            result[i + 3] = data[i + 3];
-        }
-        return result;
-    }
     private getPixelsAround(data: number[][][], i: number, j: number) {
         let current = data[i][j],
             left: number[] | undefined = data[i][j - 1],
@@ -394,25 +339,5 @@ export default class UiLogic {
             result[i] = rowItems;
         }
         return result;
-    }
-    private toBlackAndWhite(data: number[][][], p = 195) {
-        let result: number[][] = [],
-            resultData: number[][][] = [];
-        for (let i = 0, len = data.length; i < len; i++) {
-            let item = data[i];
-            result[i] = [];
-            resultData[i] = [];
-            for (let j = 0, subLen = item.length; j < subLen; j++) {
-                let pixel: number[] = data[i][j],
-                    k: number = (pixel[0] + pixel[1] + pixel[2]) / 3,
-                    newValue: number = k > p ? 255 : 0;
-                result[i][j] = newValue;
-                resultData[i][j] = [newValue, newValue, newValue, pixel[3]];
-            }
-        }
-        return {
-            data: resultData,
-            bitMap: result
-        };
     }
 }

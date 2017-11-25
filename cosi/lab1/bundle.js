@@ -10,7 +10,7 @@ class DisjointSet {
         }
     }
     join(x, y) {
-        if ((x = this.find(x)) == (y = this.find(y))) {
+        if ((x = this.find(x)) === (y = this.find(y))) {
             return;
         }
         if (this.elements[x].rank < this.elements[y].rank) {
@@ -46,105 +46,44 @@ class DisjointItem {
 },{}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const ui_1 = require("./ui");
 const disjointSet_1 = require("./disjointSet");
-class UiLogic {
-    constructor() {
-        let canvas = document.querySelector(`#${ui_1.canvasId}`), context, logToolbar = $$(ui_1.logToolbarId), logToolbarForm = $$(ui_1.logToolbarFormId);
-        if (canvas === null) {
-            throw new Error(`Cannot find canvas element with ID: ${ui_1.canvasId}`);
-        }
-        context = canvas.getContext("2d");
-        if (context === null) {
-            throw new Error("Cannot get context of canvas");
-        }
-        this.canvas = canvas;
-        this.context = context;
-        $$(ui_1.uploaderId).attachEvent("onAfterFileAdd", (e) => {
-            this.loadFile(e.file).then(data => this.insertImageToCanvas(data)).catch(reason => {
-                new webix.message(reason.message || reason.text || "Error was happened");
-            });
-        });
-        $$(ui_1.buttonId).attachEvent("onItemClick", () => {
-            let data = this.getInfoFromContext(this.getContextData());
-            this.drawChartData(ui_1.redChartId, data.red.map);
-            this.drawChartData(ui_1.greenChartId, data.green.map);
-            this.drawChartData(ui_1.blueChartId, data.blue.map);
-        });
-        $$(ui_1.buttonResetId).attachEvent("onItemClick", () => {
-            let data = this.getContextData();
-            this.updateContextData(data.data, this.firstData);
-            this.putContextData(data);
-            let info = this.getInfoFromContext(this.getContextData());
-            this.drawChartData(ui_1.redChartId, info.red.map);
-            this.drawChartData(ui_1.greenChartId, info.green.map);
-            this.drawChartData(ui_1.blueChartId, info.blue.map);
-        });
-        $$(ui_1.buttonRobertsId).attachEvent("onItemClick", () => {
-            let data = this.getContextData(), newData = this.runRobertsTransform(data.data);
-            this.updateContextData(data.data, newData);
-            this.putContextData(data);
-            let info = this.getInfoFromContext(this.getContextData());
-            this.drawChartData(ui_1.redChartId, info.red.map);
-            this.drawChartData(ui_1.greenChartId, info.green.map);
-            this.drawChartData(ui_1.blueChartId, info.blue.map);
-        });
-        $$(ui_1.buttonLab2Id).attachEvent("onItemClick", () => {
-            let data = this.getContextData(), newData = this.toGrayscale(data.data);
-            debugger;
-            this.updateContextData(data.data, newData);
-            this.putContextData(data);
-            debugger;
-            let median = this.medianFilter(newData);
-            this.updateContextData(data.data, this.toFlatArray(median));
-            this.putContextData(data);
-            debugger;
-            let blackWhite = this.toBlackAndWhite(median);
-            this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
-            this.putContextData(data);
-            let connectedData = this.connectedComponents(blackWhite.bitMap);
-            debugger;
-            this.updateContextData(data.data, this.toFlatArrayItems(connectedData));
-            this.putContextData(data);
-            debugger;
-        });
-        $$(ui_1.buttonLogParseId).attachEvent("onItemClick", () => {
-            if (!logToolbar.isVisible()) {
-                logToolbar.show();
-                return;
-            }
-            let formData = logToolbarForm.getValues(), data = this.getContextData();
-            this.logCorrection(data.data, parseFloat(formData.c));
-            this.putContextData(data);
-            let info = this.getInfoFromContext(this.getContextData());
-            this.drawChartData(ui_1.redChartId, info.red.map);
-            this.drawChartData(ui_1.greenChartId, info.green.map);
-            this.drawChartData(ui_1.blueChartId, info.blue.map);
-        });
+class Vector {
+    constructor(newSigns) {
+        this.cluster = 0;
+        this.id = 0;
+        this.distanse = 0;
+        this.signs = { area: 0, copmactness: 0, elongation: 0, perimeter: 0 };
+        this.signs = newSigns;
     }
-    updateContextData(data, newData) {
+}
+class ExtraUtils {
+    toGrayscale(data) {
+        let result = new Uint8ClampedArray(data.length);
         for (let i = 0, len = data.length; i < len; i += 4) {
-            data[i] = newData[i];
-            data[i + 1] = newData[i + 1];
-            data[i + 2] = newData[i + 2];
-            data[i + 3] = newData[i + 3];
-        }
-    }
-    drawChartData(chartId, data) {
-        let chart = $$(chartId);
-        chart.clearAll();
-        chart.parse(this.getChartData(data), "json");
-    }
-    getChartData(data) {
-        let result = [], keys = Object.keys(data);
-        for (let i = 0, len = keys.length; i < len; i++) {
-            let key = keys[i], item = data[key];
-            result.push({
-                pixel: parseInt(key),
-                value: data[key]
-            });
+            let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            result[i] = avg;
+            result[i + 1] = avg;
+            result[i + 2] = avg;
+            result[i + 3] = data[i + 3];
         }
         return result;
+    }
+    toBlackAndWhite(data, p = 195) {
+        let result = [], resultData = [];
+        for (let i = 0, len = data.length; i < len; i++) {
+            let item = data[i];
+            result[i] = [];
+            resultData[i] = [];
+            for (let j = 0, subLen = item.length; j < subLen; j++) {
+                let pixel = data[i][j], k = (pixel[0] + pixel[1] + pixel[2]) / 3, newValue = k > p ? 255 : 0;
+                result[i][j] = newValue;
+                resultData[i][j] = [newValue, newValue, newValue, pixel[3]];
+            }
+        }
+        return {
+            data: resultData,
+            bitMap: result
+        };
     }
     getEmptyArray(rows, cols) {
         let result = [];
@@ -188,6 +127,193 @@ class UiLogic {
                     result[i][j] = unions.find(element);
                 }
             }
+        }
+        return result;
+    }
+    getVectors(data) {
+        let result = [];
+        for (let i = 0, keys = Object.keys(data), len = keys.length; i < len; i++) {
+            let obj = data[keys[i]], vector = new Vector({
+                area: obj.area,
+                copmactness: obj.copmactness,
+                elongation: obj.elongation,
+                perimeter: obj.perimeter
+            });
+            vector.id = i;
+            result.push(vector);
+        }
+        return result;
+    }
+    getSigns(data) {
+        let result = {}, getObject = (key, dataObj) => {
+            if (!dataObj[key]) {
+                dataObj[key] = { area: 0, coMX: 0, coMY: 0, copmactness: 0, elongation: 0, m02: 0, m11: 0, m20: 0, perimeter: 0 };
+            }
+            return dataObj[key];
+        }, square = (value) => value * value;
+        for (let x = 1, rows = data.length - 1; x < rows; x++) {
+            let rowData = data[x], prevRowData = data[x - 1], nextRowData = data[x + 1];
+            for (let y = 1, cols = data[0].length; y < cols; y++) {
+                let pixel = rowData[y];
+                if (pixel) {
+                    let obj = getObject(pixel.toString(), result);
+                    obj.area++;
+                    if (!prevRowData[y] || !rowData[y - 1] || !nextRowData[y] || !rowData[y + 1]) {
+                        obj.perimeter++;
+                    }
+                    obj.coMX += y;
+                    obj.coMY += x;
+                }
+            }
+        }
+        for (let i = 0, keys = Object.keys(result), len = keys.length; i < len; i++) {
+            let obj = result[keys[i]];
+            obj.copmactness = square(obj.perimeter / obj.area);
+            obj.coMX /= obj.area;
+            obj.coMY /= obj.area;
+        }
+        for (let x = 1, rows = data.length - 1; x < rows; x++) {
+            let rowData = data[x];
+            for (let y = 1, cols = data[0].length; y < cols; y++) {
+                let pixel = rowData[y];
+                if (pixel) {
+                    let obj = result[pixel.toString()], tmpX = y - obj.coMX, tmpY = x - obj.coMY;
+                    obj.m20 += square(tmpX);
+                    obj.m02 += square(tmpY);
+                    obj.m11 += tmpX * tmpY;
+                }
+            }
+        }
+        for (let i = 0, keys = Object.keys(result), len = keys.length; i < len; i++) {
+            let obj = result[keys[i]], tmp1 = obj.m20 + obj.m02, temp = obj.m20 - obj.m02 + 4.0 * square(obj.m11), tmp2 = temp >= 0 ? Math.sqrt(temp) : 0;
+            obj.elongation = (tmp1 + tmp2) / (tmp1 - tmp2) || 0;
+        }
+        return result;
+    }
+    kMedoids(objects, objCount, k, maxStep) {
+        let centers = [];
+        for (let i = 0; i < objCount; i++) {
+            objects[i].cluster = Math.floor(Math.random() * (k - 0)) + 0;
+        }
+    }
+    kMediodsFindCenters(objects, objCount, centers, k) {
+        let clusterSizes = [];
+        for (let i = 0; i < objCount; i++) {
+            let cluster = objects[i].cluster;
+            if (!clusterSizes[cluster]) {
+                clusterSizes[cluster] = 1;
+            }
+            else {
+                clusterSizes[cluster]++;
+            }
+        }
+    }
+}
+exports.default = ExtraUtils;
+
+},{"./disjointSet":1}],3:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const ui_1 = require("./ui");
+const lab2Func_1 = require("./lab2Func");
+class UiLogic {
+    constructor() {
+        let canvas = document.querySelector(`#${ui_1.canvasId}`), context, logToolbar = $$(ui_1.logToolbarId), logToolbarForm = $$(ui_1.logToolbarFormId), extraUtils = new lab2Func_1.default();
+        if (canvas === null) {
+            throw new Error(`Cannot find canvas element with ID: ${ui_1.canvasId}`);
+        }
+        context = canvas.getContext("2d");
+        if (context === null) {
+            throw new Error("Cannot get context of canvas");
+        }
+        this.canvas = canvas;
+        this.context = context;
+        $$(ui_1.uploaderId).attachEvent("onAfterFileAdd", (e) => {
+            this.loadFile(e.file).then(data => this.insertImageToCanvas(data)).catch(reason => {
+                new webix.message(reason.message || reason.text || "Error was happened");
+            });
+        });
+        $$(ui_1.buttonId).attachEvent("onItemClick", () => {
+            let data = this.getInfoFromContext(this.getContextData());
+            this.drawChartData(ui_1.redChartId, data.red.map);
+            this.drawChartData(ui_1.greenChartId, data.green.map);
+            this.drawChartData(ui_1.blueChartId, data.blue.map);
+        });
+        $$(ui_1.buttonResetId).attachEvent("onItemClick", () => {
+            let data = this.getContextData();
+            this.updateContextData(data.data, this.firstData);
+            this.putContextData(data);
+            let info = this.getInfoFromContext(this.getContextData());
+            this.drawChartData(ui_1.redChartId, info.red.map);
+            this.drawChartData(ui_1.greenChartId, info.green.map);
+            this.drawChartData(ui_1.blueChartId, info.blue.map);
+        });
+        $$(ui_1.buttonRobertsId).attachEvent("onItemClick", () => {
+            let data = this.getContextData(), newData = this.runRobertsTransform(data.data);
+            this.updateContextData(data.data, newData);
+            this.putContextData(data);
+            let info = this.getInfoFromContext(this.getContextData());
+            this.drawChartData(ui_1.redChartId, info.red.map);
+            this.drawChartData(ui_1.greenChartId, info.green.map);
+            this.drawChartData(ui_1.blueChartId, info.blue.map);
+        });
+        $$(ui_1.buttonLab2Id).attachEvent("onItemClick", () => {
+            let data = this.getContextData(), newData = extraUtils.toGrayscale(data.data);
+            this.updateContextData(data.data, newData);
+            this.putContextData(data);
+            // let median = this.medianFilter(newData);
+            // this.updateContextData(data.data, this.toFlatArray(median));
+            // this.putContextData(data);
+            let median = this.flatArrayToMatrix(newData);
+            let blackWhite = extraUtils.toBlackAndWhite(median);
+            this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
+            this.putContextData(data);
+            let connectedData = extraUtils.connectedComponents(blackWhite.bitMap);
+            this.updateContextData(data.data, this.toFlatArrayItems(connectedData));
+            this.putContextData(data);
+            debugger;
+            let signs = extraUtils.getSigns(connectedData);
+            debugger;
+            let vectors = extraUtils.getVectors(signs);
+            debugger;
+            extraUtils.kMedoids(vectors, vectors.length, 2, 20);
+            debugger;
+        });
+        $$(ui_1.buttonLogParseId).attachEvent("onItemClick", () => {
+            if (!logToolbar.isVisible()) {
+                logToolbar.show();
+                return;
+            }
+            let formData = logToolbarForm.getValues(), data = this.getContextData();
+            this.logCorrection(data.data, parseFloat(formData.c));
+            this.putContextData(data);
+            let info = this.getInfoFromContext(this.getContextData());
+            this.drawChartData(ui_1.redChartId, info.red.map);
+            this.drawChartData(ui_1.greenChartId, info.green.map);
+            this.drawChartData(ui_1.blueChartId, info.blue.map);
+        });
+    }
+    updateContextData(data, newData) {
+        for (let i = 0, len = data.length; i < len; i += 4) {
+            data[i] = newData[i];
+            data[i + 1] = newData[i + 1];
+            data[i + 2] = newData[i + 2];
+            data[i + 3] = newData[i + 3];
+        }
+    }
+    drawChartData(chartId, data) {
+        let chart = $$(chartId);
+        chart.clearAll();
+        chart.parse(this.getChartData(data), "json");
+    }
+    getChartData(data) {
+        let result = [], keys = Object.keys(data);
+        for (let i = 0, len = keys.length; i < len; i++) {
+            let key = keys[i], item = data[key];
+            result.push({
+                pixel: parseInt(key),
+                value: data[key]
+            });
         }
         return result;
     }
@@ -342,17 +468,6 @@ class UiLogic {
         }
         return res;
     }
-    toGrayscale(data) {
-        let result = new Uint8ClampedArray(data.length);
-        for (let i = 0, len = data.length; i < len; i += 4) {
-            let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-            result[i] = avg;
-            result[i + 1] = avg;
-            result[i + 2] = avg;
-            result[i + 3] = data[i + 3];
-        }
-        return result;
-    }
     getPixelsAround(data, i, j) {
         let current = data[i][j], left = data[i][j - 1], right = data[i][j + 1], isHasInTop = data[i - 1] !== undefined, isHasInBottom = data[i + 1] !== undefined, top = isHasInTop ? data[i - 1][j] : undefined, bottom = isHasInBottom ? data[i + 1][j] : undefined, topLeft = isHasInTop ? data[i - 1][j - 1] || top || current : left || current, topRight = isHasInTop ? data[i - 1][j + 1] || top || current : right || current, bottomLeft = isHasInBottom ? data[i + 1][j - 1] || bottom || current : left || current, bottomRight = isHasInBottom ? data[i + 1][j + 1] || bottom || current : right || current;
         return [
@@ -390,27 +505,10 @@ class UiLogic {
         }
         return result;
     }
-    toBlackAndWhite(data, p = 195) {
-        let result = [], resultData = [];
-        for (let i = 0, len = data.length; i < len; i++) {
-            let item = data[i];
-            result[i] = [];
-            resultData[i] = [];
-            for (let j = 0, subLen = item.length; j < subLen; j++) {
-                let pixel = data[i][j], k = (pixel[0] + pixel[1] + pixel[2]) / 3, newValue = k > p ? 255 : 0;
-                result[i][j] = newValue;
-                resultData[i][j] = [newValue, newValue, newValue, pixel[3]];
-            }
-        }
-        return {
-            data: resultData,
-            bitMap: result
-        };
-    }
 }
 exports.default = UiLogic;
 
-},{"./disjointSet":1,"./ui":3}],3:[function(require,module,exports){
+},{"./lab2Func":2,"./ui":4}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("../mod/lab2/uiItems");
@@ -588,7 +686,7 @@ exports.greenChartId = greenChartId;
 exports.blueChartId = blueChartId;
 exports.ui = ui;
 
-},{"../mod/lab2/uiItems":11}],4:[function(require,module,exports){
+},{"../mod/lab2/uiItems":12}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataWorker {
@@ -614,7 +712,7 @@ class DataWorker {
 }
 exports.default = DataWorker;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -657,7 +755,7 @@ let defaultData = {
 exports.exponentialUi = exponentialUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":14,"./uiItems":11}],6:[function(require,module,exports){
+},{"../modTest":15,"./uiItems":12}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -702,7 +800,7 @@ let defaultData = {
 exports.gammaUi = gammaUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":14,"./uiItems":11}],7:[function(require,module,exports){
+},{"../modTest":15,"./uiItems":12}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -749,7 +847,7 @@ let defaultData = {
 exports.gaussUi = gaussUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":14,"./uiItems":11}],8:[function(require,module,exports){
+},{"../modTest":15,"./uiItems":12}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uniformUi_1 = require("./uniformUi");
@@ -790,7 +888,7 @@ let distributionListId = "distributionListId", ui = {
 exports.distributionListId = distributionListId;
 exports.ui = ui;
 
-},{"./exponentialUi":5,"./gammaUi":6,"./gaussUi":7,"./simpsonUi":9,"./triangleUi":10,"./uniformUi":12}],9:[function(require,module,exports){
+},{"./exponentialUi":6,"./gammaUi":7,"./gaussUi":8,"./simpsonUi":10,"./triangleUi":11,"./uniformUi":13}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -835,7 +933,7 @@ let defaultData = {
 exports.simpsonUi = simpsonUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":14,"./uiItems":11}],10:[function(require,module,exports){
+},{"../modTest":15,"./uiItems":12}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -880,7 +978,7 @@ let defaultData = {
 exports.triangleUi = triangleUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":14,"./uiItems":11}],11:[function(require,module,exports){
+},{"../modTest":15,"./uiItems":12}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let getButton = (buttonId) => ({
@@ -931,7 +1029,7 @@ exports.getTextField = getTextField;
 exports.getForm = getForm;
 exports.getChart = getChart;
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -980,7 +1078,7 @@ exports.uniformChartId = uniformChartId;
 exports.uniformUi = uniformUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":14,"./uiItems":11}],13:[function(require,module,exports){
+},{"../modTest":15,"./uiItems":12}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
@@ -1052,7 +1150,7 @@ class ModLab {
 }
 exports.default = ModLab;
 
-},{"./dataWorker":4,"./lab2/exponentialUi":5,"./lab2/gammaUi":6,"./lab2/gaussUi":7,"./lab2/simpsonUi":9,"./lab2/triangleUi":10,"./lab2/uniformUi":12,"./modTest":14,"./ui":15}],14:[function(require,module,exports){
+},{"./dataWorker":5,"./lab2/exponentialUi":6,"./lab2/gammaUi":7,"./lab2/gaussUi":8,"./lab2/simpsonUi":10,"./lab2/triangleUi":11,"./lab2/uniformUi":13,"./modTest":15,"./ui":16}],15:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let mult = (a, b) => a * b, div = (a, b) => a / b, mod = (a, b) => a % b, makeStep = (index, prevResult, a, m) => {
@@ -1228,7 +1326,7 @@ class ModLabUtils {
 }
 exports.default = ModLabUtils;
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mainUi_1 = require("./lab2/mainUi");
@@ -1383,7 +1481,7 @@ exports.formDataId = formDataId;
 exports.formOutputDataId = formOutputDataId;
 exports.UI = ui;
 
-},{"./lab2/mainUi":8}],16:[function(require,module,exports){
+},{"./lab2/mainUi":9}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Complex {
@@ -1555,7 +1653,7 @@ exports.CorrelationFourier = correlationFourier;
 exports.FWHT = fwht;
 exports.GetPhaseAndAmplitude = getPhaseAndAmplitude;
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
@@ -1903,4 +2001,4 @@ webix.ready(() => {
     });
 });
 
-},{"./lab1/logic":2,"./lab1/ui":3,"./mod/madLab":13,"./mod/ui":15,"./test":16}]},{},[17]);
+},{"./lab1/logic":3,"./lab1/ui":4,"./mod/madLab":14,"./mod/ui":16,"./test":17}]},{},[18]);
