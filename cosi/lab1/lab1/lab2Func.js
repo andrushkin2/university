@@ -7,9 +7,25 @@ class Vector {
         this.id = 0;
         this.distanse = 0;
         this.signs = { area: 0, copmactness: 0, elongation: 0, perimeter: 0 };
+        this.tempCluster = undefined;
+        this.tempDistance = undefined;
         this.signs = newSigns;
     }
+    resetTempValues() {
+        this.tempCluster = undefined;
+        this.tempDistance = undefined;
+    }
+    saveNewState() {
+        if (this.tempCluster !== undefined) {
+            this.cluster = this.tempCluster;
+        }
+        if (this.tempDistance !== undefined) {
+            this.distanse = this.tempDistance;
+        }
+        this.resetTempValues();
+    }
 }
+exports.Vector = Vector;
 class ExtraUtils {
     toGrayscale(data) {
         let result = new Uint8ClampedArray(data.length);
@@ -87,13 +103,13 @@ class ExtraUtils {
     getVectors(data) {
         let result = [];
         for (let i = 0, keys = Object.keys(data), len = keys.length; i < len; i++) {
-            let obj = data[keys[i]], vector = new Vector({
+            let key = keys[i], obj = data[key], vector = new Vector({
                 area: obj.area,
                 copmactness: obj.copmactness,
                 elongation: obj.elongation,
                 perimeter: obj.perimeter
             });
-            vector.id = i;
+            vector.id = parseInt(key);
             result.push(vector);
         }
         return result;
@@ -144,23 +160,165 @@ class ExtraUtils {
         }
         return result;
     }
-    kMedoids(objects, objCount, k, maxStep) {
-        let centers = [];
-        for (let i = 0; i < objCount; i++) {
-            objects[i].cluster = Math.floor(Math.random() * (k - 0)) + 0;
-        }
-    }
-    kMediodsFindCenters(objects, objCount, centers, k) {
-        let clusterSizes = [];
-        for (let i = 0; i < objCount; i++) {
-            let cluster = objects[i].cluster;
-            if (!clusterSizes[cluster]) {
-                clusterSizes[cluster] = 1;
+    kMedoids(objects, length, k, maxStep) {
+        let distanceMatrix = this.getDistanceMatrix(objects, length), usedClisters = {}, getUsedClasterId = (clusters) => clusters.map(val => val.id).join("_"), getRandomClusters = (vectors, amount) => {
+            let res = [], len = vectors.length;
+            while (res.length < amount) {
+                let i = this.getRandom(0, length);
+                res.indexOf(i) === -1 && res.push(i);
+            }
+            return res.map(value => vectors[value]);
+        }, updateVectors = (vectors, isNeedToSet) => {
+            for (let i = 0, len = vectors.length; i < len; i++) {
+                let vector = vectors[i];
+                isNeedToSet ? vector.saveNewState() : vector.resetTempValues();
+            }
+        }, getBiggestCluster = (data) => {
+            if (data.length === 0) {
+                throw new Error("Cluster data shouldn't be an empty array");
+            }
+            let biggestCluster = data[0];
+            for (let i = 1, len = data.length; i < len; i++) {
+                let cluster = data[i];
+                if (cluster.vectors.length > biggestCluster.vectors.length) {
+                    biggestCluster = cluster;
+                }
+            }
+            return biggestCluster;
+        }, findNewCenters = (data, currCenters) => {
+            let currentCenters = currCenters.slice(0), biggestCluster = getBiggestCluster(data);
+            for (let i = 0, len = currentCenters.length; i < len; i++) {
+                let currentCluster = currentCenters[i];
+                if (currentCluster.id !== biggestCluster.clusterId) {
+                    continue;
+                }
+                let vectors = biggestCluster.vectors, amount = vectors.length, randomCluster = vectors[this.getRandom(0, amount)];
+                currentCenters[i] = randomCluster;
+                let step = 0;
+                while (step < 50 && (randomCluster.id === currentCluster.id || usedClisters[getUsedClasterId(currentCenters)] === true)) {
+                    randomCluster = vectors[this.getRandom(0, amount)];
+                    currentCenters[i] = randomCluster;
+                    step++;
+                }
+                break;
+            }
+            return currentCenters;
+        }, centers = getRandomClusters(objects, k);
+        usedClisters[getUsedClasterId(centers)] = true;
+        let stepData = this.findNewClustters(objects, distanceMatrix, centers);
+        let minDistance = stepData.totalCost;
+        updateVectors(objects, true);
+        for (let i = 0; i < maxStep; i++) {
+            let tempCenters = findNewCenters(stepData.clusters, centers);
+            usedClisters[getUsedClasterId(tempCenters)] = true;
+            stepData = this.findNewClustters(objects, distanceMatrix, tempCenters);
+            if (minDistance > stepData.totalCost) {
+                centers = tempCenters;
+                minDistance = stepData.totalCost;
+                updateVectors(objects, true);
             }
             else {
-                clusterSizes[cluster]++;
+                updateVectors(objects, false);
             }
         }
+        let centersObject = {};
+        let result = {};
+        centers.forEach((value, index) => {
+            centersObject[value.id] = value;
+            result[value.id] = [0, 0, 0, 255];
+            result[value.id][index] = 128;
+        });
+        let variance = 0.5;
+        for (let i = 0; i < length; i++) {
+            let vector = objects[i];
+            for (let j = 0, keys = Object.keys(vector.signs), len = keys.length; i < len; i++) {
+                let key = keys[j], value = vector.signs[key];
+                if (value > (1.0 + variance) * centersObject[vector.cluster].signs[key] || value < (1.0 + variance) * centersObject[vector.cluster].signs[key]) {
+                    vector.cluster = -1;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+    getRandom(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+    getDicstance(vec1, vec2) {
+        let result = 0.0, vec1Sign = vec1.signs, vec2Sign = vec2.signs, square = (value) => value * value;
+        for (let i = 0, keys = Object.keys(vec1Sign), len = keys.length; i < len; i++) {
+            let key = keys[i];
+            result += square(vec1Sign[key] - vec2Sign[key]);
+        }
+        return result;
+    }
+    getDistanceMatrix(objects, length) {
+        let result = {};
+        for (let i = 0; i < length; i++) {
+            for (let j = 0; j < length; j++) {
+                let vec1 = objects[i], vec2 = objects[j], keyVec1 = vec1.id, keyVec2 = vec2.id;
+                if (!result[keyVec1] || !result[keyVec2] || result[keyVec1][keyVec2] === undefined || result[keyVec2][keyVec1] === undefined) {
+                    if (!result[keyVec1]) {
+                        result[keyVec1] = {};
+                    }
+                    if (!result[keyVec2]) {
+                        result[keyVec2] = {};
+                    }
+                    let distance = this.getDicstance(vec1, vec2);
+                    if (result[keyVec1][keyVec2] === undefined) {
+                        result[keyVec1][keyVec2] = distance;
+                    }
+                    if (result[keyVec2][keyVec1] === undefined) {
+                        result[keyVec2][keyVec1] = distance;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    findNewClustters(objects, distanceMatrix, centers) {
+        let result = {
+            totalCost: 0,
+            clusters: centers.map(vec => ({
+                clusterId: vec.id,
+                vectors: [],
+                totalCost: 0
+            }))
+        }, getNewCluster = (vector, centerVectors, matrix) => {
+            vector.resetTempValues();
+            for (let i = 0, len = centerVectors.length; i < len; i++) {
+                let centerVector = centerVectors[i], distance = matrix[vector.id][centerVector.id];
+                if (vector.tempDistance === undefined || vector.tempDistance > distance) {
+                    vector.tempDistance = distance;
+                    vector.tempCluster = centerVector.id;
+                }
+            }
+        }, addItemToCluster = (vector, clusters) => {
+            if (vector.tempCluster === undefined) {
+                throw new Error("Ooops, some vector doesn't have tempCluster");
+            }
+            let clusterId = vector.tempCluster;
+            for (let i = 0, len = clusters.length; i < len; i++) {
+                let cluster = clusters[i];
+                if (cluster.clusterId === clusterId) {
+                    cluster.vectors.push(vector);
+                    cluster.totalCost += vector.tempDistance || 0;
+                    return;
+                }
+            }
+        };
+        for (let i = 0, len = objects.length; i < len; i++) {
+            getNewCluster(objects[i], centers, distanceMatrix);
+        }
+        for (let i = 0, len = objects.length; i < len; i++) {
+            let vector = objects[i];
+            if (vector.tempDistance === undefined || vector.tempCluster === undefined) {
+                throw new Error("Ooops, some vector doesn't have tempDistance or tempCluster");
+            }
+            result.totalCost += vector.tempDistance;
+            addItemToCluster(vector, result.clusters);
+        }
+        return result;
     }
 }
 exports.default = ExtraUtils;

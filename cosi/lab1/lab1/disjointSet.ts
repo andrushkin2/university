@@ -21,7 +21,7 @@ export default class DisjointSet {
         }
     }
     public find(x: number) {
-        if (x = this.elements[x].p) {
+        if (x === this.elements[x].p) {
             return x;
         }
         this.elements[x].p = this.find(this.elements[x].p);

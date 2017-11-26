@@ -47,23 +47,36 @@ class UiLogic {
             let data = this.getContextData(), newData = extraUtils.toGrayscale(data.data);
             this.updateContextData(data.data, newData);
             this.putContextData(data);
-            // let median = this.medianFilter(newData);
-            // this.updateContextData(data.data, this.toFlatArray(median));
-            // this.putContextData(data);
-            let median = this.flatArrayToMatrix(newData);
-            let blackWhite = extraUtils.toBlackAndWhite(median);
+            let median = this.medianFilter(newData);
+            this.updateContextData(data.data, this.toFlatArray(median));
+            this.putContextData(data);
+            // let median = this.flatArrayToMatrix(newData);
+            let blackWhite = extraUtils.toBlackAndWhite(median, 195);
             this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
             this.putContextData(data);
             let connectedData = extraUtils.connectedComponents(blackWhite.bitMap);
             this.updateContextData(data.data, this.toFlatArrayItems(connectedData));
             this.putContextData(data);
-            debugger;
             let signs = extraUtils.getSigns(connectedData);
-            debugger;
             let vectors = extraUtils.getVectors(signs);
             debugger;
-            extraUtils.kMedoids(vectors, vectors.length, 2, 20);
-            debugger;
+            let colors = extraUtils.kMedoids(vectors, vectors.length, 2, 20);
+            let vectorsObject = {};
+            vectors.forEach(vector => {
+                vectorsObject[vector.id] = vector;
+            });
+            let realData = this.flatArrayToMatrix(this.firstData.slice(0));
+            for (let i = 0, rows = realData.length; i < rows; i++) {
+                for (let j = 0, cols = realData[0].length; j < cols; j++) {
+                    let key = connectedData[i][j];
+                    if (key && vectorsObject[key] && vectorsObject[key].cluster !== -1) {
+                        let color = colors[vectorsObject[key].cluster];
+                        realData[i][j] = color;
+                    }
+                }
+            }
+            this.updateContextData(data.data, this.toFlatArray(realData));
+            this.putContextData(data);
         });
         $$(ui_1.buttonLogParseId).attachEvent("onItemClick", () => {
             if (!logToolbar.isVisible()) {
