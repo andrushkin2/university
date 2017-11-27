@@ -59,8 +59,7 @@ class UiLogic {
             this.putContextData(data);
             let signs = extraUtils.getSigns(connectedData);
             let vectors = extraUtils.getVectors(signs);
-            debugger;
-            let colors = extraUtils.kMedoids(vectors, vectors.length, 2, 20);
+            let colors = extraUtils.kMedoids(vectors, vectors.length, 2, 40);
             let vectorsObject = {};
             vectors.forEach(vector => {
                 vectorsObject[vector.id] = vector;
@@ -289,7 +288,7 @@ class UiLogic {
         red.sort();
         green.sort();
         blue.sort();
-        let determinate = Math.round(red.length / 2);
+        let determinate = Math.round(red.length / 2) - 1;
         return [red[determinate], green[determinate], blue[determinate]];
     }
     medianFilter(data) {

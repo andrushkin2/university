@@ -9,7 +9,7 @@ export default class DisjointSet {
     }
     public join(x: number, y: number) {
         if ((x = this.find(x)) === (y = this.find(y))) {
-            return;
+            return { x, y };
         }
         if (this.elements[x].rank < this.elements[y].rank) {
             this.elements[x].p = y;
@@ -19,6 +19,7 @@ export default class DisjointSet {
         if (this.elements[x].rank === this.elements[y].rank) {
             ++this.elements[x].rank;
         }
+        return { x, y };
     }
     public find(x: number) {
         if (x === this.elements[x].p) {

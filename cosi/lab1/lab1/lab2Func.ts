@@ -71,7 +71,7 @@ export default class ExtraUtils {
             result[i] = avg;
             result[i + 1] = avg;
             result[i + 2] = avg;
-            result[i + 3] = data[i + 3];
+            result[i + 3] = 255;
         }
         return result;
     }
@@ -86,7 +86,7 @@ export default class ExtraUtils {
                 let pixel: number[] = data[i][j],
                     k: number = (pixel[0] + pixel[1] + pixel[2]) / 3,
                     newValue: number = k > p ? 255 : 0;
-                result[i][j] = newValue;
+                result[i][j] = k > p ? 1 : 0;
                 resultData[i][j] = [newValue, newValue, newValue, pixel[3]];
             }
         }
@@ -110,7 +110,7 @@ export default class ExtraUtils {
         let unions = new DisjointSet(10000),
             rows = elements.length,
             cols = elements[0].length,
-            label = 0,
+            label = 3,
             result = this.getEmptyArray(rows, cols);
         for (let x = 1; x < rows; x++) {
             for (let y = 1; y < cols; y++) {
@@ -119,7 +119,8 @@ export default class ExtraUtils {
                         b = result[x - 1][y],
                         c = result[x][y - 1];
                     if (!b && !c) {
-                        result[x][y] = ++label;
+                        label += 1;
+                        result[x][y] = label;
                     } else if (b && !c) {
                         result[x][y] = result[x - 1][y];
                     } else if (!b && c) {
@@ -127,7 +128,9 @@ export default class ExtraUtils {
                     } else {
                         result[x][y] = (b < c) ? result[x - 1][y] : result[x][y - 1];
                         if (b !== c) {
-                            unions.join(result[x - 1][y], result[x][y - 1]);
+                            let newValues = unions.join(result[x - 1][y], result[x][y - 1]);
+                            result[x - 1][y] = newValues.x;
+                            result[x][y - 1] = newValues.y;
                         }
                     }
                 }
@@ -218,6 +221,14 @@ export default class ExtraUtils {
             obj.elongation = (tmp1 + tmp2) / (tmp1 - tmp2) || 0;
         }
 
+        for (let i = 0, keys = Object.keys(result), len = keys.length; i < len; i++) {
+            let key = keys[i],
+                obj = result[key];
+            if (obj.area < 10) {
+                delete result[key];
+            }
+        }
+
         return result;
     }
     public kMedoids(objects: Vector[], length: number, k: number, maxStep: number) {
@@ -226,12 +237,14 @@ export default class ExtraUtils {
             getUsedClasterId = (clusters: Vector[]) => clusters.map(val => val.id).join("_"),
             getRandomClusters = (vectors: Vector[], amount: number) => {
                 let res: number[] = [],
-                    len = vectors.length;
+                    len = vectors.length,
+                    sorted = vectors.slice(0).sort((a, b) => a.signs.area > b.signs.area ? -1 : 1);
+                res.push(0);
                 while (res.length < amount) {
-                    let i = this.getRandom(0, length);
+                    let i = this.getRandom(0, length / 2);
                     res.indexOf(i) === -1 && res.push(i);
                 }
-                return res.map(value => vectors[value]);
+                return res.map(value => sorted[value]);
             },
             updateVectors = (vectors: Vector[], isNeedToSet: boolean) => {
                 for (let i = 0, len = vectors.length; i < len; i++) {
@@ -297,18 +310,18 @@ export default class ExtraUtils {
         let centersObject: {[key: number]: Vector} = {};
         let result: { [key: number]: number[] } = {};
         centers.forEach((value, index) => {
+            let color = this.colors[index] || this.colors[5];
             centersObject[value.id] = value;
-            result[value.id] = [0, 0, 0, 255];
-            result[value.id][index] = 128;
+            result[value.id] = [color[0], color[1], color[2], 255];
         });
-        let variance = 0.5;
+        let variance = 0.3;
 
         for (let i = 0; i < length; i ++) {
             let vector = objects[i];
             for (let j = 0, keys = Object.keys(vector.signs), len = keys.length; i < len; i++) {
                 let key = keys[j],
                     value = vector.signs[key];
-                if (value > (1.0 + variance) * centersObject[vector.cluster].signs[key] || value < (1.0 + variance) * centersObject[vector.cluster].signs[key]) {
+                if (value > (1.0 + variance) * centersObject[vector.cluster].signs[key] || value < (1.0 - variance) * centersObject[vector.cluster].signs[key]) {
                     vector.cluster = -1;
                     break;
                 }
@@ -317,6 +330,7 @@ export default class ExtraUtils {
 
         return result;
     }
+    private colors: number[][] = [ [255, 102, 102], [255, 189, 86], [157, 226, 79], [135, 206, 250], [177, 91, 222], [255, 165, 0] ];
     private getRandom(min: number, max: number) {
         return Math.floor(Math.random() * (max - min)) + min;
     }

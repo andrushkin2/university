@@ -27,6 +27,9 @@ class Vector {
 }
 exports.Vector = Vector;
 class ExtraUtils {
+    constructor() {
+        this.colors = [[255, 102, 102], [255, 189, 86], [157, 226, 79], [135, 206, 250], [177, 91, 222], [255, 165, 0]];
+    }
     toGrayscale(data) {
         let result = new Uint8ClampedArray(data.length);
         for (let i = 0, len = data.length; i < len; i += 4) {
@@ -34,7 +37,7 @@ class ExtraUtils {
             result[i] = avg;
             result[i + 1] = avg;
             result[i + 2] = avg;
-            result[i + 3] = data[i + 3];
+            result[i + 3] = 255;
         }
         return result;
     }
@@ -46,7 +49,7 @@ class ExtraUtils {
             resultData[i] = [];
             for (let j = 0, subLen = item.length; j < subLen; j++) {
                 let pixel = data[i][j], k = (pixel[0] + pixel[1] + pixel[2]) / 3, newValue = k > p ? 255 : 0;
-                result[i][j] = newValue;
+                result[i][j] = k > p ? 1 : 0;
                 resultData[i][j] = [newValue, newValue, newValue, pixel[3]];
             }
         }
@@ -67,13 +70,14 @@ class ExtraUtils {
         return result;
     }
     connectedComponents(elements) {
-        let unions = new disjointSet_1.default(10000), rows = elements.length, cols = elements[0].length, label = 0, result = this.getEmptyArray(rows, cols);
+        let unions = new disjointSet_1.default(10000), rows = elements.length, cols = elements[0].length, label = 3, result = this.getEmptyArray(rows, cols);
         for (let x = 1; x < rows; x++) {
             for (let y = 1; y < cols; y++) {
                 if (elements[x][y]) {
                     let a = result[x][y], b = result[x - 1][y], c = result[x][y - 1];
                     if (!b && !c) {
-                        result[x][y] = ++label;
+                        label += 1;
+                        result[x][y] = label;
                     }
                     else if (b && !c) {
                         result[x][y] = result[x - 1][y];
@@ -84,7 +88,9 @@ class ExtraUtils {
                     else {
                         result[x][y] = (b < c) ? result[x - 1][y] : result[x][y - 1];
                         if (b !== c) {
-                            unions.join(result[x - 1][y], result[x][y - 1]);
+                            let newValues = unions.join(result[x - 1][y], result[x][y - 1]);
+                            result[x - 1][y] = newValues.x;
+                            result[x][y - 1] = newValues.y;
                         }
                     }
                 }
@@ -158,16 +164,23 @@ class ExtraUtils {
             let obj = result[keys[i]], tmp1 = obj.m20 + obj.m02, temp = obj.m20 - obj.m02 + 4.0 * square(obj.m11), tmp2 = temp >= 0 ? Math.sqrt(temp) : 0;
             obj.elongation = (tmp1 + tmp2) / (tmp1 - tmp2) || 0;
         }
+        for (let i = 0, keys = Object.keys(result), len = keys.length; i < len; i++) {
+            let key = keys[i], obj = result[key];
+            if (obj.area < 10) {
+                delete result[key];
+            }
+        }
         return result;
     }
     kMedoids(objects, length, k, maxStep) {
         let distanceMatrix = this.getDistanceMatrix(objects, length), usedClisters = {}, getUsedClasterId = (clusters) => clusters.map(val => val.id).join("_"), getRandomClusters = (vectors, amount) => {
-            let res = [], len = vectors.length;
+            let res = [], len = vectors.length, sorted = vectors.slice(0).sort((a, b) => a.signs.area > b.signs.area ? -1 : 1);
+            res.push(0);
             while (res.length < amount) {
-                let i = this.getRandom(0, length);
+                let i = this.getRandom(0, length / 2);
                 res.indexOf(i) === -1 && res.push(i);
             }
-            return res.map(value => vectors[value]);
+            return res.map(value => sorted[value]);
         }, updateVectors = (vectors, isNeedToSet) => {
             for (let i = 0, len = vectors.length; i < len; i++) {
                 let vector = vectors[i];
@@ -224,16 +237,16 @@ class ExtraUtils {
         let centersObject = {};
         let result = {};
         centers.forEach((value, index) => {
+            let color = this.colors[index] || this.colors[5];
             centersObject[value.id] = value;
-            result[value.id] = [0, 0, 0, 255];
-            result[value.id][index] = 128;
+            result[value.id] = [color[0], color[1], color[2], 255];
         });
-        let variance = 0.5;
+        let variance = 0.3;
         for (let i = 0; i < length; i++) {
             let vector = objects[i];
             for (let j = 0, keys = Object.keys(vector.signs), len = keys.length; i < len; i++) {
                 let key = keys[j], value = vector.signs[key];
-                if (value > (1.0 + variance) * centersObject[vector.cluster].signs[key] || value < (1.0 + variance) * centersObject[vector.cluster].signs[key]) {
+                if (value > (1.0 + variance) * centersObject[vector.cluster].signs[key] || value < (1.0 - variance) * centersObject[vector.cluster].signs[key]) {
                     vector.cluster = -1;
                     break;
                 }

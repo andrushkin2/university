@@ -10,7 +10,7 @@ class DisjointSet {
     }
     join(x, y) {
         if ((x = this.find(x)) === (y = this.find(y))) {
-            return;
+            return { x, y };
         }
         if (this.elements[x].rank < this.elements[y].rank) {
             this.elements[x].p = y;
@@ -21,6 +21,7 @@ class DisjointSet {
         if (this.elements[x].rank === this.elements[y].rank) {
             ++this.elements[x].rank;
         }
+        return { x, y };
     }
     find(x) {
         if (x === this.elements[x].p) {
