@@ -75,7 +75,7 @@ export default class UiLogic {
             this.updateContextData(data.data, this.toFlatArray(median));
             this.putContextData(data);
             // let median = this.flatArrayToMatrix(newData);
-            let blackWhite = extraUtils.toBlackAndWhite(median, 195);
+            let blackWhite = extraUtils.toBlackAndWhite(median, 200);
             this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
             this.putContextData(data);
             let connectedData = extraUtils.connectedComponents(blackWhite.bitMap);

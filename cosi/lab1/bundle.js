@@ -288,7 +288,7 @@ class ExtraUtils {
             centersObject[value.id] = value;
             result[value.id] = [color[0], color[1], color[2], 255];
         });
-        let variance = 0.3;
+        let variance = 0.25;
         for (let i = 0; i < length; i++) {
             let vector = objects[i];
             for (let j = 0, keys = Object.keys(vector.signs), len = keys.length; i < len; i++) {
@@ -437,7 +437,7 @@ class UiLogic {
             this.updateContextData(data.data, this.toFlatArray(median));
             this.putContextData(data);
             // let median = this.flatArrayToMatrix(newData);
-            let blackWhite = extraUtils.toBlackAndWhite(median, 195);
+            let blackWhite = extraUtils.toBlackAndWhite(median, 200);
             this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
             this.putContextData(data);
             let connectedData = extraUtils.connectedComponents(blackWhite.bitMap);
