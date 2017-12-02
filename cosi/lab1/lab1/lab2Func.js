@@ -33,7 +33,7 @@ class ExtraUtils {
     toGrayscale(data) {
         let result = new Uint8ClampedArray(data.length);
         for (let i = 0, len = data.length; i < len; i += 4) {
-            let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+            let avg = Math.round((data[i] + data[i + 1] + data[i + 2]) / 3);
             result[i] = avg;
             result[i + 1] = avg;
             result[i + 2] = avg;
@@ -175,9 +175,9 @@ class ExtraUtils {
     kMedoids(objects, length, k, maxStep) {
         let distanceMatrix = this.getDistanceMatrix(objects, length), usedClisters = {}, getUsedClasterId = (clusters) => clusters.map(val => val.id).join("_"), getRandomClusters = (vectors, amount) => {
             let res = [], len = vectors.length, sorted = vectors.slice(0).sort((a, b) => a.signs.area > b.signs.area ? -1 : 1);
-            res.push(0);
+            res.push(Math.round(length / 2));
             while (res.length < amount) {
-                let i = this.getRandom(0, length / 2);
+                let i = this.getRandom(Math.round(length * 0.25), Math.round(length * 0.75));
                 res.indexOf(i) === -1 && res.push(i);
             }
             return res.map(value => sorted[value]);
@@ -186,34 +186,37 @@ class ExtraUtils {
                 let vector = vectors[i];
                 isNeedToSet ? vector.saveNewState() : vector.resetTempValues();
             }
-        }, getBiggestCluster = (data) => {
+        }, getBiggestCluster = (data, isFindBeggest) => {
             if (data.length === 0) {
                 throw new Error("Cluster data shouldn't be an empty array");
             }
-            let biggestCluster = data[0];
+            let biggestCluster = data[0], compare = (len1, len2) => len1 > len2 ? isFindBeggest : !isFindBeggest;
             for (let i = 1, len = data.length; i < len; i++) {
                 let cluster = data[i];
-                if (cluster.vectors.length > biggestCluster.vectors.length) {
+                if (compare(cluster.vectors.length, biggestCluster.vectors.length)) {
                     biggestCluster = cluster;
                 }
             }
             return biggestCluster;
-        }, findNewCenters = (data, currCenters) => {
-            let currentCenters = currCenters.slice(0), biggestCluster = getBiggestCluster(data);
+        }, findNewCenters = (data, currCenters, isFindBeggest) => {
+            let currentCenters = currCenters.slice(0), biggestCluster = getBiggestCluster(data, isFindBeggest);
             for (let i = 0, len = currentCenters.length; i < len; i++) {
                 let currentCluster = currentCenters[i];
                 if (currentCluster.id !== biggestCluster.clusterId) {
                     continue;
                 }
-                let vectors = biggestCluster.vectors, amount = vectors.length, randomCluster = vectors[this.getRandom(0, amount)];
+                let vectors = biggestCluster.vectors.slice(0).sort((value1, value2) => value1.distanse > value2.distanse ? 1 : -1), randomCluster = vectors[0];
                 currentCenters[i] = randomCluster;
-                let step = 0;
-                while (step < 50 && (randomCluster.id === currentCluster.id || usedClisters[getUsedClasterId(currentCenters)] === true)) {
-                    randomCluster = vectors[this.getRandom(0, amount)];
-                    currentCenters[i] = randomCluster;
-                    step++;
+                if (randomCluster.id !== currentCluster.id && usedClisters[getUsedClasterId(currentCenters)] !== true) {
+                    break;
                 }
-                break;
+                for (let j = 1, subLen = vectors.length; j < subLen; j++) {
+                    randomCluster = vectors[j];
+                    currentCenters[i] = randomCluster;
+                    if (randomCluster.id !== currentCluster.id && usedClisters[getUsedClasterId(currentCenters)] !== true) {
+                        break;
+                    }
+                }
             }
             return currentCenters;
         }, centers = getRandomClusters(objects, k);
@@ -222,7 +225,13 @@ class ExtraUtils {
         let minDistance = stepData.totalCost;
         updateVectors(objects, true);
         for (let i = 0; i < maxStep; i++) {
-            let tempCenters = findNewCenters(stepData.clusters, centers);
+            let tempCenters = findNewCenters(stepData.clusters, centers, true);
+            if (usedClisters[getUsedClasterId(tempCenters)] === true) {
+                tempCenters = findNewCenters(stepData.clusters, centers, false);
+            }
+            if (usedClisters[getUsedClasterId(tempCenters)] === true) {
+                break;
+            }
             usedClisters[getUsedClasterId(tempCenters)] = true;
             stepData = this.findNewClustters(objects, distanceMatrix, tempCenters);
             if (minDistance > stepData.totalCost) {
@@ -241,7 +250,7 @@ class ExtraUtils {
             centersObject[value.id] = value;
             result[value.id] = [color[0], color[1], color[2], 255];
         });
-        let variance = 0.25;
+        let variance = 0.7;
         for (let i = 0; i < length; i++) {
             let vector = objects[i];
             for (let j = 0, keys = Object.keys(vector.signs), len = keys.length; i < len; i++) {
