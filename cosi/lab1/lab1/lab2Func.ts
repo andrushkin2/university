@@ -1,4 +1,5 @@
 import DisjointSet from "./disjointSet";
+import { debug } from "util";
 
 interface IFinalSign {
     area: number;
@@ -270,20 +271,23 @@ export default class ExtraUtils {
                 let currentCenters = currCenters.slice(0),
                     biggestCluster = getBiggestCluster(data, isFindBeggest);
                 for (let i = 0, len = currentCenters.length; i < len; i++) {
-                    let currentCluster = currentCenters[i];
-                    if (currentCluster.id !== biggestCluster.clusterId) {
+                    let currentClusterId = currentCenters[i].id;
+                    if (currentClusterId !== biggestCluster.clusterId) {
                         continue;
                     }
                     let vectors = biggestCluster.vectors.slice(0).sort((value1, value2) => value1.distanse > value2.distanse ? 1 : -1),
-                        randomCluster = vectors[0];
-                    currentCenters[i] = randomCluster;
-                    if (randomCluster.id !== currentCluster.id && usedClisters[getUsedClasterId(currentCenters)] !== true) {
-                        break;
+                        randomCluster = vectors[0],
+                        tempCenters = currentCenters.slice(0);
+                    tempCenters[i] = randomCluster;
+                    if (randomCluster.id !== currentClusterId && usedClisters[getUsedClasterId(tempCenters)] !== true) {
+                        currentCenters[i] = randomCluster;
+                        continue;
                     }
                     for (let j = 1, subLen = vectors.length; j < subLen; j++) {
                         randomCluster = vectors[j];
-                        currentCenters[i] = randomCluster;
-                        if (randomCluster.id !== currentCluster.id && usedClisters[getUsedClasterId(currentCenters)] !== true) {
+                        tempCenters[i] = randomCluster;
+                        if (randomCluster.id !== currentClusterId && usedClisters[getUsedClasterId(tempCenters)] !== true) {
+                            currentCenters[i] = randomCluster;
                             break;
                         }
                     }
@@ -306,9 +310,10 @@ export default class ExtraUtils {
                 break;
             }
             usedClisters[getUsedClasterId(tempCenters)] = true;
-            stepData = this.findNewClustters(objects, distanceMatrix, tempCenters);
-            if (minDistance > stepData.totalCost) {
+            let tempData = this.findNewClustters(objects, distanceMatrix, tempCenters);
+            if (minDistance > tempData.totalCost) {
                 centers = tempCenters;
+                stepData = tempData;
                 minDistance = stepData.totalCost;
                 updateVectors(objects, true);
             } else {
@@ -339,7 +344,7 @@ export default class ExtraUtils {
 
         return result;
     }
-    private colors: number[][] = [ [255, 102, 102], [255, 189, 86], [157, 226, 79], [135, 206, 250], [177, 91, 222], [255, 165, 0] ];
+    private colors: number[][] = [[255, 102, 102], [157, 226, 79], [255, 189, 86], [135, 206, 250], [177, 91, 222], [255, 165, 0] ];
     private getRandom(min: number, max: number) {
         return Math.floor(Math.random() * (max - min)) + min;
     }
@@ -384,7 +389,7 @@ export default class ExtraUtils {
     private findNewClustters(objects: Vector[], distanceMatrix: IDistanceMatrix, centers: Vector[]) {
         let result: INewClustesData = {
                 totalCost: 0,
-                clusters: centers.map(vec => ({
+                clusters: centers.map(vec => (<IClusterData>{
                     clusterId: vec.id,
                     vectors: [],
                     totalCost: 0
@@ -403,7 +408,7 @@ export default class ExtraUtils {
             },
             addItemToCluster = (vector: Vector, clusters: IClusterData[]) => {
                 if (vector.tempCluster === undefined) {
-                    throw new Error("Ooops, some vector doesn't have tempCluster");
+                    throw new Error("Some vector doesn't have tempCluster");
                 }
                 let clusterId = vector.tempCluster;
                 for (let i = 0, len = clusters.length; i < len; i++) {
@@ -422,7 +427,7 @@ export default class ExtraUtils {
         for (let i = 0, len = objects.length; i < len; i ++) {
             let vector = objects[i];
             if (vector.tempDistance === undefined || vector.tempCluster === undefined) {
-                throw new Error("Ooops, some vector doesn't have tempDistance or tempCluster");
+                throw new Error("Some vector doesn't have tempDistance or tempCluster");
             }
             result.totalCost += vector.tempDistance;
             addItemToCluster(vector, result.clusters);

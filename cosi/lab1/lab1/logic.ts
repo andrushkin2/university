@@ -26,7 +26,19 @@ export default class UiLogic {
             context: CanvasRenderingContext2D | null,
             logToolbar: webix.ui.toolbar = (<webix.ui.toolbar>$$(logToolbarId)),
             logToolbarForm: webix.ui.form = (<webix.ui.form>$$(logToolbarFormId)),
-            extraUtils = new ExtraUtils();
+            extraUtils = new ExtraUtils(),
+            resetState = () => {
+                if (!this.firstData) {
+                    return;
+                }
+                let data = this.getContextData();
+                this.updateContextData(data.data, this.firstData);
+                this.putContextData(data);
+                let info = this.getInfoFromContext(this.getContextData());
+                this.drawChartData(redChartId, info.red.map);
+                this.drawChartData(greenChartId, info.green.map);
+                this.drawChartData(blueChartId, info.blue.map);
+            };
         if (canvas === null) {
             throw new Error(`Cannot find canvas element with ID: ${canvasId}`);
         }
@@ -48,13 +60,7 @@ export default class UiLogic {
             this.drawChartData(blueChartId, data.blue.map);
         });
         (<webix.ui.button>$$(buttonResetId)).attachEvent("onItemClick", () => {
-            let data = this.getContextData();
-            this.updateContextData(data.data, this.firstData);
-            this.putContextData(data);
-            let info = this.getInfoFromContext(this.getContextData());
-            this.drawChartData(redChartId, info.red.map);
-            this.drawChartData(greenChartId, info.green.map);
-            this.drawChartData(blueChartId, info.blue.map);
+            resetState();
         });
         (<webix.ui.button>$$(buttonRobertsId)).attachEvent("onItemClick", () => {
             let data = this.getContextData(),
@@ -67,6 +73,11 @@ export default class UiLogic {
             this.drawChartData(blueChartId, info.blue.map);
         });
         (<webix.ui.button>$$(buttonLab2Id)).attachEvent("onItemClick", () => {
+            if (!this.firstData) {
+                webix.message({type: "error", text: "There is no loaded picture" });
+                return;
+            }
+            resetState();
             let data = this.getContextData(),
                 newData = extraUtils.toGrayscale(data.data);
             this.updateContextData(data.data, newData);
@@ -96,6 +107,10 @@ export default class UiLogic {
 
             let vectors = extraUtils.getVectors(signs);
 
+            if (vectors.length < 2) {
+                webix.message({ type: "error", text: "Cannot find any vector in the pucture" });
+                return;
+            }
             let colors = extraUtils.kMedoids(vectors, vectors.length, 2, 150);
 
             let vectorsObject: { [key: number]: Vector } = {};

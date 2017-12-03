@@ -75,7 +75,7 @@ class Vector {
 exports.Vector = Vector;
 class ExtraUtils {
     constructor() {
-        this.colors = [[255, 102, 102], [255, 189, 86], [157, 226, 79], [135, 206, 250], [177, 91, 222], [255, 165, 0]];
+        this.colors = [[255, 102, 102], [157, 226, 79], [255, 189, 86], [135, 206, 250], [177, 91, 222], [255, 165, 0]];
     }
     toGrayscale(data) {
         let result = new Uint8ClampedArray(data.length);
@@ -248,19 +248,21 @@ class ExtraUtils {
         }, findNewCenters = (data, currCenters, isFindBeggest) => {
             let currentCenters = currCenters.slice(0), biggestCluster = getBiggestCluster(data, isFindBeggest);
             for (let i = 0, len = currentCenters.length; i < len; i++) {
-                let currentCluster = currentCenters[i];
-                if (currentCluster.id !== biggestCluster.clusterId) {
+                let currentClusterId = currentCenters[i].id;
+                if (currentClusterId !== biggestCluster.clusterId) {
                     continue;
                 }
-                let vectors = biggestCluster.vectors.slice(0).sort((value1, value2) => value1.distanse > value2.distanse ? 1 : -1), randomCluster = vectors[0];
-                currentCenters[i] = randomCluster;
-                if (randomCluster.id !== currentCluster.id && usedClisters[getUsedClasterId(currentCenters)] !== true) {
-                    break;
+                let vectors = biggestCluster.vectors.slice(0).sort((value1, value2) => value1.distanse > value2.distanse ? 1 : -1), randomCluster = vectors[0], tempCenters = currentCenters.slice(0);
+                tempCenters[i] = randomCluster;
+                if (randomCluster.id !== currentClusterId && usedClisters[getUsedClasterId(tempCenters)] !== true) {
+                    currentCenters[i] = randomCluster;
+                    continue;
                 }
                 for (let j = 1, subLen = vectors.length; j < subLen; j++) {
                     randomCluster = vectors[j];
-                    currentCenters[i] = randomCluster;
-                    if (randomCluster.id !== currentCluster.id && usedClisters[getUsedClasterId(currentCenters)] !== true) {
+                    tempCenters[i] = randomCluster;
+                    if (randomCluster.id !== currentClusterId && usedClisters[getUsedClasterId(tempCenters)] !== true) {
+                        currentCenters[i] = randomCluster;
                         break;
                     }
                 }
@@ -280,9 +282,10 @@ class ExtraUtils {
                 break;
             }
             usedClisters[getUsedClasterId(tempCenters)] = true;
-            stepData = this.findNewClustters(objects, distanceMatrix, tempCenters);
-            if (minDistance > stepData.totalCost) {
+            let tempData = this.findNewClustters(objects, distanceMatrix, tempCenters);
+            if (minDistance > tempData.totalCost) {
                 centers = tempCenters;
+                stepData = tempData;
                 minDistance = stepData.totalCost;
                 updateVectors(objects, true);
             }
@@ -364,7 +367,7 @@ class ExtraUtils {
             }
         }, addItemToCluster = (vector, clusters) => {
             if (vector.tempCluster === undefined) {
-                throw new Error("Ooops, some vector doesn't have tempCluster");
+                throw new Error("Some vector doesn't have tempCluster");
             }
             let clusterId = vector.tempCluster;
             for (let i = 0, len = clusters.length; i < len; i++) {
@@ -382,7 +385,7 @@ class ExtraUtils {
         for (let i = 0, len = objects.length; i < len; i++) {
             let vector = objects[i];
             if (vector.tempDistance === undefined || vector.tempCluster === undefined) {
-                throw new Error("Ooops, some vector doesn't have tempDistance or tempCluster");
+                throw new Error("Some vector doesn't have tempDistance or tempCluster");
             }
             result.totalCost += vector.tempDistance;
             addItemToCluster(vector, result.clusters);
@@ -399,7 +402,18 @@ const ui_1 = require("./ui");
 const lab2Func_1 = require("./lab2Func");
 class UiLogic {
     constructor() {
-        let canvas = document.querySelector(`#${ui_1.canvasId}`), context, logToolbar = $$(ui_1.logToolbarId), logToolbarForm = $$(ui_1.logToolbarFormId), extraUtils = new lab2Func_1.default();
+        let canvas = document.querySelector(`#${ui_1.canvasId}`), context, logToolbar = $$(ui_1.logToolbarId), logToolbarForm = $$(ui_1.logToolbarFormId), extraUtils = new lab2Func_1.default(), resetState = () => {
+            if (!this.firstData) {
+                return;
+            }
+            let data = this.getContextData();
+            this.updateContextData(data.data, this.firstData);
+            this.putContextData(data);
+            let info = this.getInfoFromContext(this.getContextData());
+            this.drawChartData(ui_1.redChartId, info.red.map);
+            this.drawChartData(ui_1.greenChartId, info.green.map);
+            this.drawChartData(ui_1.blueChartId, info.blue.map);
+        };
         if (canvas === null) {
             throw new Error(`Cannot find canvas element with ID: ${ui_1.canvasId}`);
         }
@@ -421,13 +435,7 @@ class UiLogic {
             this.drawChartData(ui_1.blueChartId, data.blue.map);
         });
         $$(ui_1.buttonResetId).attachEvent("onItemClick", () => {
-            let data = this.getContextData();
-            this.updateContextData(data.data, this.firstData);
-            this.putContextData(data);
-            let info = this.getInfoFromContext(this.getContextData());
-            this.drawChartData(ui_1.redChartId, info.red.map);
-            this.drawChartData(ui_1.greenChartId, info.green.map);
-            this.drawChartData(ui_1.blueChartId, info.blue.map);
+            resetState();
         });
         $$(ui_1.buttonRobertsId).attachEvent("onItemClick", () => {
             let data = this.getContextData(), newData = this.runRobertsTransform(data.data);
@@ -439,6 +447,11 @@ class UiLogic {
             this.drawChartData(ui_1.blueChartId, info.blue.map);
         });
         $$(ui_1.buttonLab2Id).attachEvent("onItemClick", () => {
+            if (!this.firstData) {
+                webix.message({ type: "error", text: "There is no loaded picture" });
+                return;
+            }
+            resetState();
             let data = this.getContextData(), newData = extraUtils.toGrayscale(data.data);
             this.updateContextData(data.data, newData);
             this.putContextData(data);
@@ -460,6 +473,10 @@ class UiLogic {
             this.putContextData(data);
             let signs = extraUtils.getSigns(connectedData);
             let vectors = extraUtils.getVectors(signs);
+            if (vectors.length < 2) {
+                webix.message({ type: "error", text: "Cannot find any vector in the pucture" });
+                return;
+            }
             let colors = extraUtils.kMedoids(vectors, vectors.length, 2, 150);
             let vectorsObject = {};
             vectors.forEach(vector => {
@@ -2293,6 +2310,17 @@ let cosiUi = {
     ]
 };
 webix.ready(() => {
+    window.addEventListener("error", e => {
+        let error = new Error(e.error || e);
+        webix.message({
+            type: "error",
+            text: JSON.stringify({
+                name: error.name || "Error",
+                message: error.message || "Unknown error",
+                stack: error.stack
+            }, undefined, "\t").toString()
+        });
+    });
     webix.ui(testUi);
     let uiLogic, modLab;
     $$("tabbar").attachEvent("onAfterTabClick", (e) => {

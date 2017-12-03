@@ -314,6 +314,17 @@ let cosiUi = {
     ]
 };
 webix.ready(() => {
+    window.addEventListener("error", e => {
+        let error = new Error(e.error || e);
+        webix.message({
+            type: "error",
+            text: JSON.stringify({
+                name: error.name || "Error",
+                message: error.message || "Unknown error",
+                stack: error.stack
+            }, undefined, "\t").toString()
+        });
+    });
     webix.ui(testUi);
     let uiLogic, modLab;
     $$("tabbar").attachEvent("onAfterTabClick", (e) => {

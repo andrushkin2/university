@@ -4,7 +4,18 @@ const ui_1 = require("./ui");
 const lab2Func_1 = require("./lab2Func");
 class UiLogic {
     constructor() {
-        let canvas = document.querySelector(`#${ui_1.canvasId}`), context, logToolbar = $$(ui_1.logToolbarId), logToolbarForm = $$(ui_1.logToolbarFormId), extraUtils = new lab2Func_1.default();
+        let canvas = document.querySelector(`#${ui_1.canvasId}`), context, logToolbar = $$(ui_1.logToolbarId), logToolbarForm = $$(ui_1.logToolbarFormId), extraUtils = new lab2Func_1.default(), resetState = () => {
+            if (!this.firstData) {
+                return;
+            }
+            let data = this.getContextData();
+            this.updateContextData(data.data, this.firstData);
+            this.putContextData(data);
+            let info = this.getInfoFromContext(this.getContextData());
+            this.drawChartData(ui_1.redChartId, info.red.map);
+            this.drawChartData(ui_1.greenChartId, info.green.map);
+            this.drawChartData(ui_1.blueChartId, info.blue.map);
+        };
         if (canvas === null) {
             throw new Error(`Cannot find canvas element with ID: ${ui_1.canvasId}`);
         }
@@ -26,13 +37,7 @@ class UiLogic {
             this.drawChartData(ui_1.blueChartId, data.blue.map);
         });
         $$(ui_1.buttonResetId).attachEvent("onItemClick", () => {
-            let data = this.getContextData();
-            this.updateContextData(data.data, this.firstData);
-            this.putContextData(data);
-            let info = this.getInfoFromContext(this.getContextData());
-            this.drawChartData(ui_1.redChartId, info.red.map);
-            this.drawChartData(ui_1.greenChartId, info.green.map);
-            this.drawChartData(ui_1.blueChartId, info.blue.map);
+            resetState();
         });
         $$(ui_1.buttonRobertsId).attachEvent("onItemClick", () => {
             let data = this.getContextData(), newData = this.runRobertsTransform(data.data);
@@ -44,6 +49,11 @@ class UiLogic {
             this.drawChartData(ui_1.blueChartId, info.blue.map);
         });
         $$(ui_1.buttonLab2Id).attachEvent("onItemClick", () => {
+            if (!this.firstData) {
+                webix.message({ type: "error", text: "There is no loaded picture" });
+                return;
+            }
+            resetState();
             let data = this.getContextData(), newData = extraUtils.toGrayscale(data.data);
             this.updateContextData(data.data, newData);
             this.putContextData(data);
@@ -65,6 +75,10 @@ class UiLogic {
             this.putContextData(data);
             let signs = extraUtils.getSigns(connectedData);
             let vectors = extraUtils.getVectors(signs);
+            if (vectors.length < 2) {
+                webix.message({ type: "error", text: "Cannot find any vector in the pucture" });
+                return;
+            }
             let colors = extraUtils.kMedoids(vectors, vectors.length, 2, 150);
             let vectorsObject = {};
             vectors.forEach(vector => {
