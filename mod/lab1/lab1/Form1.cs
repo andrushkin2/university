@@ -84,7 +84,7 @@ namespace lab1
             Dx /= (RandArray.Count - 1);
             textBox_Dx.Text = Dx.ToString();
 
-            textBox_sko.Text = (Math.Sqrt(Dx)).ToString();
+            //textBox_sko.Text = (Math.Sqrt(Dx)).ToString();
 
         }
 
@@ -108,7 +108,7 @@ namespace lab1
             int N = RandArray.Count;
 
             // Получим панель для рисования
-            GraphPane pane = zedGraphControl1.GraphPane;
+            ZedGraph.GraphPane pane = zedGraphControl1.GraphPane;
 
             // Очистим список кривых на тот случай, если до этого сигналы уже были нарисованы
             pane.CurveList.Clear();
@@ -134,7 +134,7 @@ namespace lab1
             }
 
 
-            BarItem bar = pane.AddBar("Гистограмма", X_values, frequency, Color.DarkGreen);
+            ZedGraph.BarItem bar = pane.AddBar("Гистограмма", X_values, frequency, Color.DarkSeaGreen);
 
             // !!! Расстояния между кластерами (группами столбиков) гистограммы = 0.0
             // У нас в кластере только один столбик.
@@ -183,5 +183,14 @@ namespace lab1
             RandArray.Clear();
         }
 
+        private void label10_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
