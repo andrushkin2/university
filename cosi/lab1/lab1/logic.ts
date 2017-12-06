@@ -86,7 +86,7 @@ export default class UiLogic {
 
             this.updateContextData(data.data, this.toFlatArray(median));
             this.putContextData(data);
-            // let median = this.flatArrayToMatrix(newData);
+
             let blackWhite = extraUtils.toBlackAndWhite(median, 180);
             this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
             this.putContextData(data);
@@ -436,16 +436,18 @@ export default class UiLogic {
     private erosion(arr: number[][][]) {
         let result: number[][][] = [],
             matrix = [
-                [1, 1, 1],
-                [1, 1, 1],
-                [1, 1, 1]
+                [1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1]
             ];
         for (let i = 0, len = arr.length; i < len; i++) {
             let item = arr[i],
                 rowItems: number[][] = [];
             for (let j = 0, subLen = item.length; j < subLen; j++) {
                 let pixel = item[j],
-                    newPixel = this.getNewPixel(matrix, this.getPixelsAround(arr, i, j, "3"), false);
+                    newPixel = this.getNewPixel(matrix, this.getPixelsAround(arr, i, j, "5"), false);
                 rowItems.push([newPixel[0], newPixel[1], newPixel[2], pixel[3]]);
             }
             result[i] = rowItems;
@@ -455,16 +457,18 @@ export default class UiLogic {
     private dilatation(arr: number[][][]) {
         let result: number[][][] = [],
             matrix = [
-                [1, 1, 1],
-                [1, 1, 1],
-                [1, 1, 1]
+                [1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1]
             ];
         for (let i = 0, len = arr.length; i < len; i++) {
             let item = arr[i],
                 rowItems: number[][] = [];
             for (let j = 0, subLen = item.length; j < subLen; j++) {
                 let pixel = item[j],
-                    newPixel = this.getNewPixel(matrix, this.getPixelsAround(arr, i, j, "3"), true);
+                    newPixel = this.getNewPixel(matrix, this.getPixelsAround(arr, i, j, "5"), true);
                 rowItems.push([newPixel[0], newPixel[1], newPixel[2], pixel[3]]);
             }
             result[i] = rowItems;

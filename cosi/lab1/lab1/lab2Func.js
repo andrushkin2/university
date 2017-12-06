@@ -253,7 +253,7 @@ class ExtraUtils {
             centersObject[value.id] = value;
             result[value.id] = [color[0], color[1], color[2], 255];
         });
-        let variance = 0.7;
+        let variance = 0.3;
         for (let i = 0; i < length; i++) {
             let vector = objects[i];
             for (let j = 0, keys = Object.keys(vector.signs), len = keys.length; i < len; i++) {

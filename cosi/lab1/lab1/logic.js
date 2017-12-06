@@ -367,14 +367,16 @@ class UiLogic {
     }
     erosion(arr) {
         let result = [], matrix = [
-            [1, 1, 1],
-            [1, 1, 1],
-            [1, 1, 1]
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1]
         ];
         for (let i = 0, len = arr.length; i < len; i++) {
             let item = arr[i], rowItems = [];
             for (let j = 0, subLen = item.length; j < subLen; j++) {
-                let pixel = item[j], newPixel = this.getNewPixel(matrix, this.getPixelsAround(arr, i, j, "3"), false);
+                let pixel = item[j], newPixel = this.getNewPixel(matrix, this.getPixelsAround(arr, i, j, "5"), false);
                 rowItems.push([newPixel[0], newPixel[1], newPixel[2], pixel[3]]);
             }
             result[i] = rowItems;
@@ -383,14 +385,16 @@ class UiLogic {
     }
     dilatation(arr) {
         let result = [], matrix = [
-            [1, 1, 1],
-            [1, 1, 1],
-            [1, 1, 1]
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1]
         ];
         for (let i = 0, len = arr.length; i < len; i++) {
             let item = arr[i], rowItems = [];
             for (let j = 0, subLen = item.length; j < subLen; j++) {
-                let pixel = item[j], newPixel = this.getNewPixel(matrix, this.getPixelsAround(arr, i, j, "3"), true);
+                let pixel = item[j], newPixel = this.getNewPixel(matrix, this.getPixelsAround(arr, i, j, "5"), true);
                 rowItems.push([newPixel[0], newPixel[1], newPixel[2], pixel[3]]);
             }
             result[i] = rowItems;
