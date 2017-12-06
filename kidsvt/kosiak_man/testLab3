@@ -9,8 +9,8 @@ architecture BENCH of TEST_Test_Lab3 is
   end component;
   signal X2, X3, X4, C1: STD_LOGIC;
 begin
-  X2 <= '0', '1' after 10 NS, '0' after 20 NS, '1' after 30 NS, '0' after 40 NS, '0' after 50 NS, '1' after 60 NS, '0' after 70 NS, '0' after 80 NS;
-  X3 <= '0', '0' after 10 NS, '1' after 20 NS, '1' after 30 NS, '0' after 40 NS, '1' after 50 NS, '1' after 60 NS, '0' after 70 NS, '1' after 80 NS;
-  X4 <= '0', '1' after 10 NS, '0' after 20 NS, '0' after 30 NS, '0' after 40 NS, '0' after 50 NS, '1' after 60 NS, '1' after 70 NS, '1' after 80 NS;
+  X2 <= '0', '0' after 100 NS, '1' after 200 NS, '1' after 300 NS, '0' after 400 NS, '0' after 500 NS, '1' after 600 NS, '0' after 700 NS, '0' after 800 NS;
+  X3 <= '0', '1' after 100 NS, '1' after 200 NS, '0' after 300 NS, '0' after 400 NS, '1' after 500 NS, '1' after 600 NS, '0' after 700 NS, '1' after 800 NS;
+  X4 <= '0', '0' after 100 NS, '0' after 200 NS, '1' after 300 NS, '0' after 400 NS, '1' after 500 NS, '1' after 600 NS, '1' after 700 NS, '1' after 800 NS;
   M: lab3 port map (X2, X3, X4, C1);
 end BENCH;

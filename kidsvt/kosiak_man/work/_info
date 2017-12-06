@@ -3,28 +3,34 @@ cModel Technology
 dC:\Modeltech_5.7f\examples
 Ehohoh
 DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
-w1510162970
+w1509643471
 d\\Mac\Home\Documents\git\university\kidsvt\kosiak_man
-F//Mac/Home/Documents/git/university/kidsvt/kosiak_man/lab3
+F//Mac/Home/Documents/git/university/kidsvt/kosiak_man/text.vhd
 l0
-L5
-V0dK[P[C1P`]ihU7f^WAKK0
+L84
+Vo?=_]_O4ajc_LjM6l5iS33
 OE;C;5.7f;15
 o-work work -87 -explicit
 tExplicit T
 Aha
+DE work naoa2 U3LP1`[inJF=CAz>^nQa@1
+DE work nao3 aHmi[=9L=dEeeAQX^OK?V1
+DE work na2 R=156jULa>^UNZgNm0W6@3
+DE work no2 0PlE;P]Zh;A7hQC3@`kRF1
+DE work n jnUX21SomZDzzRERCXinL0
+DE work nex2 mm:Y37:B`E<JkBRlQ<9W81
 DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
-DE work hohoh 0dK[P[C1P`]ihU7f^WAKK0
-l12
-L10
-V_YKzW;kLESCZOC[CR:UE80
+DE work hohoh o?=_]_O4ajc_LjM6l5iS33
+l128
+L89
+VgYKm=X10[9^HGTD^nQW0D2
 OE;C;5.7f;15
 M1 ieee std_logic_1164
 o-work work -87 -explicit
 tExplicit T
 Elab3
 DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
-w1510249734
+w1512594819
 d\\Mac\Home\Documents\git\university\kidsvt\kosiak_man
 F//Mac/Home/Documents/git/university/kidsvt/kosiak_man/lab3
 l0
@@ -38,14 +44,14 @@ DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
 DE work lab3 E=IeEgohJAOdGZ_MlG?Ha1
 l11
 L10
-Vz<URS`B<VDlbb<_637D9S1
+VK@4Pjzk;gz7M0Rm^RJLZd1
 OE;C;5.7f;15
 M1 ieee std_logic_1164
 o-work work -87 -explicit
 tExplicit T
 En
 DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
-w1509647071
+w1509643471
 d\\Mac\Home\Documents\git\university\kidsvt\kosiak_man
 F//Mac/Home/Documents/git/university/kidsvt/kosiak_man/text.vhd
 l0
@@ -66,7 +72,7 @@ o-work work -87 -explicit
 tExplicit T
 Ena2
 DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
-w1509647071
+w1509643471
 d\\Mac\Home\Documents\git\university\kidsvt\kosiak_man
 F//Mac/Home/Documents/git/university/kidsvt/kosiak_man/text.vhd
 l0
@@ -87,7 +93,7 @@ o-work work -87 -explicit
 tExplicit T
 Enao3
 DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
-w1509647071
+w1509643471
 d\\Mac\Home\Documents\git\university\kidsvt\kosiak_man
 F//Mac/Home/Documents/git/university/kidsvt/kosiak_man/text.vhd
 l0
@@ -108,7 +114,7 @@ o-work work -87 -explicit
 tExplicit T
 Enaoa2
 DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
-w1509647071
+w1509643471
 d\\Mac\Home\Documents\git\university\kidsvt\kosiak_man
 F//Mac/Home/Documents/git/university/kidsvt/kosiak_man/text.vhd
 l0
@@ -129,7 +135,7 @@ o-work work -87 -explicit
 tExplicit T
 Enex2
 DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
-w1509647071
+w1509643471
 d\\Mac\Home\Documents\git\university\kidsvt\kosiak_man
 F//Mac/Home/Documents/git/university/kidsvt/kosiak_man/text.vhd
 l0
@@ -150,7 +156,7 @@ o-work work -87 -explicit
 tExplicit T
 Eno2
 DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
-w1509647071
+w1509643471
 d\\Mac\Home\Documents\git\university\kidsvt\kosiak_man
 F//Mac/Home/Documents/git/university/kidsvt/kosiak_man/text.vhd
 l0
@@ -170,9 +176,9 @@ M1 ieee std_logic_1164
 o-work work -87 -explicit
 tExplicit T
 Etest_test
-w1510163209
+w1512590685
 d\\Mac\Home\Documents\git\university\kidsvt\kosiak_man
-F//Mac/Home/Documents/git/university/kidsvt/kosiak_man/testLab3
+F//Mac/Home/Documents/git/university/kidsvt/kosiak_man/test.vhd
 l0
 L1
 V?>6i:Pg?[DLc24D5RZJhY0
@@ -180,18 +186,18 @@ OE;C;5.7f;15
 o-work work -87 -explicit
 tExplicit T
 Abench
-DE work hohoh 0dK[P[C1P`]ihU7f^WAKK0
+DE work hohoh o?=_]_O4ajc_LjM6l5iS33
 DE work test_test ?>6i:Pg?[DLc24D5RZJhY0
 DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
-l11
+l12
 L5
-VjX?0hV5Fh=;QWCSXGI=i63
+VN:8Z?NZ`XjWaHVe25XgYK2
 OE;C;5.7f;15
 M1 ieee std_logic_1164
 o-work work -87 -explicit
 tExplicit T
 Etest_test_lab3
-w1510249313
+w1512593609
 d\\Mac\Home\Documents\git\university\kidsvt\kosiak_man
 F//Mac/Home/Documents/git/university/kidsvt/kosiak_man/testLab3
 l0
@@ -206,7 +212,7 @@ DE work test_test_lab3 GSe863X8VF8jnhieMoe`]3
 DP ieee std_logic_1164 GH1=`jDDBJ=`LM;:Ak`kf2
 l11
 L5
-VSD8ZPQFbQFUHE;P:G]82O1
+V^?d7;U=1_P@1k0mjdcnG:2
 OE;C;5.7f;15
 M1 ieee std_logic_1164
 o-work work -87 -explicit

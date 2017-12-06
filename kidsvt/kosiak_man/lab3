@@ -9,6 +9,6 @@ END lab3;
 
 ARCHITECTURE lab3Arc OF lab3 IS
 BEGIN
-	C1 <= NOT((NOT ((NOT X3) AND X2)) AND (X2 OR (NOT X3) OR X4)) after 5 NS;
+	C1 <= NOT((NOT((NOT X3) AND X2)) AND (X2 OR (NOT X3) OR X4));
 END lab3Arc;
 
