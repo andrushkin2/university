@@ -1,16 +1,16 @@
-//Mac/Home/Documents/git/university/kidsvt/kosiak_man/lab3 {1 {vcom -work work -87 -explicit //Mac/Home/Documents/git/university/kidsvt/kosiak_man/lab3
-Model Technology ModelSim SE vcom 5.7f Compiler 2003.09 Sep 15 2003
--- Loading package standard
--- Loading package std_logic_1164
--- Compiling entity lab3
--- Compiling architecture lab3arc of lab3
-
-} {} {}} //Mac/Home/Documents/git/university/kidsvt/kosiak_man/testLab3 {1 {vcom -work work -87 -explicit //Mac/Home/Documents/git/university/kidsvt/kosiak_man/testLab3
+//Mac/Home/Documents/git/university/kidsvt/kosiak_man/testLab3 {1 {vcom -work work -87 -explicit //Mac/Home/Documents/git/university/kidsvt/kosiak_man/testLab3
 Model Technology ModelSim SE vcom 5.7f Compiler 2003.09 Sep 15 2003
 -- Loading package standard
 -- Compiling entity test_test_lab3
 -- Loading package std_logic_1164
 -- Compiling architecture bench of test_test_lab3
 -- Loading entity lab3
+
+} {} {}} //Mac/Home/Documents/git/university/kidsvt/kosiak_man/lab3 {1 {vcom -work work -87 -explicit //Mac/Home/Documents/git/university/kidsvt/kosiak_man/lab3
+Model Technology ModelSim SE vcom 5.7f Compiler 2003.09 Sep 15 2003
+-- Loading package standard
+-- Loading package std_logic_1164
+-- Compiling entity lab3
+-- Compiling architecture lab3arc of lab3
 
 } {} {}}

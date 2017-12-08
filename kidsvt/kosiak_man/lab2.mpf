@@ -351,6 +351,6 @@ Project_Files_Count = 2
 Project_File_0 = //Mac/Home/Documents/git/university/kidsvt/kosiak_man/text.vhd
 Project_File_P_0 = vhdl_novitalcheck 0 file_type VHDL group_id 0 vhdl_nodebug 0 vhdl_1164 1 vhdl_noload 0 vhdl_synth 0 folder {Top Level} last_compile 1509643471 vhdl_disableopt 0 vhdl_vital 0 vhdl_warn1 1 vhdl_explicit 1 vhdl_showsource 0 vhdl_warn2 1 vhdl_warn3 1 vhdl_warn4 1 ood 0 vhdl_warn5 1 compile_to work compile_order 0 dont_compile 0 vhdl_use93 0
 Project_File_1 = //Mac/Home/Documents/git/university/kidsvt/kosiak_man/test.vhd
-Project_File_P_1 = vhdl_novitalcheck 0 file_type VHDL group_id 0 vhdl_nodebug 0 vhdl_1164 1 vhdl_noload 0 vhdl_synth 0 folder {Top Level} last_compile 1512590685 vhdl_disableopt 0 vhdl_vital 0 vhdl_warn1 1 vhdl_explicit 1 vhdl_showsource 0 vhdl_warn2 1 vhdl_warn3 1 vhdl_warn4 1 ood 0 vhdl_warn5 1 compile_to work compile_order 1 dont_compile 0 vhdl_use93 0
+Project_File_P_1 = vhdl_novitalcheck 0 file_type VHDL group_id 0 vhdl_nodebug 0 vhdl_1164 1 vhdl_noload 0 vhdl_synth 0 folder {Top Level} last_compile 1512668315 vhdl_disableopt 0 vhdl_vital 0 vhdl_warn1 1 vhdl_warn2 1 vhdl_showsource 0 vhdl_explicit 1 vhdl_warn3 1 vhdl_warn4 1 vhdl_warn5 1 ood 0 compile_to work compile_order 1 dont_compile 0 vhdl_use93 0
 Project_Sim_Count = 0
 Project_Folder_Count = 0
