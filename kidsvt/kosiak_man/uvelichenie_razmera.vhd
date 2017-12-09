@@ -11,7 +11,7 @@ END hohoh ;
 ARCHITECTURE ha OF hohoh IS
 	signal A1, A4, A2, A6, A3, A5: STD_LOGIC;
 BEGIN
-	A1 <= P4 XOR P1 after 5 NS;
+	A1 <= (P4 AND P1) OR ((NOT P4) AND (NOT P1)) after 5 NS;
 	A4 <= NOT P3	 after 1 NS;
 	A2 <= P3 NOR A1 after 3 NS;
 	A6 <= A4 NAND P2 after 2 NS;
