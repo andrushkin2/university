@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mainUi_1 = require("./lab2/mainUi");
-let buttonId = "modButtonId1", chartId = "modChart1Id", formDataId = "formDataId", formOutputDataId = "formOutputDataId", tabbarId = "modLabsSegmentedId", modLab1Id = "modLab1Id", modLab2Id = "modLab2Id", ui = {
+const ui_1 = require("./lab3/ui");
+let buttonId = "modButtonId1", chartId = "modChart1Id", formDataId = "formDataId", formOutputDataId = "formOutputDataId", tabbarId = "modLabsSegmentedId", modLab1Id = "modLab1Id", modLab2Id = "modLab2Id", modLab3Id = "modLab3Id", ui = {
     id: "modId",
     css: "bg_panel_raised",
     type: "space",
@@ -13,7 +14,8 @@ let buttonId = "modButtonId1", chartId = "modChart1Id", formDataId = "formDataId
                 {
                     view: "segmented", id: tabbarId, value: modLab1Id, multiview: true, options: [
                         { value: "Lab 1", id: modLab1Id },
-                        { value: "Lab 2", id: modLab2Id }
+                        { value: "Lab 2", id: modLab2Id },
+                        { value: "Lab 3", id: modLab3Id }
                     ]
                 },
                 {}
@@ -140,6 +142,12 @@ let buttonId = "modButtonId1", chartId = "modChart1Id", formDataId = "formDataId
                     id: modLab2Id,
                     rows: [
                         mainUi_1.ui
+                    ]
+                },
+                {
+                    id: modLab3Id,
+                    rows: [
+                        ui_1.ui
                     ]
                 }
             ]

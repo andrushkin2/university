@@ -9,6 +9,7 @@ const exponentialUi_1 = require("./lab2/exponentialUi");
 const gammaUi_1 = require("./lab2/gammaUi");
 const triangleUi_1 = require("./lab2/triangleUi");
 const simpsonUi_1 = require("./lab2/simpsonUi");
+const ui_2 = require("./lab3/ui");
 class ModLab {
     constructor() {
         $$(ui_1.buttonId).attachEvent("onItemClick", () => {
@@ -41,6 +42,7 @@ class ModLab {
         gammaUi_1.initFunction();
         triangleUi_1.initFunction();
         simpsonUi_1.initFunction();
+        ui_2.initLab3();
     }
     validateForm(data) {
         let a = parseInt(data["a"]) || 0, m = parseInt(data["m"]) || 0, r0 = parseInt(data["r0"]) || 0;

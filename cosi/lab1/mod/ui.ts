@@ -1,4 +1,5 @@
 import { ui as lab2UI } from "./lab2/mainUi";
+import { ui as lab3UI } from "./lab3/ui";
 
 let buttonId = "modButtonId1",
     chartId = "modChart1Id",
@@ -7,6 +8,7 @@ let buttonId = "modButtonId1",
     tabbarId = "modLabsSegmentedId",
     modLab1Id = "modLab1Id",
     modLab2Id = "modLab2Id",
+    modLab3Id = "modLab3Id",
     ui = {
         id: "modId",
         css: "bg_panel_raised",
@@ -19,7 +21,8 @@ let buttonId = "modButtonId1",
                     {
                         view: "segmented", id: tabbarId, value: modLab1Id, multiview: true, options: [
                             { value: "Lab 1", id: modLab1Id },
-                            { value: "Lab 2", id: modLab2Id }
+                            { value: "Lab 2", id: modLab2Id },
+                            { value: "Lab 3", id: modLab3Id }
                         ]
                     },
                     {}
@@ -146,6 +149,12 @@ let buttonId = "modButtonId1",
                         id: modLab2Id,
                         rows: [
                             lab2UI
+                        ]
+                    },
+                    {
+                        id: modLab3Id,
+                        rows: [
+                            lab3UI
                         ]
                     }
                 ]

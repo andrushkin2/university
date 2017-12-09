@@ -7,10 +7,13 @@ import { initFunction as initExponentialLab } from "./lab2/exponentialUi";
 import { initFunction as initGammaLab } from "./lab2/gammaUi";
 import { initFunction as initTriangleLab } from "./lab2/triangleUi";
 import { initFunction as initSimpsonLab } from "./lab2/simpsonUi";
+import { formLab3Id, formOutputLab3Id, runLab3Id, initLab3 } from "./lab3/ui";
 
 type IButton = webix.ui.button;
 type IChart = webix.ui.chart;
 type IForm = webix.ui.form;
+
+export {IButton, IChart, IForm};
 
 interface IFormData<T> {
     [key: string]: T;
@@ -60,6 +63,7 @@ export default class ModLab {
         initGammaLab();
         initTriangleLab();
         initSimpsonLab();
+        initLab3();
     }
     private validateForm(data: IFormData<string>) {
         let a = parseInt(data["a"]) || 0,

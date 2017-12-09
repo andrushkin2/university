@@ -458,7 +458,6 @@ class UiLogic {
             let median = this.gaussFilter(newData);
             this.updateContextData(data.data, this.toFlatArray(median));
             this.putContextData(data);
-            // let median = this.flatArrayToMatrix(newData);
             let blackWhite = extraUtils.toBlackAndWhite(median, 180);
             this.updateContextData(data.data, this.toFlatArray(blackWhite.data));
             this.putContextData(data);
@@ -1099,7 +1098,7 @@ let defaultData = {
 exports.exponentialUi = exponentialUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":15,"./uiItems":12}],7:[function(require,module,exports){
+},{"../modTest":17,"./uiItems":12}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1144,7 +1143,7 @@ let defaultData = {
 exports.gammaUi = gammaUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":15,"./uiItems":12}],8:[function(require,module,exports){
+},{"../modTest":17,"./uiItems":12}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1191,7 +1190,7 @@ let defaultData = {
 exports.gaussUi = gaussUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":15,"./uiItems":12}],9:[function(require,module,exports){
+},{"../modTest":17,"./uiItems":12}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uniformUi_1 = require("./uniformUi");
@@ -1277,7 +1276,7 @@ let defaultData = {
 exports.simpsonUi = simpsonUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":15,"./uiItems":12}],11:[function(require,module,exports){
+},{"../modTest":17,"./uiItems":12}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1322,7 +1321,7 @@ let defaultData = {
 exports.triangleUi = triangleUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":15,"./uiItems":12}],12:[function(require,module,exports){
+},{"../modTest":17,"./uiItems":12}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let getButton = (buttonId) => ({
@@ -1422,7 +1421,173 @@ exports.uniformChartId = uniformChartId;
 exports.uniformUi = uniformUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":15,"./uiItems":12}],14:[function(require,module,exports){
+},{"../modTest":17,"./uiItems":12}],14:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class Lab3Logic {
+    calcValues(p1, p2, ticks) {
+        debugger;
+        let input = 0, output = 0, l = 0, states = {}, state = "2000", // t0 - 0   j - 1   t1 - 2  t2 - 3
+        calcState = (randP1, randP2) => {
+            if (state[2] === "1" && randP1 > p1) {
+                state = this.getNewState(state, 0, 2);
+                output++;
+            }
+            if (state[3] === "1" && randP2 > p2) {
+                state = this.getNewState(state, 0, 3);
+                output++;
+            }
+            if (state[1] === "2" && (state[2] === "0" || state[3] === "0")) {
+                if (state[2] === "0" && state[3] === "0") {
+                    // set j = 0
+                    state = this.getNewState(state, 0, 1);
+                    // set t1 = 1
+                    state = this.getNewState(state, 1, 2);
+                    // set t2 = 1
+                    state = this.getNewState(state, 1, 3);
+                }
+                else if (state[2] === "0") {
+                    let j = parseInt(state[1]);
+                    if (j - 1 >= 0) {
+                        state = this.getNewState(state, j - 1, 1);
+                        state = this.getNewState(state, 1, 2);
+                    }
+                    else {
+                        debugger;
+                    }
+                }
+                else if (state[3] === "0") {
+                    let j = parseInt(state[1]);
+                    if (j - 1 >= 0) {
+                        state = this.getNewState(state, j - 1, 1);
+                        state = this.getNewState(state, 1, 3);
+                    }
+                    else {
+                        debugger;
+                    }
+                }
+            }
+            if (state[1] === "1" && (state[2] === "0" || state[3] === "0")) {
+                if (state[2] === "0") {
+                    let j = parseInt(state[1]);
+                    if (j - 1 >= 0) {
+                        state = this.getNewState(state, j - 1, 1);
+                        state = this.getNewState(state, 1, 2);
+                    }
+                    else {
+                        debugger;
+                    }
+                }
+                else if (state[3] === "0") {
+                    let j = parseInt(state[1]);
+                    if (j - 1 >= 0) {
+                        state = this.getNewState(state, j - 1, 1);
+                        state = this.getNewState(state, 1, 3);
+                    }
+                    else {
+                        debugger;
+                    }
+                }
+            }
+        };
+        states[state] = 0;
+        for (let i = 0; i < ticks; i++) {
+            let randP1 = this.getRandom(), randP2 = this.getRandom();
+            switch (state[0]) {
+                case "1":
+                    calcState(randP1, randP2);
+                    if (state === "1211") {
+                        debugger;
+                    }
+                    else {
+                        let j = parseInt(state[1]);
+                        if (j + 1 < 3) {
+                            state = this.getNewState(state, j + 1, 1);
+                        }
+                        else {
+                            debugger;
+                        }
+                        input++;
+                    }
+                    state = this.getNewState(state, 2, 0);
+                    break;
+                case "2":
+                    calcState(randP1, randP2);
+                    state = this.getNewState(state, 1, 0);
+                    break;
+                default:
+                    debugger;
+                    break;
+            }
+            states[state] = this.updateState(states[state]);
+            l += parseInt(state[1]);
+        }
+        return {
+            a: output / ticks,
+            l: l / ticks
+        };
+    }
+    getNewState(currState, newValue, valueIndex) {
+        let arrString = currState.split("");
+        arrString[valueIndex] = newValue.toString();
+        return arrString.join("");
+    }
+    updateState(oldValue) {
+        return oldValue === undefined ? 1 : oldValue + 1;
+    }
+    getRandom() {
+        return Math.random();
+    }
+}
+exports.default = Lab3Logic;
+
+},{}],15:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const uiItems_1 = require("../lab2/uiItems");
+const logic_1 = require("./logic");
+let runLab3Id = "runLab3Id", formLab3Id = "formLab3Id", formOutputLab3Id = "formOutputLab3Id", ui = {
+    rows: [
+        {
+            type: "toolbar",
+            css: "bg_panel",
+            cols: [
+                uiItems_1.getButton(runLab3Id),
+                uiItems_1.getForm(formLab3Id, [
+                    uiItems_1.getTextField("p1", "P1:", 0.6),
+                    uiItems_1.getTextField("p2", "P2:", 0.5),
+                    uiItems_1.getTextField("ticks", "Ticks:", 1000)
+                ])
+            ]
+        },
+        {
+            cols: [
+                uiItems_1.getForm(formOutputLab3Id, [
+                    uiItems_1.getTextField("a", "A:", 0),
+                    uiItems_1.getTextField("l", "L:", 0)
+                    // getTextField("ticks", "Ticks:", 1000)
+                ], true)
+            ]
+        }
+    ]
+}, initLab3 = () => {
+    let runButton = $$(runLab3Id), formInput = $$(formLab3Id), formOutput = $$(formOutputLab3Id), parser = new logic_1.default();
+    runButton.attachEvent("onItemClick", () => {
+        let inputData = formInput.getValues();
+        let result = parser.calcValues(parseFloat(inputData.p1), parseFloat(inputData.p2), parseInt(inputData.ticks));
+        formOutput.setValues({
+            a: result.a,
+            l: result.l
+        });
+    });
+};
+exports.runLab3Id = runLab3Id;
+exports.formLab3Id = formLab3Id;
+exports.formOutputLab3Id = formOutputLab3Id;
+exports.ui = ui;
+exports.initLab3 = initLab3;
+
+},{"../lab2/uiItems":12,"./logic":14}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
@@ -1434,6 +1599,7 @@ const exponentialUi_1 = require("./lab2/exponentialUi");
 const gammaUi_1 = require("./lab2/gammaUi");
 const triangleUi_1 = require("./lab2/triangleUi");
 const simpsonUi_1 = require("./lab2/simpsonUi");
+const ui_2 = require("./lab3/ui");
 class ModLab {
     constructor() {
         $$(ui_1.buttonId).attachEvent("onItemClick", () => {
@@ -1466,6 +1632,7 @@ class ModLab {
         gammaUi_1.initFunction();
         triangleUi_1.initFunction();
         simpsonUi_1.initFunction();
+        ui_2.initLab3();
     }
     validateForm(data) {
         let a = parseInt(data["a"]) || 0, m = parseInt(data["m"]) || 0, r0 = parseInt(data["r0"]) || 0;
@@ -1494,7 +1661,7 @@ class ModLab {
 }
 exports.default = ModLab;
 
-},{"./dataWorker":5,"./lab2/exponentialUi":6,"./lab2/gammaUi":7,"./lab2/gaussUi":8,"./lab2/simpsonUi":10,"./lab2/triangleUi":11,"./lab2/uniformUi":13,"./modTest":15,"./ui":16}],15:[function(require,module,exports){
+},{"./dataWorker":5,"./lab2/exponentialUi":6,"./lab2/gammaUi":7,"./lab2/gaussUi":8,"./lab2/simpsonUi":10,"./lab2/triangleUi":11,"./lab2/uniformUi":13,"./lab3/ui":15,"./modTest":17,"./ui":18}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let mult = (a, b) => a * b, div = (a, b) => a / b, mod = (a, b) => a % b, makeStep = (index, prevResult, a, m) => {
@@ -1670,11 +1837,12 @@ class ModLabUtils {
 }
 exports.default = ModLabUtils;
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mainUi_1 = require("./lab2/mainUi");
-let buttonId = "modButtonId1", chartId = "modChart1Id", formDataId = "formDataId", formOutputDataId = "formOutputDataId", tabbarId = "modLabsSegmentedId", modLab1Id = "modLab1Id", modLab2Id = "modLab2Id", ui = {
+const ui_1 = require("./lab3/ui");
+let buttonId = "modButtonId1", chartId = "modChart1Id", formDataId = "formDataId", formOutputDataId = "formOutputDataId", tabbarId = "modLabsSegmentedId", modLab1Id = "modLab1Id", modLab2Id = "modLab2Id", modLab3Id = "modLab3Id", ui = {
     id: "modId",
     css: "bg_panel_raised",
     type: "space",
@@ -1686,7 +1854,8 @@ let buttonId = "modButtonId1", chartId = "modChart1Id", formDataId = "formDataId
                 {
                     view: "segmented", id: tabbarId, value: modLab1Id, multiview: true, options: [
                         { value: "Lab 1", id: modLab1Id },
-                        { value: "Lab 2", id: modLab2Id }
+                        { value: "Lab 2", id: modLab2Id },
+                        { value: "Lab 3", id: modLab3Id }
                     ]
                 },
                 {}
@@ -1814,6 +1983,12 @@ let buttonId = "modButtonId1", chartId = "modChart1Id", formDataId = "formDataId
                     rows: [
                         mainUi_1.ui
                     ]
+                },
+                {
+                    id: modLab3Id,
+                    rows: [
+                        ui_1.ui
+                    ]
                 }
             ]
         }
@@ -1825,7 +2000,7 @@ exports.formDataId = formDataId;
 exports.formOutputDataId = formOutputDataId;
 exports.UI = ui;
 
-},{"./lab2/mainUi":9}],17:[function(require,module,exports){
+},{"./lab2/mainUi":9,"./lab3/ui":15}],19:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Complex {
@@ -1997,7 +2172,7 @@ exports.CorrelationFourier = correlationFourier;
 exports.FWHT = fwht;
 exports.GetPhaseAndAmplitude = getPhaseAndAmplitude;
 
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
@@ -2356,4 +2531,4 @@ webix.ready(() => {
     });
 });
 
-},{"./lab1/logic":3,"./lab1/ui":4,"./mod/madLab":14,"./mod/ui":16,"./test":17}]},{},[18]);
+},{"./lab1/logic":3,"./lab1/ui":4,"./mod/madLab":16,"./mod/ui":18,"./test":19}]},{},[20]);
