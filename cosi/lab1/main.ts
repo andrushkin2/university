@@ -3,6 +3,7 @@ import { ui, canvasId, uploaderId } from "./lab1/ui";
 import UiLogic from "./lab1/logic";
 import { UI as modUi } from "./mod/ui";
 import ModLab from "./mod/madLab";
+import { initLab6, ui as Lab6UI } from "./lab3/ui";
 
 let getXData = (count: number): number[] => {
         let i: number = 0,
@@ -285,7 +286,8 @@ let cosiUi = {
                             { value: "Lab 2", id: "lab2" },
                             { value: "Lab 3", id: "lab3" },
                             { value: "Lab 4", id: "lab4" },
-                            { value: "Lab 1 gen.2", id: "lab5" }
+                            { value: "Lab 1 gen.2", id: "lab5" },
+                            { value: "Lab 3 gen.2", id: "lab6" }
                         ]
                     },
                     {}
@@ -368,7 +370,8 @@ let cosiUi = {
                                 getChartObject(lab4Data4)
                             ]
                         },
-                        ui
+                        ui,
+                        Lab6UI
                     ]
                 }
             }
@@ -417,10 +420,15 @@ webix.ready(() => {
     webix.ui(testUi);
 
     let uiLogic: UiLogic,
-        modLab: ModLab;
+        modLab: ModLab,
+        lab6Run = false;
     (<webix.ui.segmented>$$("tabbar")).attachEvent("onAfterTabClick", (e) => {
-        if (uiLogic === undefined) {
+        if (e === "lab5" && uiLogic === undefined) {
             uiLogic = new UiLogic();
+        }
+        if (e === "lab6" && !lab6Run) {
+            initLab6();
+            lab6Run = true;
         }
     });
     (<webix.ui.segmented>$$("subjectsId")).attachEvent("onAfterTabClick", (e) => {

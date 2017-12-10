@@ -1029,7 +1029,170 @@ exports.greenChartId = greenChartId;
 exports.blueChartId = blueChartId;
 exports.ui = ui;
 
-},{"../mod/lab2/uiItems":12}],5:[function(require,module,exports){
+},{"../mod/lab2/uiItems":14}],5:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+let itemSize = 15, count = 10, height = count * itemSize, width = height, svgNamespace = "http://www.w3.org/2000/svg", createElement = (tagName, appendTo, props, cssObj) => {
+    let el = document.createElementNS(svgNamespace, tagName);
+    props !== undefined && setAttributes(el, props);
+    cssObj !== undefined && css(el, cssObj);
+    appendTo !== undefined && appendTo.appendChild(el);
+    return el;
+}, setAttributes = (element, props) => {
+    for (let i = 0, keys = Object.keys(props), len = keys.length; i < len; i++) {
+        element.setAttribute(keys[i], props[keys[i]]);
+    }
+}, css = (element, cssObj) => {
+    for (let i = 0, keys = Object.keys(cssObj), len = keys.length; i < len; i++) {
+        element.style[keys[i]] = cssObj[keys[i]];
+    }
+};
+class Checkmate {
+    constructor() {
+        this.elements = [];
+        this.container = this.createSvg();
+        for (let i = 0; i < count; i++) {
+            let x = i * itemSize, items = [];
+            for (let j = 0; j < count; j++) {
+                items.push(new Rect(j * itemSize, x, itemSize, this.container));
+            }
+            this.elements[i] = items;
+        }
+    }
+    updateValues(values) {
+        for (let i = 0; i < count; i++) {
+            for (let j = 0; j < count; j++) {
+                this.elements[i][j].value = values[i][j];
+            }
+        }
+    }
+    getValues() {
+        let result = [];
+        for (let i = 0; i < count; i++) {
+            let items = [];
+            for (let j = 0; j < count; j++) {
+                items[j] = this.elements[i][j].value;
+            }
+            result[i] = items;
+        }
+        return result;
+    }
+    createSvg() {
+        let svg = document.createElementNS(svgNamespace, "svg");
+        svg.style.webkitTransform = "translateZ(0)";
+        svg.style.pointerEvents = "all";
+        svg.style.overflow = "hidden";
+        svg.style.transformOrigin = "0px 0px 0px";
+        svg.setAttributeNS(svgNamespace, "width", `${width}`);
+        svg.setAttributeNS(svgNamespace, "height", `${height}`);
+        return svg;
+    }
+}
+exports.default = Checkmate;
+class Rect {
+    constructor(x, y, size, parent) {
+        this.state = 1;
+        this.container = createElement("rect", parent, {
+            x: x,
+            y: y,
+            width: size,
+            height: size,
+            fill: "white"
+        });
+    }
+    set value(newValue) {
+        this.state = newValue;
+        setAttributes(this.container, {
+            fill: this.state === 0 ? "black" : "white"
+        });
+    }
+    get value() {
+        return this.state;
+    }
+}
+
+},{}],6:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const uiItems_1 = require("../mod/lab2/uiItems");
+const svgElement_1 = require("./svgElement");
+let runButtonId = "lab6RunButton", containerId = "lab6COntainerId", ui = {
+    id: "lab6",
+    type: "space",
+    rows: [
+        {
+            type: "toolbar",
+            height: 50,
+            cols: [
+                uiItems_1.getButton(runButtonId)
+            ]
+        },
+        {
+            rows: [
+                {
+                    view: "scrollview",
+                    height: 1000,
+                    scroll: "auto",
+                    type: "space",
+                    body: {
+                        type: "space",
+                        template: `<div id="${containerId}" style="width: 100%; height: 100%;"></div>`
+                    }
+                }
+            ]
+        }
+    ]
+}, t = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+], b = [
+    [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
+    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
+    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 0, 0, 0]
+], l = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
+    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
+    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
+    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
+    [0, 1, 1, 1, 0, 0, 1, 1, 0, 0],
+    [0, 1, 1, 1, 0, 0, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+], initLab6 = () => {
+    let container = document.querySelector(`#${containerId}`), runButton = $$(runButtonId);
+    runButton.attachEvent("onItemClick", () => {
+    });
+    let testSVG = new svgElement_1.default();
+    container.appendChild(testSVG.container);
+    testSVG.updateValues(t);
+    let testSVG1 = new svgElement_1.default();
+    container.appendChild(testSVG1.container);
+    testSVG1.updateValues(b);
+    let testSVG2 = new svgElement_1.default();
+    container.appendChild(testSVG2.container);
+    testSVG2.updateValues(l);
+};
+exports.ui = ui;
+exports.initLab6 = initLab6;
+
+},{"../mod/lab2/uiItems":14,"./svgElement":5}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataWorker {
@@ -1055,7 +1218,7 @@ class DataWorker {
 }
 exports.default = DataWorker;
 
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1098,7 +1261,7 @@ let defaultData = {
 exports.exponentialUi = exponentialUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":17,"./uiItems":12}],7:[function(require,module,exports){
+},{"../modTest":19,"./uiItems":14}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1143,7 +1306,7 @@ let defaultData = {
 exports.gammaUi = gammaUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":17,"./uiItems":12}],8:[function(require,module,exports){
+},{"../modTest":19,"./uiItems":14}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1190,7 +1353,7 @@ let defaultData = {
 exports.gaussUi = gaussUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":17,"./uiItems":12}],9:[function(require,module,exports){
+},{"../modTest":19,"./uiItems":14}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uniformUi_1 = require("./uniformUi");
@@ -1231,7 +1394,7 @@ let distributionListId = "distributionListId", ui = {
 exports.distributionListId = distributionListId;
 exports.ui = ui;
 
-},{"./exponentialUi":6,"./gammaUi":7,"./gaussUi":8,"./simpsonUi":10,"./triangleUi":11,"./uniformUi":13}],10:[function(require,module,exports){
+},{"./exponentialUi":8,"./gammaUi":9,"./gaussUi":10,"./simpsonUi":12,"./triangleUi":13,"./uniformUi":15}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1276,7 +1439,7 @@ let defaultData = {
 exports.simpsonUi = simpsonUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":17,"./uiItems":12}],11:[function(require,module,exports){
+},{"../modTest":19,"./uiItems":14}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1321,7 +1484,7 @@ let defaultData = {
 exports.triangleUi = triangleUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":17,"./uiItems":12}],12:[function(require,module,exports){
+},{"../modTest":19,"./uiItems":14}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let getButton = (buttonId) => ({
@@ -1372,7 +1535,7 @@ exports.getTextField = getTextField;
 exports.getForm = getForm;
 exports.getChart = getChart;
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1421,7 +1584,7 @@ exports.uniformChartId = uniformChartId;
 exports.uniformUi = uniformUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":17,"./uiItems":12}],14:[function(require,module,exports){
+},{"../modTest":19,"./uiItems":14}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Lab3Logic {
@@ -1550,7 +1713,7 @@ class Lab3Logic {
 }
 exports.default = Lab3Logic;
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("../lab2/uiItems");
@@ -1596,7 +1759,7 @@ exports.formOutputLab3Id = formOutputLab3Id;
 exports.ui = ui;
 exports.initLab3 = initLab3;
 
-},{"../lab2/uiItems":12,"./logic":14}],16:[function(require,module,exports){
+},{"../lab2/uiItems":14,"./logic":16}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
@@ -1670,7 +1833,7 @@ class ModLab {
 }
 exports.default = ModLab;
 
-},{"./dataWorker":5,"./lab2/exponentialUi":6,"./lab2/gammaUi":7,"./lab2/gaussUi":8,"./lab2/simpsonUi":10,"./lab2/triangleUi":11,"./lab2/uniformUi":13,"./lab3/ui":15,"./modTest":17,"./ui":18}],17:[function(require,module,exports){
+},{"./dataWorker":7,"./lab2/exponentialUi":8,"./lab2/gammaUi":9,"./lab2/gaussUi":10,"./lab2/simpsonUi":12,"./lab2/triangleUi":13,"./lab2/uniformUi":15,"./lab3/ui":17,"./modTest":19,"./ui":20}],19:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let mult = (a, b) => a * b, div = (a, b) => a / b, mod = (a, b) => a % b, makeStep = (index, prevResult, a, m) => {
@@ -1846,7 +2009,7 @@ class ModLabUtils {
 }
 exports.default = ModLabUtils;
 
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mainUi_1 = require("./lab2/mainUi");
@@ -2009,7 +2172,7 @@ exports.formDataId = formDataId;
 exports.formOutputDataId = formOutputDataId;
 exports.UI = ui;
 
-},{"./lab2/mainUi":9,"./lab3/ui":15}],19:[function(require,module,exports){
+},{"./lab2/mainUi":11,"./lab3/ui":17}],21:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Complex {
@@ -2181,7 +2344,7 @@ exports.CorrelationFourier = correlationFourier;
 exports.FWHT = fwht;
 exports.GetPhaseAndAmplitude = getPhaseAndAmplitude;
 
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
@@ -2189,6 +2352,7 @@ const ui_1 = require("./lab1/ui");
 const logic_1 = require("./lab1/logic");
 const ui_2 = require("./mod/ui");
 const madLab_1 = require("./mod/madLab");
+const ui_3 = require("./lab3/ui");
 let getXData = (count) => {
     let i = 0, res = [];
     for (i; i < count; i++) {
@@ -2382,7 +2546,8 @@ let cosiUi = {
                         { value: "Lab 2", id: "lab2" },
                         { value: "Lab 3", id: "lab3" },
                         { value: "Lab 4", id: "lab4" },
-                        { value: "Lab 1 gen.2", id: "lab5" }
+                        { value: "Lab 1 gen.2", id: "lab5" },
+                        { value: "Lab 3 gen.2", id: "lab6" }
                     ]
                 },
                 {}
@@ -2465,7 +2630,8 @@ let cosiUi = {
                             getChartObject(lab4Data4)
                         ]
                     },
-                    ui_1.ui
+                    ui_1.ui,
+                    ui_3.ui
                 ]
             }
         }
@@ -2510,10 +2676,14 @@ webix.ready(() => {
         });
     });
     webix.ui(testUi);
-    let uiLogic, modLab;
+    let uiLogic, modLab, lab6Run = false;
     $$("tabbar").attachEvent("onAfterTabClick", (e) => {
-        if (uiLogic === undefined) {
+        if (e === "lab5" && uiLogic === undefined) {
             uiLogic = new logic_1.default();
+        }
+        if (e === "lab6" && !lab6Run) {
+            ui_3.initLab6();
+            lab6Run = true;
         }
     });
     $$("subjectsId").attachEvent("onAfterTabClick", (e) => {
@@ -2540,4 +2710,4 @@ webix.ready(() => {
     });
 });
 
-},{"./lab1/logic":3,"./lab1/ui":4,"./mod/madLab":16,"./mod/ui":18,"./test":19}]},{},[20]);
+},{"./lab1/logic":3,"./lab1/ui":4,"./lab3/ui":6,"./mod/madLab":18,"./mod/ui":20,"./test":21}]},{},[22]);

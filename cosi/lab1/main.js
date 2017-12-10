@@ -5,6 +5,7 @@ const ui_1 = require("./lab1/ui");
 const logic_1 = require("./lab1/logic");
 const ui_2 = require("./mod/ui");
 const madLab_1 = require("./mod/madLab");
+const ui_3 = require("./lab3/ui");
 let getXData = (count) => {
     let i = 0, res = [];
     for (i; i < count; i++) {
@@ -198,7 +199,8 @@ let cosiUi = {
                         { value: "Lab 2", id: "lab2" },
                         { value: "Lab 3", id: "lab3" },
                         { value: "Lab 4", id: "lab4" },
-                        { value: "Lab 1 gen.2", id: "lab5" }
+                        { value: "Lab 1 gen.2", id: "lab5" },
+                        { value: "Lab 3 gen.2", id: "lab6" }
                     ]
                 },
                 {}
@@ -281,7 +283,8 @@ let cosiUi = {
                             getChartObject(lab4Data4)
                         ]
                     },
-                    ui_1.ui
+                    ui_1.ui,
+                    ui_3.ui
                 ]
             }
         }
@@ -326,10 +329,14 @@ webix.ready(() => {
         });
     });
     webix.ui(testUi);
-    let uiLogic, modLab;
+    let uiLogic, modLab, lab6Run = false;
     $$("tabbar").attachEvent("onAfterTabClick", (e) => {
-        if (uiLogic === undefined) {
+        if (e === "lab5" && uiLogic === undefined) {
             uiLogic = new logic_1.default();
+        }
+        if (e === "lab6" && !lab6Run) {
+            ui_3.initLab6();
+            lab6Run = true;
         }
     });
     $$("subjectsId").attachEvent("onAfterTabClick", (e) => {
