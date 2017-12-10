@@ -16,7 +16,7 @@ let runLab3Id = "runLab3Id",
                     getForm(formLab3Id, [
                         getTextField("p1", "P1:", 0.6),
                         getTextField("p2", "P2:", 0.5),
-                        getTextField("ticks", "Ticks:", 1000)
+                        getTextField("ticks", "Ticks:", 10000)
                     ])
                 ]
             },

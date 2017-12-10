@@ -1426,7 +1426,6 @@ exports.initFunction = initFunction;
 Object.defineProperty(exports, "__esModule", { value: true });
 class Lab3Logic {
     calcValues(p1, p2, ticks) {
-        debugger;
         let input = 0, output = 0, l = 0, states = {}, state = "2000", // t0 - 0   j - 1   t1 - 2  t2 - 3
         calcState = (randP1, randP2) => {
             if (state[2] === "1" && randP1 > p1) {
@@ -1497,12 +1496,22 @@ class Lab3Logic {
                 case "1":
                     calcState(randP1, randP2);
                     if (state === "1211") {
-                        debugger;
                     }
                     else {
                         let j = parseInt(state[1]);
                         if (j + 1 < 3) {
-                            state = this.getNewState(state, j + 1, 1);
+                            j += 1;
+                            state = this.getNewState(state, j, 1);
+                            if (j - 1 >= 0 && state[2] === "0") {
+                                j -= 1;
+                                state = this.getNewState(state, j, 1);
+                                state = this.getNewState(state, 1, 2);
+                            }
+                            if (j - 1 >= 0 && state[3] === "0") {
+                                j -= 1;
+                                state = this.getNewState(state, j, 1);
+                                state = this.getNewState(state, 1, 3);
+                            }
                         }
                         else {
                             debugger;
@@ -1520,7 +1529,7 @@ class Lab3Logic {
                     break;
             }
             states[state] = this.updateState(states[state]);
-            l += parseInt(state[1]);
+            l += parseInt(state[1]) > 0 ? 1 : 0;
         }
         return {
             a: output / ticks,
@@ -1556,7 +1565,7 @@ let runLab3Id = "runLab3Id", formLab3Id = "formLab3Id", formOutputLab3Id = "form
                 uiItems_1.getForm(formLab3Id, [
                     uiItems_1.getTextField("p1", "P1:", 0.6),
                     uiItems_1.getTextField("p2", "P2:", 0.5),
-                    uiItems_1.getTextField("ticks", "Ticks:", 1000)
+                    uiItems_1.getTextField("ticks", "Ticks:", 10000)
                 ])
             ]
         },

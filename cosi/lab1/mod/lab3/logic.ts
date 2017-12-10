@@ -7,7 +7,6 @@ interface IState {
 
 export default class Lab3Logic {
     public calcValues(p1: number, p2: number, ticks: number) {
-        debugger;
         let input = 0,
             output = 0,
             l = 0,
@@ -76,11 +75,21 @@ export default class Lab3Logic {
                 case "1":
                     calcState(randP1, randP2);
                     if (state === "1211") {
-                        debugger;
                     } else {
                         let j = parseInt(state[1]);
                         if (j + 1 < 3) {
-                            state = this.getNewState(state, j + 1, 1);
+                            j += 1;
+                            state = this.getNewState(state, j, 1);
+                            if (j - 1 >= 0 && state[2] === "0") {
+                                j -= 1;
+                                state = this.getNewState(state, j, 1);
+                                state = this.getNewState(state, 1, 2);
+                            }
+                            if (j - 1 >= 0 && state[3] === "0") {
+                                j -= 1;
+                                state = this.getNewState(state, j, 1);
+                                state = this.getNewState(state, 1, 3);
+                            }
                         } else {
                             debugger;
                         }
@@ -97,7 +106,7 @@ export default class Lab3Logic {
                     break;
             }
             states[state] = this.updateState(states[state]);
-            l += parseInt(state[1]);
+            l += parseInt(state[1]) > 0 ? 1 : 0;
         }
         return {
             a: output / ticks,

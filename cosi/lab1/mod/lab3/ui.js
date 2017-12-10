@@ -12,7 +12,7 @@ let runLab3Id = "runLab3Id", formLab3Id = "formLab3Id", formOutputLab3Id = "form
                 uiItems_1.getForm(formLab3Id, [
                     uiItems_1.getTextField("p1", "P1:", 0.6),
                     uiItems_1.getTextField("p2", "P2:", 0.5),
-                    uiItems_1.getTextField("ticks", "Ticks:", 1000)
+                    uiItems_1.getTextField("ticks", "Ticks:", 10000)
                 ])
             ]
         },
