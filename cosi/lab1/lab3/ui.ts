@@ -1,6 +1,7 @@
 import { getButton } from "../mod/lab2/uiItems";
 import { IButton } from "../mod/madLab";
 import Checkmate from "./svgElement";
+import NetworkUtils from "./network";
 
 let runButtonId = "lab6RunButton",
     containerId = "lab6COntainerId",
@@ -69,9 +70,11 @@ let runButtonId = "lab6RunButton",
     ],
     initLab6 = () => {
         let container = document.querySelector(`#${containerId}`) as HTMLElement,
-            runButton = $$(runButtonId) as IButton;
+            runButton = $$(runButtonId) as IButton,
+            network = new NetworkUtils();
         runButton.attachEvent("onItemClick", () => {
-
+            let weights = network.learnNetwork([t , b, l], 100);
+            debugger;
         });
 
         let testSVG = new Checkmate();

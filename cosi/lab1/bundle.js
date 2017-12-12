@@ -1029,7 +1029,62 @@ exports.greenChartId = greenChartId;
 exports.blueChartId = blueChartId;
 exports.ui = ui;
 
-},{"../mod/lab2/uiItems":14}],5:[function(require,module,exports){
+},{"../mod/lab2/uiItems":15}],5:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class NetworkUtils {
+    constructor() {
+        this.lower = -1;
+        this.upper = 1;
+    }
+    learnNetwork(images, size) {
+        let result = [], flattenImages = images.map(image => this.toFlattenArray(image));
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < i; j++) {
+                let calcValue = flattenImages.reduce((prev, image) => prev + (image[i] * image[j]), 0.0);
+                if (!result[i]) {
+                    result[i] = [];
+                }
+                if (!result[j]) {
+                    result[j] = [];
+                }
+                result[i][j] = calcValue;
+                result[j][i] = calcValue;
+            }
+        }
+        return result;
+    }
+    toFlattenArray(array) {
+        let res = [];
+        for (let i = 0, len = array.length; i < len; i++) {
+            res = res.concat(array[i]);
+        }
+        return res;
+    }
+    recognize(image, weightMatrix) {
+        let isDoSearch = true, flattenImage = this.toFlattenArray(image);
+        while (isDoSearch) {
+            isDoSearch = this.step(flattenImage, weightMatrix);
+        }
+    }
+    step(flattenImage, matrix) {
+        let isChanged = false;
+        for (let i = 0, len = flattenImage.length; i < len; i++) {
+            let oldValue = flattenImage[i];
+            let newValue = this.calculate(flattenImage, matrix[i]);
+            flattenImage[i] = newValue;
+            isChanged = newValue !== oldValue || isChanged;
+        }
+        return isChanged;
+    }
+    calculate(flattenArray, matrixRow) {
+        let val = flattenArray.reduce((prev, current, index) => prev + matrixRow[index], 0.0);
+        return val > 0 ? this.upper : this.lower;
+    }
+}
+exports.default = NetworkUtils;
+
+},{}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let itemSize = 15, count = 10, height = count * itemSize, width = height, svgNamespace = "http://www.w3.org/2000/svg", createElement = (tagName, appendTo, props, cssObj) => {
@@ -1111,11 +1166,12 @@ class Rect {
     }
 }
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("../mod/lab2/uiItems");
 const svgElement_1 = require("./svgElement");
+const network_1 = require("./network");
 let runButtonId = "lab6RunButton", containerId = "lab6COntainerId", ui = {
     id: "lab6",
     type: "space",
@@ -1176,8 +1232,10 @@ let runButtonId = "lab6RunButton", containerId = "lab6COntainerId", ui = {
     [0, 1, 1, 1, 0, 0, 1, 1, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ], initLab6 = () => {
-    let container = document.querySelector(`#${containerId}`), runButton = $$(runButtonId);
+    let container = document.querySelector(`#${containerId}`), runButton = $$(runButtonId), network = new network_1.default();
     runButton.attachEvent("onItemClick", () => {
+        let weights = network.learnNetwork([t, b, l], 100);
+        debugger;
     });
     let testSVG = new svgElement_1.default();
     container.appendChild(testSVG.container);
@@ -1192,7 +1250,7 @@ let runButtonId = "lab6RunButton", containerId = "lab6COntainerId", ui = {
 exports.ui = ui;
 exports.initLab6 = initLab6;
 
-},{"../mod/lab2/uiItems":14,"./svgElement":5}],7:[function(require,module,exports){
+},{"../mod/lab2/uiItems":15,"./network":5,"./svgElement":6}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataWorker {
@@ -1218,7 +1276,7 @@ class DataWorker {
 }
 exports.default = DataWorker;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1261,7 +1319,7 @@ let defaultData = {
 exports.exponentialUi = exponentialUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":19,"./uiItems":14}],9:[function(require,module,exports){
+},{"../modTest":20,"./uiItems":15}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1306,7 +1364,7 @@ let defaultData = {
 exports.gammaUi = gammaUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":19,"./uiItems":14}],10:[function(require,module,exports){
+},{"../modTest":20,"./uiItems":15}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1353,7 +1411,7 @@ let defaultData = {
 exports.gaussUi = gaussUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":19,"./uiItems":14}],11:[function(require,module,exports){
+},{"../modTest":20,"./uiItems":15}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uniformUi_1 = require("./uniformUi");
@@ -1394,7 +1452,7 @@ let distributionListId = "distributionListId", ui = {
 exports.distributionListId = distributionListId;
 exports.ui = ui;
 
-},{"./exponentialUi":8,"./gammaUi":9,"./gaussUi":10,"./simpsonUi":12,"./triangleUi":13,"./uniformUi":15}],12:[function(require,module,exports){
+},{"./exponentialUi":9,"./gammaUi":10,"./gaussUi":11,"./simpsonUi":13,"./triangleUi":14,"./uniformUi":16}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1439,7 +1497,7 @@ let defaultData = {
 exports.simpsonUi = simpsonUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":19,"./uiItems":14}],13:[function(require,module,exports){
+},{"../modTest":20,"./uiItems":15}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1484,7 +1542,7 @@ let defaultData = {
 exports.triangleUi = triangleUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":19,"./uiItems":14}],14:[function(require,module,exports){
+},{"../modTest":20,"./uiItems":15}],15:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let getButton = (buttonId) => ({
@@ -1535,7 +1593,7 @@ exports.getTextField = getTextField;
 exports.getForm = getForm;
 exports.getChart = getChart;
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1584,7 +1642,7 @@ exports.uniformChartId = uniformChartId;
 exports.uniformUi = uniformUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":19,"./uiItems":14}],16:[function(require,module,exports){
+},{"../modTest":20,"./uiItems":15}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Lab3Logic {
@@ -1713,7 +1771,7 @@ class Lab3Logic {
 }
 exports.default = Lab3Logic;
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("../lab2/uiItems");
@@ -1759,7 +1817,7 @@ exports.formOutputLab3Id = formOutputLab3Id;
 exports.ui = ui;
 exports.initLab3 = initLab3;
 
-},{"../lab2/uiItems":14,"./logic":16}],18:[function(require,module,exports){
+},{"../lab2/uiItems":15,"./logic":17}],19:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
@@ -1833,7 +1891,7 @@ class ModLab {
 }
 exports.default = ModLab;
 
-},{"./dataWorker":7,"./lab2/exponentialUi":8,"./lab2/gammaUi":9,"./lab2/gaussUi":10,"./lab2/simpsonUi":12,"./lab2/triangleUi":13,"./lab2/uniformUi":15,"./lab3/ui":17,"./modTest":19,"./ui":20}],19:[function(require,module,exports){
+},{"./dataWorker":8,"./lab2/exponentialUi":9,"./lab2/gammaUi":10,"./lab2/gaussUi":11,"./lab2/simpsonUi":13,"./lab2/triangleUi":14,"./lab2/uniformUi":16,"./lab3/ui":18,"./modTest":20,"./ui":21}],20:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let mult = (a, b) => a * b, div = (a, b) => a / b, mod = (a, b) => a % b, makeStep = (index, prevResult, a, m) => {
@@ -2009,7 +2067,7 @@ class ModLabUtils {
 }
 exports.default = ModLabUtils;
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mainUi_1 = require("./lab2/mainUi");
@@ -2172,7 +2230,7 @@ exports.formDataId = formDataId;
 exports.formOutputDataId = formOutputDataId;
 exports.UI = ui;
 
-},{"./lab2/mainUi":11,"./lab3/ui":17}],21:[function(require,module,exports){
+},{"./lab2/mainUi":12,"./lab3/ui":18}],22:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Complex {
@@ -2344,7 +2402,7 @@ exports.CorrelationFourier = correlationFourier;
 exports.FWHT = fwht;
 exports.GetPhaseAndAmplitude = getPhaseAndAmplitude;
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
@@ -2710,4 +2768,4 @@ webix.ready(() => {
     });
 });
 
-},{"./lab1/logic":3,"./lab1/ui":4,"./lab3/ui":6,"./mod/madLab":18,"./mod/ui":20,"./test":21}]},{},[22]);
+},{"./lab1/logic":3,"./lab1/ui":4,"./lab3/ui":7,"./mod/madLab":19,"./mod/ui":21,"./test":22}]},{},[23]);

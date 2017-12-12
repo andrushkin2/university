@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("../mod/lab2/uiItems");
 const svgElement_1 = require("./svgElement");
+const network_1 = require("./network");
 let runButtonId = "lab6RunButton", containerId = "lab6COntainerId", ui = {
     id: "lab6",
     type: "space",
@@ -62,8 +63,10 @@ let runButtonId = "lab6RunButton", containerId = "lab6COntainerId", ui = {
     [0, 1, 1, 1, 0, 0, 1, 1, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ], initLab6 = () => {
-    let container = document.querySelector(`#${containerId}`), runButton = $$(runButtonId);
+    let container = document.querySelector(`#${containerId}`), runButton = $$(runButtonId), network = new network_1.default();
     runButton.attachEvent("onItemClick", () => {
+        let weights = network.learnNetwork([t, b, l], 100);
+        debugger;
     });
     let testSVG = new svgElement_1.default();
     container.appendChild(testSVG.container);
