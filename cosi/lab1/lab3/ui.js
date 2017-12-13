@@ -67,6 +67,20 @@ let runButtonId = "lab6RunButton", containerId = "lab6COntainerId", ui = {
     runButton.attachEvent("onItemClick", () => {
         let weights = network.learnNetwork([t, b, l], 100);
         debugger;
+        let test20Percentage = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ];
+        let found = network.recognize(test20Percentage, weights);
+        testSVG3.updateValues(found);
     });
     let testSVG = new svgElement_1.default();
     container.appendChild(testSVG.container);
@@ -77,6 +91,8 @@ let runButtonId = "lab6RunButton", containerId = "lab6COntainerId", ui = {
     let testSVG2 = new svgElement_1.default();
     container.appendChild(testSVG2.container);
     testSVG2.updateValues(l);
+    let testSVG3 = new svgElement_1.default();
+    container.appendChild(testSVG3.container);
 };
 exports.ui = ui;
 exports.initLab6 = initLab6;

@@ -71,7 +71,7 @@ class Rect {
     set value(newValue) {
         this.state = newValue;
         setAttributes(this.container, {
-            fill: this.state === 0 ? "black" : "white"
+            fill: this.state === 0 ? "black" : this.state === 1 ? "white" : "grey"
         });
     }
     get value() {

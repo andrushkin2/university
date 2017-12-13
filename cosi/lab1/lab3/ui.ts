@@ -75,6 +75,20 @@ let runButtonId = "lab6RunButton",
         runButton.attachEvent("onItemClick", () => {
             let weights = network.learnNetwork([t , b, l], 100);
             debugger;
+            let test20Percentage = [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+                [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ];
+            let found = network.recognize(test20Percentage, weights);
+            testSVG3.updateValues(found);
         });
 
         let testSVG = new Checkmate();
@@ -86,6 +100,9 @@ let runButtonId = "lab6RunButton",
         let testSVG2 = new Checkmate();
         container.appendChild(testSVG2.container);
         testSVG2.updateValues(l);
+
+        let testSVG3 = new Checkmate();
+        container.appendChild(testSVG3.container);
     };
 
 export { ui, initLab6 };
