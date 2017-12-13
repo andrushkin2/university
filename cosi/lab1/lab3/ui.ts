@@ -1,7 +1,8 @@
 import { getButton } from "../mod/lab2/uiItems";
 import { IButton } from "../mod/madLab";
-import Checkmate from "./svgElement";
+import Checkmate, { SvgRow } from "./svgElement";
 import NetworkUtils from "./network";
+import { debug } from "util";
 
 let runButtonId = "lab6RunButton",
     containerId = "lab6COntainerId",
@@ -25,7 +26,7 @@ let runButtonId = "lab6RunButton",
                         type: "space",
                         body: {
                             type: "space",
-                            template: `<div id="${containerId}" style="width: 100%; height: 100%;"></div>`
+                            template: `<div id="${containerId}" style="width: 100%; height: 100%; overflow-y: auto;"></div>`
                         }
                     }
                 ]
@@ -33,62 +34,71 @@ let runButtonId = "lab6RunButton",
         ]
     },
     t = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-        [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-        [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, 1, 1, 1, 1, 1, 1, -1, -1],
+        [-1, -1, 1, 1, 1, 1, 1, 1, -1, -1],
+        [-1, -1, -1, -1, 1, 1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, 1, 1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, 1, 1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, 1, 1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, 1, 1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, 1, 1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
     ],
     b = [
-        [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-        [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-        [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-        [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-        [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-        [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-        [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-        [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-        [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-        [0, 0, 1, 1, 1, 1, 1, 0, 0, 0]
+        [-1, -1, 1, 1, 1, 1, 1, -1, -1, -1],
+        [-1, -1, 1, 1, 1, 1, 1, 1, -1, -1],
+        [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+        [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+        [-1, -1, 1, 1, 1, 1, 1, -1, -1, -1],
+        [-1, -1, 1, 1, 1, 1, 1, -1, -1, -1],
+        [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+        [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+        [-1, -1, 1, 1, 1, 1, 1, 1, -1, -1],
+        [-1, -1, 1, 1, 1, 1, 1, -1, -1, -1]
     ],
     l = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-        [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-        [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-        [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-        [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-        [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-        [0, 1, 1, 1, 0, 0, 1, 1, 0, 0],
-        [0, 1, 1, 1, 0, 0, 1, 1, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, 1, 1, 1, 1, 1, 1, -1, -1],
+        [-1, -1, 1, 1, 1, 1, 1, 1, -1, -1],
+        [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+        [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+        [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+        [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+        [-1, 1, 1, 1, -1, -1, 1, 1, -1, -1],
+        [-1, 1, 1, 1, -1, -1, 1, 1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
     ],
     initLab6 = () => {
         let container = document.querySelector(`#${containerId}`) as HTMLElement,
             runButton = $$(runButtonId) as IButton,
-            network = new NetworkUtils();
+            network = new NetworkUtils(),
+            clearRowItems = () => {
+                let elements = container.querySelectorAll(`.rowItem`);
+                for (let len = elements.length - 1, i = len; i >= 0; i--) {
+                    container.removeChild(elements[i]);
+                }
+            },
+            weights: number[][] | undefined;
         runButton.attachEvent("onItemClick", () => {
-            let weights = network.learnNetwork([t , b, l], 100);
-            debugger;
-            let test20Percentage = [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-                [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            ];
-            let found = network.recognize(test20Percentage, weights);
-            testSVG3.updateValues(found);
+            clearRowItems();
+            weights = weights || network.learnNetwork([t , b, l], 100);
+
+            let images = [t, b, l],
+                percentage = [10, 20, 30, 35, 40, 45, 50, 55, 60, 65, 70, 80, 90, 100];
+
+            for (let i = 0; i < 3; i++) {
+                let image = images[i];
+                for (let k = 0, len = percentage.length; k < len; k++) {
+                    let persent = percentage[k],
+                        noise = network.getNoise(image, persent, 10),
+                        foundImage = network.recognize(noise, weights),
+                        rowItem = new SvgRow(persent);
+
+                    rowItem.updateRow(noise, foundImage);
+                    container.appendChild(rowItem.container);
+                }
+            }
         });
 
         let testSVG = new Checkmate();
@@ -100,9 +110,6 @@ let runButtonId = "lab6RunButton",
         let testSVG2 = new Checkmate();
         container.appendChild(testSVG2.container);
         testSVG2.updateValues(l);
-
-        let testSVG3 = new Checkmate();
-        container.appendChild(testSVG3.container);
     };
 
 export { ui, initLab6 };

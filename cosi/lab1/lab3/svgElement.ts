@@ -85,10 +85,34 @@ class Rect {
     set value(newValue: number) {
         this.state = newValue;
         setAttributes(this.container, {
-            fill: this.state === 0 ? "black" : this.state === 1 ? "white" : "grey"
+            fill: this.state === -1 ? "black" : "white"
         });
     }
     get value() {
         return this.state;
+    }
+}
+
+export class SvgRow {
+    public container: HTMLDivElement;
+    private firstSvg: Checkmate;
+    private secondSVG: Checkmate;
+    constructor(persent: number) {
+        this.container = document.createElement("div");
+        this.container.classList.add("rowItem");
+
+        let containerNumber = document.createElement("div");
+        containerNumber.classList.add("rowItemValue");
+        containerNumber.textContent = `Persent: ${persent.toString()}`;
+        this.container.appendChild(containerNumber);
+
+        this.firstSvg = new Checkmate();
+        this.secondSVG = new Checkmate();
+        this.container.appendChild(this.firstSvg.container);
+        this.container.appendChild(this.secondSVG.container);
+    }
+    updateRow(firstImage: number[][], secondImage: number[][]) {
+        this.firstSvg.updateValues(firstImage);
+        this.secondSVG.updateValues(secondImage);
     }
 }

@@ -62,7 +62,29 @@ class NetworkUtils {
             let matrixValue = matrixRow[index] || 0;
             return prev + current * matrixValue;
         }, val = flattenArray.reduce(reduceFunc, 0.0);
-        return val > 0 ? this.upper : val === 0 ? 0 : this.lower;
+        return val > 0 ? this.upper : this.lower;
+    }
+    getNoise(image, percentage = 10, step = 10) {
+        let picture = this.toFlattenArray(image), indexes = [];
+        if (percentage === 100) {
+            for (let i = 0, len = picture.length; i < len; i++) {
+                indexes.push(i);
+            }
+        }
+        else {
+            let len = picture.length, count = Math.round(picture.length * percentage / 100), getRandom = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+            while (indexes.length !== count) {
+                let newIndex = getRandom(0, len);
+                if (indexes.indexOf(newIndex) === -1) {
+                    indexes.push(newIndex);
+                }
+            }
+        }
+        for (let i = 0, len = indexes.length; i < len; i++) {
+            let index = indexes[i], pictureValue = picture[index];
+            picture[index] = pictureValue === -1 ? 1 : -1;
+        }
+        return this.fromFlattenArray(picture, step);
     }
 }
 exports.default = NetworkUtils;

@@ -1094,7 +1094,29 @@ class NetworkUtils {
             let matrixValue = matrixRow[index] || 0;
             return prev + current * matrixValue;
         }, val = flattenArray.reduce(reduceFunc, 0.0);
-        return val > 0 ? this.upper : val === 0 ? 0 : this.lower;
+        return val > 0 ? this.upper : this.lower;
+    }
+    getNoise(image, percentage = 10, step = 10) {
+        let picture = this.toFlattenArray(image), indexes = [];
+        if (percentage === 100) {
+            for (let i = 0, len = picture.length; i < len; i++) {
+                indexes.push(i);
+            }
+        }
+        else {
+            let len = picture.length, count = Math.round(picture.length * percentage / 100), getRandom = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+            while (indexes.length !== count) {
+                let newIndex = getRandom(0, len);
+                if (indexes.indexOf(newIndex) === -1) {
+                    indexes.push(newIndex);
+                }
+            }
+        }
+        for (let i = 0, len = indexes.length; i < len; i++) {
+            let index = indexes[i], pictureValue = picture[index];
+            picture[index] = pictureValue === -1 ? 1 : -1;
+        }
+        return this.fromFlattenArray(picture, step);
     }
 }
 exports.default = NetworkUtils;
@@ -1173,13 +1195,32 @@ class Rect {
     set value(newValue) {
         this.state = newValue;
         setAttributes(this.container, {
-            fill: this.state === 0 ? "black" : this.state === 1 ? "white" : "grey"
+            fill: this.state === -1 ? "black" : "white"
         });
     }
     get value() {
         return this.state;
     }
 }
+class SvgRow {
+    constructor(persent) {
+        this.container = document.createElement("div");
+        this.container.classList.add("rowItem");
+        let containerNumber = document.createElement("div");
+        containerNumber.classList.add("rowItemValue");
+        containerNumber.textContent = `Persent: ${persent.toString()}`;
+        this.container.appendChild(containerNumber);
+        this.firstSvg = new Checkmate();
+        this.secondSVG = new Checkmate();
+        this.container.appendChild(this.firstSvg.container);
+        this.container.appendChild(this.secondSVG.container);
+    }
+    updateRow(firstImage, secondImage) {
+        this.firstSvg.updateValues(firstImage);
+        this.secondSVG.updateValues(secondImage);
+    }
+}
+exports.SvgRow = SvgRow;
 
 },{}],7:[function(require,module,exports){
 "use strict";
@@ -1207,64 +1248,64 @@ let runButtonId = "lab6RunButton", containerId = "lab6COntainerId", ui = {
                     type: "space",
                     body: {
                         type: "space",
-                        template: `<div id="${containerId}" style="width: 100%; height: 100%;"></div>`
+                        template: `<div id="${containerId}" style="width: 100%; height: 100%; overflow-y: auto;"></div>`
                     }
                 }
             ]
         }
     ]
 }, t = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-    [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, 1, 1, 1, 1, 1, 1, -1, -1],
+    [-1, -1, 1, 1, 1, 1, 1, 1, -1, -1],
+    [-1, -1, -1, -1, 1, 1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 1, 1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 1, 1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 1, 1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 1, 1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 1, 1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 ], b = [
-    [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-    [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-    [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-    [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-    [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-    [0, 0, 1, 1, 1, 1, 1, 0, 0, 0]
+    [-1, -1, 1, 1, 1, 1, 1, -1, -1, -1],
+    [-1, -1, 1, 1, 1, 1, 1, 1, -1, -1],
+    [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+    [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+    [-1, -1, 1, 1, 1, 1, 1, -1, -1, -1],
+    [-1, -1, 1, 1, 1, 1, 1, -1, -1, -1],
+    [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+    [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+    [-1, -1, 1, 1, 1, 1, 1, 1, -1, -1],
+    [-1, -1, 1, 1, 1, 1, 1, -1, -1, -1]
 ], l = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-    [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-    [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-    [0, 1, 1, 1, 0, 0, 1, 1, 0, 0],
-    [0, 1, 1, 1, 0, 0, 1, 1, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, 1, 1, 1, 1, 1, 1, -1, -1],
+    [-1, -1, 1, 1, 1, 1, 1, 1, -1, -1],
+    [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+    [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+    [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+    [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1],
+    [-1, 1, 1, 1, -1, -1, 1, 1, -1, -1],
+    [-1, 1, 1, 1, -1, -1, 1, 1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 ], initLab6 = () => {
-    let container = document.querySelector(`#${containerId}`), runButton = $$(runButtonId), network = new network_1.default();
+    let container = document.querySelector(`#${containerId}`), runButton = $$(runButtonId), network = new network_1.default(), clearRowItems = () => {
+        let elements = container.querySelectorAll(`.rowItem`);
+        for (let len = elements.length - 1, i = len; i >= 0; i--) {
+            container.removeChild(elements[i]);
+        }
+    }, weights;
     runButton.attachEvent("onItemClick", () => {
-        let weights = network.learnNetwork([t, b, l], 100);
-        debugger;
-        let test20Percentage = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-            [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ];
-        let found = network.recognize(test20Percentage, weights);
-        testSVG3.updateValues(found);
+        clearRowItems();
+        weights = weights || network.learnNetwork([t, b, l], 100);
+        let images = [t, b, l], percentage = [10, 20, 30, 35, 40, 45, 50, 55, 60, 65, 70, 80, 90, 100];
+        for (let i = 0; i < 3; i++) {
+            let image = images[i];
+            for (let k = 0, len = percentage.length; k < len; k++) {
+                let persent = percentage[k], noise = network.getNoise(image, persent, 10), foundImage = network.recognize(noise, weights), rowItem = new svgElement_1.SvgRow(persent);
+                rowItem.updateRow(noise, foundImage);
+                container.appendChild(rowItem.container);
+            }
+        }
     });
     let testSVG = new svgElement_1.default();
     container.appendChild(testSVG.container);
@@ -1275,8 +1316,6 @@ let runButtonId = "lab6RunButton", containerId = "lab6COntainerId", ui = {
     let testSVG2 = new svgElement_1.default();
     container.appendChild(testSVG2.container);
     testSVG2.updateValues(l);
-    let testSVG3 = new svgElement_1.default();
-    container.appendChild(testSVG3.container);
 };
 exports.ui = ui;
 exports.initLab6 = initLab6;
