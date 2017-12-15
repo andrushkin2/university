@@ -1864,8 +1864,8 @@ let runLab3Id = "runLab3Id", formLab3Id = "formLab3Id", formOutputLab3Id = "form
             cols: [
                 uiItems_1.getForm(formOutputLab3Id, [
                     uiItems_1.getTextField("a", "A:", 0),
-                    uiItems_1.getTextField("l", "L:", 0)
-                    // getTextField("ticks", "Ticks:", 1000)
+                    uiItems_1.getTextField("l", "L:", 0),
+                    uiItems_1.getTextField("w", "W:", 0)
                 ], true)
             ]
         }
@@ -1877,7 +1877,8 @@ let runLab3Id = "runLab3Id", formLab3Id = "formLab3Id", formOutputLab3Id = "form
         let result = parser.calcValues(parseFloat(inputData.p1), parseFloat(inputData.p2), parseInt(inputData.ticks));
         formOutput.setValues({
             a: result.a,
-            l: result.l
+            l: result.l,
+            w: result.l / result.a
         });
     });
 };

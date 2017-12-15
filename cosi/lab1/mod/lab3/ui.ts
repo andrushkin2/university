@@ -24,8 +24,8 @@ let runLab3Id = "runLab3Id",
                 cols: [
                     getForm(formOutputLab3Id, [
                         getTextField("a", "A:", 0),
-                        getTextField("l", "L:", 0)
-                        // getTextField("ticks", "Ticks:", 1000)
+                        getTextField("l", "L:", 0),
+                        getTextField("w", "W:", 0)
                     ], true)
                 ]
             }
@@ -41,7 +41,8 @@ let runLab3Id = "runLab3Id",
             let result = parser.calcValues(parseFloat(inputData.p1), parseFloat(inputData.p2), parseInt(inputData.ticks));
             formOutput.setValues({
                 a: result.a,
-                l: result.l
+                l: result.l,
+                w: result.l / result.a
             });
         });
     };
