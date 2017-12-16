@@ -36,6 +36,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.calculateButton = new System.Windows.Forms.Button();
             this.textBox_Dx = new System.Windows.Forms.TextBox();
             this.textBox_Mx = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -48,7 +49,6 @@
             this.textBox_no_period = new System.Windows.Forms.TextBox();
             this.textBox_period = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.calculateButton = new System.Windows.Forms.Button();
             this.zedGraphControl1 = new ZedGraph.ZedGraphControl();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -75,7 +75,7 @@
             this.textBox_R0.Name = "textBox_R0";
             this.textBox_R0.Size = new System.Drawing.Size(100, 20);
             this.textBox_R0.TabIndex = 5;
-            this.textBox_R0.Text = "2797";
+            this.textBox_R0.Text = "1";
             // 
             // textBox_m
             // 
@@ -83,7 +83,7 @@
             this.textBox_m.Name = "textBox_m";
             this.textBox_m.Size = new System.Drawing.Size(100, 20);
             this.textBox_m.TabIndex = 4;
-            this.textBox_m.Text = "68030";
+            this.textBox_m.Text = "123121";
             // 
             // textBox_a
             // 
@@ -91,7 +91,7 @@
             this.textBox_a.Name = "textBox_a";
             this.textBox_a.Size = new System.Drawing.Size(100, 20);
             this.textBox_a.TabIndex = 3;
-            this.textBox_a.Text = "1567";
+            this.textBox_a.Text = "66";
             // 
             // label3
             // 
@@ -119,6 +119,17 @@
             this.label1.Size = new System.Drawing.Size(25, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "a = ";
+            // 
+            // calculateButton
+            // 
+            this.calculateButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.calculateButton.Location = new System.Drawing.Point(43, 120);
+            this.calculateButton.Name = "calculateButton";
+            this.calculateButton.Size = new System.Drawing.Size(100, 36);
+            this.calculateButton.TabIndex = 14;
+            this.calculateButton.Text = "Run";
+            this.calculateButton.UseVisualStyleBackColor = true;
+            this.calculateButton.Click += new System.EventHandler(this.calculateButton_Click);
             // 
             // textBox_Dx
             // 
@@ -224,17 +235,6 @@
             this.label10.TabIndex = 7;
             this.label10.Text = "Period =";
             this.label10.Click += new System.EventHandler(this.label10_Click);
-            // 
-            // calculateButton
-            // 
-            this.calculateButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.calculateButton.Location = new System.Drawing.Point(43, 120);
-            this.calculateButton.Name = "calculateButton";
-            this.calculateButton.Size = new System.Drawing.Size(100, 36);
-            this.calculateButton.TabIndex = 14;
-            this.calculateButton.Text = "Run";
-            this.calculateButton.UseVisualStyleBackColor = true;
-            this.calculateButton.Click += new System.EventHandler(this.calculateButton_Click);
             // 
             // zedGraphControl1
             // 
