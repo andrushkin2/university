@@ -4,10 +4,10 @@ using System.Text;
 
 namespace lab1
 {
-    class LehmerRandom
+    class Randomizer
     {
         private ulong a, m, Rprev, R0;
-        public LehmerRandom(ulong a, ulong m, ulong R0)
+        public Randomizer(ulong a, ulong m, ulong R0)
         {
             this.a = a;
             this.m = m;
@@ -29,16 +29,6 @@ namespace lab1
         public double Current()
         {        
             return (double) Rprev / m;
-        }
-
-        public ulong CurrentR()
-        {
-            return Rprev;
-        }
-
-        public ulong getM()
-        {
-            return m;
         }
 
     }
