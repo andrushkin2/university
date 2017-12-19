@@ -1029,7 +1029,7 @@ exports.greenChartId = greenChartId;
 exports.blueChartId = blueChartId;
 exports.ui = ui;
 
-},{"../mod/lab2/uiItems":15}],5:[function(require,module,exports){
+},{"../mod/lab2/uiItems":16}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class NetworkUtils {
@@ -1320,7 +1320,51 @@ let runButtonId = "lab6RunButton", containerId = "lab6COntainerId", ui = {
 exports.ui = ui;
 exports.initLab6 = initLab6;
 
-},{"../mod/lab2/uiItems":15,"./network":5,"./svgElement":6}],8:[function(require,module,exports){
+},{"../mod/lab2/uiItems":16,"./network":5,"./svgElement":6}],8:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const uiItems_1 = require("../mod/lab2/uiItems");
+let runButtonId = "lab7RunButton", containerId = "lab7COntainerId", lab7COntainer1Id = "lab7COntainer1Id", lab7FormId = "lab7FormId", ui = {
+    id: "lab7",
+    type: "space",
+    rows: [
+        {
+            type: "toolbar",
+            height: 50,
+            cols: [
+                uiItems_1.getButton(runButtonId),
+                uiItems_1.getForm(lab7FormId, [
+                    uiItems_1.getTextField("error", "Error:", 0.001)
+                ])
+            ]
+        },
+        {
+            template: `<div id="${lab7COntainer1Id}" style="width: 100%; height: 100%; overflow-y: auto;"></div>`
+        },
+        {
+            rows: [
+                {
+                    view: "scrollview",
+                    height: 1000,
+                    scroll: "auto",
+                    type: "space",
+                    body: {
+                        type: "space",
+                        template: `<div id="${containerId}" style="width: 100%; height: 100%; overflow-y: auto;"></div>`
+                    }
+                }
+            ]
+        }
+    ]
+}, initLab7 = () => {
+    let container = document.querySelector(`#${containerId}`), container1 = document.querySelector(`#${lab7COntainer1Id}`), runButton = $$(runButtonId), form = $$(lab7FormId);
+    runButton.attachEvent("onItemClick", () => {
+    });
+};
+exports.ui = ui;
+exports.initLab7 = initLab7;
+
+},{"../mod/lab2/uiItems":16}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataWorker {
@@ -1346,7 +1390,7 @@ class DataWorker {
 }
 exports.default = DataWorker;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1389,7 +1433,7 @@ let defaultData = {
 exports.exponentialUi = exponentialUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":20,"./uiItems":15}],10:[function(require,module,exports){
+},{"../modTest":21,"./uiItems":16}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1434,7 +1478,7 @@ let defaultData = {
 exports.gammaUi = gammaUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":20,"./uiItems":15}],11:[function(require,module,exports){
+},{"../modTest":21,"./uiItems":16}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1481,7 +1525,7 @@ let defaultData = {
 exports.gaussUi = gaussUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":20,"./uiItems":15}],12:[function(require,module,exports){
+},{"../modTest":21,"./uiItems":16}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uniformUi_1 = require("./uniformUi");
@@ -1522,7 +1566,7 @@ let distributionListId = "distributionListId", ui = {
 exports.distributionListId = distributionListId;
 exports.ui = ui;
 
-},{"./exponentialUi":9,"./gammaUi":10,"./gaussUi":11,"./simpsonUi":13,"./triangleUi":14,"./uniformUi":16}],13:[function(require,module,exports){
+},{"./exponentialUi":10,"./gammaUi":11,"./gaussUi":12,"./simpsonUi":14,"./triangleUi":15,"./uniformUi":17}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1567,7 +1611,7 @@ let defaultData = {
 exports.simpsonUi = simpsonUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":20,"./uiItems":15}],14:[function(require,module,exports){
+},{"../modTest":21,"./uiItems":16}],15:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1612,7 +1656,7 @@ let defaultData = {
 exports.triangleUi = triangleUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":20,"./uiItems":15}],15:[function(require,module,exports){
+},{"../modTest":21,"./uiItems":16}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let getButton = (buttonId) => ({
@@ -1663,7 +1707,7 @@ exports.getTextField = getTextField;
 exports.getForm = getForm;
 exports.getChart = getChart;
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1712,7 +1756,7 @@ exports.uniformChartId = uniformChartId;
 exports.uniformUi = uniformUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":20,"./uiItems":15}],17:[function(require,module,exports){
+},{"../modTest":21,"./uiItems":16}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Lab3Logic {
@@ -1841,7 +1885,7 @@ class Lab3Logic {
 }
 exports.default = Lab3Logic;
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("../lab2/uiItems");
@@ -1888,7 +1932,7 @@ exports.formOutputLab3Id = formOutputLab3Id;
 exports.ui = ui;
 exports.initLab3 = initLab3;
 
-},{"../lab2/uiItems":15,"./logic":17}],19:[function(require,module,exports){
+},{"../lab2/uiItems":16,"./logic":18}],20:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
@@ -1962,7 +2006,7 @@ class ModLab {
 }
 exports.default = ModLab;
 
-},{"./dataWorker":8,"./lab2/exponentialUi":9,"./lab2/gammaUi":10,"./lab2/gaussUi":11,"./lab2/simpsonUi":13,"./lab2/triangleUi":14,"./lab2/uniformUi":16,"./lab3/ui":18,"./modTest":20,"./ui":21}],20:[function(require,module,exports){
+},{"./dataWorker":9,"./lab2/exponentialUi":10,"./lab2/gammaUi":11,"./lab2/gaussUi":12,"./lab2/simpsonUi":14,"./lab2/triangleUi":15,"./lab2/uniformUi":17,"./lab3/ui":19,"./modTest":21,"./ui":22}],21:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let mult = (a, b) => a * b, div = (a, b) => a / b, mod = (a, b) => a % b, makeStep = (index, prevResult, a, m) => {
@@ -2138,7 +2182,7 @@ class ModLabUtils {
 }
 exports.default = ModLabUtils;
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mainUi_1 = require("./lab2/mainUi");
@@ -2301,7 +2345,7 @@ exports.formDataId = formDataId;
 exports.formOutputDataId = formOutputDataId;
 exports.UI = ui;
 
-},{"./lab2/mainUi":12,"./lab3/ui":18}],22:[function(require,module,exports){
+},{"./lab2/mainUi":13,"./lab3/ui":19}],23:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Complex {
@@ -2473,7 +2517,7 @@ exports.CorrelationFourier = correlationFourier;
 exports.FWHT = fwht;
 exports.GetPhaseAndAmplitude = getPhaseAndAmplitude;
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
@@ -2482,6 +2526,7 @@ const logic_1 = require("./lab1/logic");
 const ui_2 = require("./mod/ui");
 const madLab_1 = require("./mod/madLab");
 const ui_3 = require("./lab3/ui");
+const ui_4 = require("./lab4/ui");
 let getXData = (count) => {
     let i = 0, res = [];
     for (i; i < count; i++) {
@@ -2676,7 +2721,8 @@ let cosiUi = {
                         { value: "Lab 3", id: "lab3" },
                         { value: "Lab 4", id: "lab4" },
                         { value: "Lab 1 gen.2", id: "lab5" },
-                        { value: "Lab 3 gen.2", id: "lab6" }
+                        { value: "Lab 3 gen.2", id: "lab6" },
+                        { value: "Lab 4 gen.2", id: "lab7" }
                     ]
                 },
                 {}
@@ -2760,7 +2806,8 @@ let cosiUi = {
                         ]
                     },
                     ui_1.ui,
-                    ui_3.ui
+                    ui_3.ui,
+                    ui_4.ui
                 ]
             }
         }
@@ -2814,6 +2861,10 @@ webix.ready(() => {
             ui_3.initLab6();
             lab6Run = true;
         }
+        if (e === "lab7" && !lab6Run) {
+            ui_4.initLab7();
+            lab6Run = true;
+        }
     });
     $$("subjectsId").attachEvent("onAfterTabClick", (e) => {
         if (modLab === undefined) {
@@ -2839,4 +2890,4 @@ webix.ready(() => {
     });
 });
 
-},{"./lab1/logic":3,"./lab1/ui":4,"./lab3/ui":7,"./mod/madLab":19,"./mod/ui":21,"./test":22}]},{},[23]);
+},{"./lab1/logic":3,"./lab1/ui":4,"./lab3/ui":7,"./lab4/ui":8,"./mod/madLab":20,"./mod/ui":22,"./test":23}]},{},[24]);

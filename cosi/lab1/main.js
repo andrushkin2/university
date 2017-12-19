@@ -6,6 +6,7 @@ const logic_1 = require("./lab1/logic");
 const ui_2 = require("./mod/ui");
 const madLab_1 = require("./mod/madLab");
 const ui_3 = require("./lab3/ui");
+const ui_4 = require("./lab4/ui");
 let getXData = (count) => {
     let i = 0, res = [];
     for (i; i < count; i++) {
@@ -200,7 +201,8 @@ let cosiUi = {
                         { value: "Lab 3", id: "lab3" },
                         { value: "Lab 4", id: "lab4" },
                         { value: "Lab 1 gen.2", id: "lab5" },
-                        { value: "Lab 3 gen.2", id: "lab6" }
+                        { value: "Lab 3 gen.2", id: "lab6" },
+                        { value: "Lab 4 gen.2", id: "lab7" }
                     ]
                 },
                 {}
@@ -284,7 +286,8 @@ let cosiUi = {
                         ]
                     },
                     ui_1.ui,
-                    ui_3.ui
+                    ui_3.ui,
+                    ui_4.ui
                 ]
             }
         }
@@ -336,6 +339,10 @@ webix.ready(() => {
         }
         if (e === "lab6" && !lab6Run) {
             ui_3.initLab6();
+            lab6Run = true;
+        }
+        if (e === "lab7" && !lab6Run) {
+            ui_4.initLab7();
             lab6Run = true;
         }
     });

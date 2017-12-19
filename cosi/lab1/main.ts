@@ -4,6 +4,7 @@ import UiLogic from "./lab1/logic";
 import { UI as modUi } from "./mod/ui";
 import ModLab from "./mod/madLab";
 import { initLab6, ui as Lab6UI } from "./lab3/ui";
+import { initLab7, ui as Lab7UI } from "./lab4/ui";
 
 let getXData = (count: number): number[] => {
         let i: number = 0,
@@ -287,7 +288,8 @@ let cosiUi = {
                             { value: "Lab 3", id: "lab3" },
                             { value: "Lab 4", id: "lab4" },
                             { value: "Lab 1 gen.2", id: "lab5" },
-                            { value: "Lab 3 gen.2", id: "lab6" }
+                            { value: "Lab 3 gen.2", id: "lab6" },
+                            { value: "Lab 4 gen.2", id: "lab7" }
                         ]
                     },
                     {}
@@ -371,7 +373,8 @@ let cosiUi = {
                             ]
                         },
                         ui,
-                        Lab6UI
+                        Lab6UI,
+                        Lab7UI
                     ]
                 }
             }
@@ -428,6 +431,10 @@ webix.ready(() => {
         }
         if (e === "lab6" && !lab6Run) {
             initLab6();
+            lab6Run = true;
+        }
+        if (e === "lab7" && !lab6Run) {
+            initLab7();
             lab6Run = true;
         }
     });
