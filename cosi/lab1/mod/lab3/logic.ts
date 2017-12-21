@@ -10,6 +10,7 @@ export default class Lab3Logic {
         let input = 0,
             output = 0,
             l = 0,
+            w = 0,
             states: IState = {},
             state = "2000",   // t0 - 0   j - 1   t1 - 2  t2 - 3
             calcState = (randP1: number, randP2: number) => {
@@ -105,12 +106,15 @@ export default class Lab3Logic {
                     debugger;
                     break;
             }
+            let j = parseInt(state[1]) || 0;
+            w += j;
             states[state] = this.updateState(states[state]);
             l += parseInt(state[1]) > 0 ? 1 : 0;
         }
         return {
             a: output / ticks,
-            l: l / ticks
+            l: l / ticks,
+            w: w / output
         };
     }
     private getNewState(currState: string, newValue: number, valueIndex: number) {

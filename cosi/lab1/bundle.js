@@ -1029,7 +1029,7 @@ exports.greenChartId = greenChartId;
 exports.blueChartId = blueChartId;
 exports.ui = ui;
 
-},{"../mod/lab2/uiItems":16}],5:[function(require,module,exports){
+},{"../mod/lab2/uiItems":18}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class NetworkUtils {
@@ -1320,11 +1320,264 @@ let runButtonId = "lab6RunButton", containerId = "lab6COntainerId", ui = {
 exports.ui = ui;
 exports.initLab6 = initLab6;
 
-},{"../mod/lab2/uiItems":16,"./network":5,"./svgElement":6}],8:[function(require,module,exports){
+},{"../mod/lab2/uiItems":18,"./network":5,"./svgElement":6}],8:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class Perceptron {
+    constructor(inputDemension, outputDemension) {
+        this.h = 0;
+        this.inputDemension = 0;
+        this.outputDemension = 0;
+        this.trainingSet = [];
+        this.layers = [];
+        this.psi = (h) => h;
+        this.dpsi = (h) => h;
+        this.weights = [];
+        this.inputDemension = inputDemension;
+        this.outputDemension = outputDemension;
+        this.layers.push(new Layer(inputDemension));
+        this.h = 1;
+    }
+    addHiddenLayer(dimension) {
+        this.layers.push(new Layer(dimension));
+        this.h++;
+    }
+    setPSI(psi, dpsi) {
+        this.psi = (value) => psi(value);
+        this.dpsi = (value) => dpsi(value);
+    }
+    init() {
+        this.layers.push(new Layer(this.outputDemension));
+        this.h++;
+        this.resetWeights();
+    }
+    train(eta) {
+        let trainingSetError = 0;
+        for (let t = 0, len = this.trainingSet.length; t < len; t++) {
+            let te = this.trainingSet[t], x = te.in, y = te.out, actual = this.classify(x);
+            let err = 0;
+            for (let i = 0, subLen = this.trainingSet.length; i < subLen; i++) {
+                err += Math.pow(y[t] - actual[t], 2);
+            }
+            trainingSetError += err * err;
+            for (let i = 0; i < this.layers[this.h - 1].dim; i++) {
+                this.layers[this.h - 1].err[i] = y[i] - actual[i];
+            }
+            for (let h = this.h - 2; h >= 0; h--) {
+                this.calcLayerError(h);
+            }
+            for (let h = 1; h < this.h; h++) {
+                this.updateWeights(h, eta);
+            }
+        }
+        return Math.sqrt(trainingSetError);
+    }
+    calcLayerError(h) {
+        let w = this.weights[h];
+        debugger;
+        for (let i = 0; i < this.layers[h].dim; i++) {
+            let sum = 0;
+            for (let j = 0; j < this.layers[h + 1].dim; j++) {
+                sum += w.w[j * w.inputDim + i] * this.layers[h + 1].err[j];
+            }
+            this.layers[h].err[i] = this.dpsi(this.layers[h].in[i]) * sum;
+        }
+    }
+    updateWeights(h, eta) {
+        let w = this.weights[h - 1];
+        for (let i = 0; i < w.inputDim; i++) {
+            for (let j = 0; j < w.outputDim; j++) {
+                let dw = eta * (this.layers[h].err[i] * this.layers[h - 1].out[j]);
+                w.w[i * w.inputDim + j] += dw;
+            }
+        }
+    }
+    setTrainingSet(trainingSet) {
+        this.trainingSet = trainingSet;
+    }
+    resetWeights() {
+        this.weights = [];
+        for (let h = 0; h < this.h - 1; h++) {
+            let dim0 = this.layers[h].dim, dim1 = this.layers[h + 1].dim;
+            this.weights.push(new WeightMatrix(dim0, dim1, 1.0));
+        }
+    }
+    classify(x) {
+        let h;
+        if (x.length === this.inputDemension) {
+            let layer = this.layers[0];
+            for (let i = 0; i < this.inputDemension; i++) {
+                layer.out[i] = x[i];
+            }
+            for (let i = 0; i < this.h; i++) {
+                this.calcLayerInput(i);
+                this.calcLayerOutput(i);
+            }
+            return this.layers[this.h - 1].out;
+        }
+        return x;
+    }
+    calcLayerInput(h) {
+        if (h > 0 && h < this.h) {
+            let w = this.weights[h - 1];
+            for (let i = 0; i < this.layers[h].dim; i++) {
+                this.layers[h].in[i] = 0;
+                for (let j = 0; j < this.layers[h - 1].dim; j++) {
+                    this.layers[h].in[i] += this.layers[h - 1].out[j] * w.w[i * w.inputDim + j];
+                }
+            }
+        }
+    }
+    calcLayerOutput(h) {
+        for (let i = 0; i < this.layers[h].dim; i++) {
+            this.layers[h].out[i] = this.psi(this.layers[h].in[i]);
+        }
+    }
+}
+exports.default = Perceptron;
+class WeightMatrix {
+    constructor(inputDim, outputDim, widthScale) {
+        this.inputDim = 0;
+        this.outputDim = 0;
+        this.w = [];
+        this.w = [];
+        this.inputDim = inputDim;
+        this.outputDim = outputDim;
+        for (let i = 0, len = inputDim * outputDim; i < len; i++) {
+            this.w.push(2 * widthScale * Math.random() - widthScale);
+        }
+    }
+}
+class Layer {
+    constructor(count) {
+        this.count = 0;
+        this.input = [];
+        this.output = [];
+        this.error = [];
+        this.count = count;
+        for (let i = 0; i < count; i++) {
+            this.input.push(0);
+            this.output.push(0);
+            this.error.push(0);
+        }
+    }
+    get dim() {
+        return this.count;
+    }
+    get in() {
+        return this.input;
+    }
+    get out() {
+        return this.output;
+    }
+    get err() {
+        return this.error;
+    }
+}
+class TrainingElement {
+    constructor(input, output) {
+        this.input = input.slice(0);
+        this.output = output.slice(0);
+    }
+    get in() {
+        return this.input;
+    }
+    get out() {
+        return this.output;
+    }
+}
+exports.TrainingElement = TrainingElement;
+
+},{}],9:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+let itemSize = 20, count = 6, height = itemSize * count, width = height, svgNamespace = "http://www.w3.org/2000/svg", createElement = (tagName, appendTo, props, cssObj) => {
+    let el = document.createElementNS(svgNamespace, tagName);
+    props !== undefined && setAttributes(el, props);
+    cssObj !== undefined && css(el, cssObj);
+    appendTo !== undefined && appendTo.appendChild(el);
+    return el;
+}, setAttributes = (element, props) => {
+    for (let i = 0, keys = Object.keys(props), len = keys.length; i < len; i++) {
+        element.setAttribute(keys[i], props[keys[i]]);
+    }
+}, css = (element, cssObj) => {
+    for (let i = 0, keys = Object.keys(cssObj), len = keys.length; i < len; i++) {
+        element.style[keys[i]] = cssObj[keys[i]];
+    }
+};
+class CheckmatePicture {
+    constructor() {
+        this.elements = [];
+        this.container = this.createSvg();
+        for (let i = 0; i < count; i++) {
+            let x = i * itemSize, items = [];
+            for (let j = 0; j < count; j++) {
+                items.push(new Rect(j * itemSize, x, itemSize, this.container));
+            }
+            this.elements[i] = items;
+        }
+    }
+    updateValues(values) {
+        for (let i = 0; i < count; i++) {
+            for (let j = 0; j < count; j++) {
+                this.elements[i][j].value = values[i][j];
+            }
+        }
+    }
+    getValues() {
+        let result = [];
+        for (let i = 0; i < count; i++) {
+            let items = [];
+            for (let j = 0; j < count; j++) {
+                items[j] = this.elements[i][j].value;
+            }
+            result[i] = items;
+        }
+        return result;
+    }
+    createSvg() {
+        let svg = document.createElementNS(svgNamespace, "svg");
+        svg.style.webkitTransform = "translateZ(0)";
+        svg.style.pointerEvents = "all";
+        svg.style.overflow = "hidden";
+        svg.style.transformOrigin = "0px 0px 0px";
+        svg.style.border = "1px solid block";
+        svg.setAttributeNS(svgNamespace, "width", `${width}`);
+        svg.setAttributeNS(svgNamespace, "height", `${height}`);
+        return svg;
+    }
+}
+exports.default = CheckmatePicture;
+class Rect {
+    constructor(x, y, size, parent) {
+        this.state = 1;
+        this.container = createElement("rect", parent, {
+            x: x,
+            y: y,
+            width: size,
+            height: size,
+            fill: "white"
+        });
+    }
+    set value(newValue) {
+        this.state = newValue;
+        setAttributes(this.container, {
+            fill: this.state === 0 ? "black" : "white"
+        });
+    }
+    get value() {
+        return this.state;
+    }
+}
+
+},{}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("../mod/lab2/uiItems");
-let runButtonId = "lab7RunButton", containerId = "lab7COntainerId", lab7COntainer1Id = "lab7COntainer1Id", lab7FormId = "lab7FormId", ui = {
+const svgPicture_1 = require("./svgPicture");
+const perceptron_1 = require("./perceptron");
+let runButtonId = "lab7RunButton", lab7FindButton = "lab7FindButton", containerId = "lab7COntainerId", lab7COntainer1Id = "lab7COntainer1Id", lab7FormId = "lab7FormId", lab7FormOutputId = "lab7FormOutputId", ui = {
     id: "lab7",
     type: "space",
     rows: [
@@ -1332,39 +1585,108 @@ let runButtonId = "lab7RunButton", containerId = "lab7COntainerId", lab7COntaine
             type: "toolbar",
             height: 50,
             cols: [
-                uiItems_1.getButton(runButtonId),
+                uiItems_1.getButton(runButtonId, "Training"),
                 uiItems_1.getForm(lab7FormId, [
                     uiItems_1.getTextField("error", "Error:", 0.001)
                 ])
             ]
         },
         {
-            template: `<div id="${lab7COntainer1Id}" style="width: 100%; height: 100%; overflow-y: auto;"></div>`
+            template: `<div id="${lab7COntainer1Id}" style="width: 100:; height: auto; overflow-y: auto; padding: 5px; background: grey;"></div>`
         },
         {
-            rows: [
-                {
-                    view: "scrollview",
-                    height: 1000,
-                    scroll: "auto",
-                    type: "space",
-                    body: {
-                        type: "space",
-                        template: `<div id="${containerId}" style="width: 100%; height: 100%; overflow-y: auto;"></div>`
-                    }
-                }
+            type: "toolbar",
+            height: 50,
+            cols: [
+                uiItems_1.getButton(lab7FindButton),
+                uiItems_1.getForm(lab7FormOutputId, [
+                    uiItems_1.getTextField("1", "1:", 0),
+                    uiItems_1.getTextField("2", "2:", 0),
+                    uiItems_1.getTextField("3", "3:", 0),
+                    uiItems_1.getTextField("4", "4:", 0),
+                    uiItems_1.getTextField("5", "5:", 0)
+                ])
             ]
         }
     ]
-}, initLab7 = () => {
-    let container = document.querySelector(`#${containerId}`), container1 = document.querySelector(`#${lab7COntainer1Id}`), runButton = $$(runButtonId), form = $$(lab7FormId);
+}, d = [
+    [1, 1, 0, 0, 0, 0],
+    [1, 0, 1, 0, 0, 0],
+    [1, 0, 1, 0, 0, 0],
+    [1, 0, 1, 0, 0, 0],
+    [1, 0, 1, 0, 0, 0],
+    [1, 1, 0, 0, 0, 0]
+], f = [
+    [1, 1, 1, 1, 0, 0],
+    [1, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0],
+    [1, 1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0]
+], iLatter = [
+    [0, 1, 1, 1, 0, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, 1, 1, 1, 0, 0]
+], nLatter = [
+    [1, 0, 0, 0, 0, 1],
+    [1, 1, 0, 0, 0, 1],
+    [1, 0, 1, 0, 0, 1],
+    [1, 0, 0, 1, 0, 1],
+    [1, 0, 0, 0, 1, 1],
+    [1, 0, 0, 0, 0, 1]
+], p = [
+    [1, 1, 1, 0, 0, 0],
+    [1, 0, 0, 1, 0, 0],
+    [1, 0, 0, 1, 0, 0],
+    [1, 1, 1, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0]
+], initLab7 = () => {
+    let container1 = document.querySelector(`#${lab7COntainer1Id}`), runButton = $$(runButtonId), form = $$(lab7FormId), a = 0.5, psi = (value) => 1.0 / (1.0 + Math.exp(-a * value)), dpsi = (value) => psi(value) * (1.0 - psi(value));
+    let perceprtor = new perceptron_1.default(36, 5), trainingElements = [], setTrainElement = (image, n) => {
+        if (!trainingElements[n]) {
+            trainingElements[n] = new perceptron_1.TrainingElement([], []);
+        }
+        let trainingElement = trainingElements[n];
+        for (let i = 0, k = 0; i < 6; i++) {
+            for (let j = 0; j < 6; j++, k++) {
+                trainingElement.in[k] = image[i][j];
+            }
+        }
+        for (let i = 0; i < 5; i++) {
+            if (i !== n) {
+                trainingElement.out[i] = 0.0;
+            }
+            else {
+                trainingElement.out[i] = 1.0;
+            }
+        }
+    };
+    [d, f, iLatter, nLatter, p].forEach((value, n) => {
+        setTrainElement(value, n);
+        let svg = new svgPicture_1.default();
+        svg.updateValues(value);
+        container1.appendChild(svg.container);
+    });
+    perceprtor.addHiddenLayer(40);
+    perceprtor.setPSI(psi, dpsi);
+    perceprtor.init();
     runButton.attachEvent("onItemClick", () => {
+        debugger;
+        perceprtor.setTrainingSet(trainingElements);
+        let error;
+        do {
+            error = perceprtor.train(0.2);
+        } while (error > 0.005);
     });
 };
 exports.ui = ui;
 exports.initLab7 = initLab7;
 
-},{"../mod/lab2/uiItems":16}],9:[function(require,module,exports){
+},{"../mod/lab2/uiItems":18,"./perceptron":8,"./svgPicture":9}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataWorker {
@@ -1390,7 +1712,7 @@ class DataWorker {
 }
 exports.default = DataWorker;
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1433,7 +1755,7 @@ let defaultData = {
 exports.exponentialUi = exponentialUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":21,"./uiItems":16}],11:[function(require,module,exports){
+},{"../modTest":23,"./uiItems":18}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1478,7 +1800,7 @@ let defaultData = {
 exports.gammaUi = gammaUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":21,"./uiItems":16}],12:[function(require,module,exports){
+},{"../modTest":23,"./uiItems":18}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1525,7 +1847,7 @@ let defaultData = {
 exports.gaussUi = gaussUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":21,"./uiItems":16}],13:[function(require,module,exports){
+},{"../modTest":23,"./uiItems":18}],15:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uniformUi_1 = require("./uniformUi");
@@ -1566,7 +1888,7 @@ let distributionListId = "distributionListId", ui = {
 exports.distributionListId = distributionListId;
 exports.ui = ui;
 
-},{"./exponentialUi":10,"./gammaUi":11,"./gaussUi":12,"./simpsonUi":14,"./triangleUi":15,"./uniformUi":17}],14:[function(require,module,exports){
+},{"./exponentialUi":12,"./gammaUi":13,"./gaussUi":14,"./simpsonUi":16,"./triangleUi":17,"./uniformUi":19}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1611,7 +1933,7 @@ let defaultData = {
 exports.simpsonUi = simpsonUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":21,"./uiItems":16}],15:[function(require,module,exports){
+},{"../modTest":23,"./uiItems":18}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1656,15 +1978,15 @@ let defaultData = {
 exports.triangleUi = triangleUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":21,"./uiItems":16}],16:[function(require,module,exports){
+},{"../modTest":23,"./uiItems":18}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let getButton = (buttonId) => ({
+let getButton = (buttonId, buttonText = "Run") => ({
     view: "button",
     css: "button_primary button_raised",
     id: buttonId,
     width: 100,
-    value: "Run"
+    value: buttonText
 }), getTextField = (name, label, value = "") => ({
     view: "text",
     value: value,
@@ -1707,7 +2029,7 @@ exports.getTextField = getTextField;
 exports.getForm = getForm;
 exports.getChart = getChart;
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("./uiItems");
@@ -1756,12 +2078,12 @@ exports.uniformChartId = uniformChartId;
 exports.uniformUi = uniformUi;
 exports.initFunction = initFunction;
 
-},{"../modTest":21,"./uiItems":16}],18:[function(require,module,exports){
+},{"../modTest":23,"./uiItems":18}],20:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Lab3Logic {
     calcValues(p1, p2, ticks) {
-        let input = 0, output = 0, l = 0, states = {}, state = "2000", // t0 - 0   j - 1   t1 - 2  t2 - 3
+        let input = 0, output = 0, l = 0, w = 0, states = {}, state = "2000", // t0 - 0   j - 1   t1 - 2  t2 - 3
         calcState = (randP1, randP2) => {
             if (state[2] === "1" && randP1 > p1) {
                 state = this.getNewState(state, 0, 2);
@@ -1863,12 +2185,15 @@ class Lab3Logic {
                     debugger;
                     break;
             }
+            let j = parseInt(state[1]) || 0;
+            w += j;
             states[state] = this.updateState(states[state]);
             l += parseInt(state[1]) > 0 ? 1 : 0;
         }
         return {
             a: output / ticks,
-            l: l / ticks
+            l: l / ticks,
+            w: w / output
         };
     }
     getNewState(currState, newValue, valueIndex) {
@@ -1885,7 +2210,7 @@ class Lab3Logic {
 }
 exports.default = Lab3Logic;
 
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("../lab2/uiItems");
@@ -1922,7 +2247,7 @@ let runLab3Id = "runLab3Id", formLab3Id = "formLab3Id", formOutputLab3Id = "form
         formOutput.setValues({
             a: result.a,
             l: result.l,
-            w: result.l / result.a
+            w: result.w
         });
     });
 };
@@ -1932,7 +2257,7 @@ exports.formOutputLab3Id = formOutputLab3Id;
 exports.ui = ui;
 exports.initLab3 = initLab3;
 
-},{"../lab2/uiItems":16,"./logic":18}],20:[function(require,module,exports){
+},{"../lab2/uiItems":18,"./logic":20}],22:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ui_1 = require("./ui");
@@ -2006,7 +2331,7 @@ class ModLab {
 }
 exports.default = ModLab;
 
-},{"./dataWorker":9,"./lab2/exponentialUi":10,"./lab2/gammaUi":11,"./lab2/gaussUi":12,"./lab2/simpsonUi":14,"./lab2/triangleUi":15,"./lab2/uniformUi":17,"./lab3/ui":19,"./modTest":21,"./ui":22}],21:[function(require,module,exports){
+},{"./dataWorker":11,"./lab2/exponentialUi":12,"./lab2/gammaUi":13,"./lab2/gaussUi":14,"./lab2/simpsonUi":16,"./lab2/triangleUi":17,"./lab2/uniformUi":19,"./lab3/ui":21,"./modTest":23,"./ui":24}],23:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let mult = (a, b) => a * b, div = (a, b) => a / b, mod = (a, b) => a % b, makeStep = (index, prevResult, a, m) => {
@@ -2182,7 +2507,7 @@ class ModLabUtils {
 }
 exports.default = ModLabUtils;
 
-},{}],22:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mainUi_1 = require("./lab2/mainUi");
@@ -2345,7 +2670,7 @@ exports.formDataId = formDataId;
 exports.formOutputDataId = formOutputDataId;
 exports.UI = ui;
 
-},{"./lab2/mainUi":13,"./lab3/ui":19}],23:[function(require,module,exports){
+},{"./lab2/mainUi":15,"./lab3/ui":21}],25:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Complex {
@@ -2517,7 +2842,7 @@ exports.CorrelationFourier = correlationFourier;
 exports.FWHT = fwht;
 exports.GetPhaseAndAmplitude = getPhaseAndAmplitude;
 
-},{}],24:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const test_1 = require("./test");
@@ -2890,4 +3215,4 @@ webix.ready(() => {
     });
 });
 
-},{"./lab1/logic":3,"./lab1/ui":4,"./lab3/ui":7,"./lab4/ui":8,"./mod/madLab":20,"./mod/ui":22,"./test":23}]},{},[24]);
+},{"./lab1/logic":3,"./lab1/ui":4,"./lab3/ui":7,"./lab4/ui":10,"./mod/madLab":22,"./mod/ui":24,"./test":25}]},{},[26]);

@@ -3,9 +3,9 @@ interface IKeyValue {
     [key: string]: string | number;
 }
 
-let itemSize = 6,
+let itemSize = 20,
     count = 6,
-    height = count * itemSize,
+    height = itemSize * count,
     width = height,
     svgNamespace = "http://www.w3.org/2000/svg",
     createElement = <T extends SVGElement>(tagName: string, appendTo?: HTMLElement | SVGElement, props?: IKeyValue, cssObj?: IKeyValue) => {
@@ -64,6 +64,7 @@ export default class CheckmatePicture {
         svg.style.pointerEvents = "all";
         svg.style.overflow = "hidden";
         svg.style.transformOrigin = "0px 0px 0px";
+        svg.style.border = "1px solid block";
         svg.setAttributeNS(svgNamespace, "width", `${width}`);
         svg.setAttributeNS(svgNamespace, "height", `${height}`);
         return <SVGSVGElement>svg;

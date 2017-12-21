@@ -42,7 +42,7 @@ let runLab3Id = "runLab3Id",
             formOutput.setValues({
                 a: result.a,
                 l: result.l,
-                w: result.l / result.a
+                w: result.w
             });
         });
     };

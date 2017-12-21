@@ -51,9 +51,10 @@ class Perceptron {
     }
     calcLayerError(h) {
         let w = this.weights[h];
+        debugger;
         for (let i = 0; i < this.layers[h].dim; i++) {
             let sum = 0;
-            for (let j = 0; j < this.layers[h + 1].dim; i++) {
+            for (let j = 0; j < this.layers[h + 1].dim; j++) {
                 sum += w.w[j * w.inputDim + i] * this.layers[h + 1].err[j];
             }
             this.layers[h].err[i] = this.dpsi(this.layers[h].in[i]) * sum;
@@ -94,7 +95,7 @@ class Perceptron {
         return x;
     }
     calcLayerInput(h) {
-        if (h < 0 && h < this.h) {
+        if (h > 0 && h < this.h) {
             let w = this.weights[h - 1];
             for (let i = 0; i < this.layers[h].dim; i++) {
                 this.layers[h].in[i] = 0;
@@ -162,3 +163,4 @@ class TrainingElement {
         return this.output;
     }
 }
+exports.TrainingElement = TrainingElement;

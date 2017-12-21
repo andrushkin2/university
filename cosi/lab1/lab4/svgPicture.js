@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let itemSize = 6, count = 6, height = count * itemSize, width = height, svgNamespace = "http://www.w3.org/2000/svg", createElement = (tagName, appendTo, props, cssObj) => {
+let itemSize = 20, count = 6, height = itemSize * count, width = height, svgNamespace = "http://www.w3.org/2000/svg", createElement = (tagName, appendTo, props, cssObj) => {
     let el = document.createElementNS(svgNamespace, tagName);
     props !== undefined && setAttributes(el, props);
     cssObj !== undefined && css(el, cssObj);
@@ -51,6 +51,7 @@ class CheckmatePicture {
         svg.style.pointerEvents = "all";
         svg.style.overflow = "hidden";
         svg.style.transformOrigin = "0px 0px 0px";
+        svg.style.border = "1px solid block";
         svg.setAttributeNS(svgNamespace, "width", `${width}`);
         svg.setAttributeNS(svgNamespace, "height", `${height}`);
         return svg;

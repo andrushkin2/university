@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class Lab3Logic {
     calcValues(p1, p2, ticks) {
-        let input = 0, output = 0, l = 0, states = {}, state = "2000", // t0 - 0   j - 1   t1 - 2  t2 - 3
+        let input = 0, output = 0, l = 0, w = 0, states = {}, state = "2000", // t0 - 0   j - 1   t1 - 2  t2 - 3
         calcState = (randP1, randP2) => {
             if (state[2] === "1" && randP1 > p1) {
                 state = this.getNewState(state, 0, 2);
@@ -104,12 +104,15 @@ class Lab3Logic {
                     debugger;
                     break;
             }
+            let j = parseInt(state[1]) || 0;
+            w += j;
             states[state] = this.updateState(states[state]);
             l += parseInt(state[1]) > 0 ? 1 : 0;
         }
         return {
             a: output / ticks,
-            l: l / ticks
+            l: l / ticks,
+            w: w / output
         };
     }
     getNewState(currState, newValue, valueIndex) {

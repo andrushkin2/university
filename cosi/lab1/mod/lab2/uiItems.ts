@@ -1,10 +1,10 @@
 
-let getButton = (buttonId: string) => (<webix.ui.buttonConfig>{
+let getButton = (buttonId: string, buttonText = "Run") => (<webix.ui.buttonConfig>{
         view: "button",
         css: "button_primary button_raised",
         id: buttonId,
         width: 100,
-        value: "Run"
+        value: buttonText
     }),
     getTextField = (name: string, label: string, value: string | number = "") => (<webix.ui.textConfig>{
         view: "text",

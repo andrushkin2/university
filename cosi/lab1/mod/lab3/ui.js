@@ -34,7 +34,7 @@ let runLab3Id = "runLab3Id", formLab3Id = "formLab3Id", formOutputLab3Id = "form
         formOutput.setValues({
             a: result.a,
             l: result.l,
-            w: result.l / result.a
+            w: result.w
         });
     });
 };
