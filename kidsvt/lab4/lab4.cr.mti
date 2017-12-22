@@ -1,4 +1,11 @@
-//Mac/Home/Documents/git/university/kidsvt/lab4/test.vhd {1 {vcom -work work -87 -explicit //Mac/Home/Documents/git/university/kidsvt/lab4/test.vhd
+//Mac/Home/Documents/git/university/kidsvt/lab4/model2.vhd {1 {vcom -work work -87 -explicit //Mac/Home/Documents/git/university/kidsvt/lab4/model2.vhd
+Model Technology ModelSim SE vcom 5.7f Compiler 2003.09 Sep 15 2003
+-- Loading package standard
+-- Loading package std_logic_1164
+-- Compiling entity lab4_3
+-- Compiling architecture v1 of lab4_3
+
+} {} {}} //Mac/Home/Documents/git/university/kidsvt/lab4/test.vhd {1 {vcom -work work -87 -explicit //Mac/Home/Documents/git/university/kidsvt/lab4/test.vhd
 Model Technology ModelSim SE vcom 5.7f Compiler 2003.09 Sep 15 2003
 -- Loading package standard
 -- Compiling entity test_test
