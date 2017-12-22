@@ -13,8 +13,8 @@ signal tempD1, tempD2: STD_LOGIC;
 begin
 	process (PRL, CLRL, CLK, J, KL, D1, D2)
 	  begin
-		assert not(PRL='1' and CLRL='1' and CLK'event and CLK='1' and J'event and KL'event) report "Error :(" severity error;
-
+		assert not(PRL='1' and CLRL='1' and CLK'event and CLK='1' and ((J'event and KL'event) or J'event or KL'event)) report "Error :(" severity error;
+	
 		if (PRL='1' and CLRL='1') then
 			if (CLK'event and CLK='1' and J='0' and KL='0') then
 				tempD1 <= '0';

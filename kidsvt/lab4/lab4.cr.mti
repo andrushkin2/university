@@ -32,4 +32,12 @@ Model Technology ModelSim SE vcom 5.7f Compiler 2003.09 Sep 15 2003
 -- Loading entity o2
 -- Loading entity na3
 
+} {} {}} //Mac/Home/Documents/git/university/kidsvt/lab4/test2.vhd {1 {vcom -work work -87 -explicit //Mac/Home/Documents/git/university/kidsvt/lab4/test2.vhd
+Model Technology ModelSim SE vcom 5.7f Compiler 2003.09 Sep 15 2003
+-- Loading package standard
+-- Compiling entity test_test2
+-- Loading package std_logic_1164
+-- Compiling architecture bench of test_test2
+-- Loading entity lab4_3
+
 } {} {}}
