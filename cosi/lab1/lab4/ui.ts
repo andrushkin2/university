@@ -5,9 +5,11 @@ import { debug } from "util";
 import Perceptron, { TrainingElement } from "./perceptron";
 
 let runButtonId = "lab7RunButton",
+    runButton2Id = "runButton2Id",
     lab7FindButton = "lab7FindButton",
     containerId = "lab7COntainerId",
     lab7COntainer1Id = "lab7COntainer1Id",
+    lab7COntainer2Id = "lab7COntainer2Id",
     lab7FormId = "lab7FormId",
     lab7FormOutputId = "lab7FormOutputId",
     ui = {
@@ -26,6 +28,20 @@ let runButtonId = "lab7RunButton",
             },
             {
                 template: `<div id="${lab7COntainer1Id}" style="width: 100:; height: auto; overflow-y: auto; padding: 5px; background: grey;"></div>`
+            },
+            {
+                cols: [
+                    <webix.ui.toolbarConfig>{
+                        type: "toolbar",
+                        height: 50,
+                        cols: [
+                            getButton(runButton2Id, "Add noise"),
+                        ]
+                    },
+                    {
+                        template: `<div id="${lab7COntainer2Id}" style="width: 100:; height: auto; overflow-y: auto; padding: 5px; background: grey;"></div>`
+                    }
+                ]
             },
             <webix.ui.toolbarConfig>{
                 type: "toolbar",
@@ -85,7 +101,9 @@ let runButtonId = "lab7RunButton",
     ],
     initLab7 = () => {
         let container1 = document.querySelector(`#${lab7COntainer1Id}`) as HTMLElement,
+            container2 = document.querySelector(`#${lab7COntainer2Id}`) as HTMLElement,
             runButton = $$(runButtonId) as IButton,
+            addNoise = $$(runButton2Id) as IButton,
             form = $$(lab7FormId) as IForm,
             a = 0.5,
             psi = (value: number) => 1.0 / (1.0 + Math.exp(-a * value)),
@@ -110,6 +128,13 @@ let runButtonId = "lab7RunButton",
                             trainingElement.out[i] = 1.0;
                         }
                     }
+                },
+                toFlattenArray = (array: number[][]) => {
+                    let res: number[] = [];
+                    for (let i = 0, len = array.length; i < len; i++) {
+                        res = res.concat(array[i]);
+                    }
+                    return res;
                 };
             [d, f, iLatter, nLatter, p].forEach((value, n) => {
                 setTrainElement(value, n);
@@ -117,6 +142,11 @@ let runButtonId = "lab7RunButton",
                 svg.updateValues(value);
                 container1.appendChild(svg.container);
             });
+
+        let activeSvgEl = new CheckmatePicture(),
+            activeState = d.slice(0);
+        container2.appendChild(activeSvgEl.container);
+        activeSvgEl.updateValues(activeState);
 
         perceprtor.addHiddenLayer(40);
         perceprtor.setPSI(psi, dpsi);
@@ -128,6 +158,11 @@ let runButtonId = "lab7RunButton",
             do {
                 error = perceprtor.train(0.2);
             } while (error > 0.005);
+        });
+        addNoise.attachEvent("onItemClick", () => {
+            debugger;
+            let res = perceprtor.classify(toFlattenArray(activeState));
+            debugger;
         });
     };
 

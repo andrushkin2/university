@@ -87,7 +87,7 @@ export default class Perceptron {
             this.weights.push(new WeightMatrix(dim0, dim1, 1.0));
         }
     }
-    private classify(x: number[]) {
+    public classify(x: number[]) {
         let h: number;
         if (x.length === this.inputDemension) {
             let layer = this.layers[0];

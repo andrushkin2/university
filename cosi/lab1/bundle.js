@@ -1577,7 +1577,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const uiItems_1 = require("../mod/lab2/uiItems");
 const svgPicture_1 = require("./svgPicture");
 const perceptron_1 = require("./perceptron");
-let runButtonId = "lab7RunButton", lab7FindButton = "lab7FindButton", containerId = "lab7COntainerId", lab7COntainer1Id = "lab7COntainer1Id", lab7FormId = "lab7FormId", lab7FormOutputId = "lab7FormOutputId", ui = {
+let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton = "lab7FindButton", containerId = "lab7COntainerId", lab7COntainer1Id = "lab7COntainer1Id", lab7COntainer2Id = "lab7COntainer2Id", lab7FormId = "lab7FormId", lab7FormOutputId = "lab7FormOutputId", ui = {
     id: "lab7",
     type: "space",
     rows: [
@@ -1593,6 +1593,20 @@ let runButtonId = "lab7RunButton", lab7FindButton = "lab7FindButton", containerI
         },
         {
             template: `<div id="${lab7COntainer1Id}" style="width: 100:; height: auto; overflow-y: auto; padding: 5px; background: grey;"></div>`
+        },
+        {
+            cols: [
+                {
+                    type: "toolbar",
+                    height: 50,
+                    cols: [
+                        uiItems_1.getButton(runButton2Id, "Add noise"),
+                    ]
+                },
+                {
+                    template: `<div id="${lab7COntainer2Id}" style="width: 100:; height: auto; overflow-y: auto; padding: 5px; background: grey;"></div>`
+                }
+            ]
         },
         {
             type: "toolbar",
@@ -1645,7 +1659,7 @@ let runButtonId = "lab7RunButton", lab7FindButton = "lab7FindButton", containerI
     [1, 0, 0, 0, 0, 0],
     [1, 0, 0, 0, 0, 0]
 ], initLab7 = () => {
-    let container1 = document.querySelector(`#${lab7COntainer1Id}`), runButton = $$(runButtonId), form = $$(lab7FormId), a = 0.5, psi = (value) => 1.0 / (1.0 + Math.exp(-a * value)), dpsi = (value) => psi(value) * (1.0 - psi(value));
+    let container1 = document.querySelector(`#${lab7COntainer1Id}`), container2 = document.querySelector(`#${lab7COntainer2Id}`), runButton = $$(runButtonId), addNoise = $$(runButton2Id), form = $$(lab7FormId), a = 0.5, psi = (value) => 1.0 / (1.0 + Math.exp(-a * value)), dpsi = (value) => psi(value) * (1.0 - psi(value));
     let perceprtor = new perceptron_1.default(36, 5), trainingElements = [], setTrainElement = (image, n) => {
         if (!trainingElements[n]) {
             trainingElements[n] = new perceptron_1.TrainingElement([], []);
@@ -1664,6 +1678,12 @@ let runButtonId = "lab7RunButton", lab7FindButton = "lab7FindButton", containerI
                 trainingElement.out[i] = 1.0;
             }
         }
+    }, toFlattenArray = (array) => {
+        let res = [];
+        for (let i = 0, len = array.length; i < len; i++) {
+            res = res.concat(array[i]);
+        }
+        return res;
     };
     [d, f, iLatter, nLatter, p].forEach((value, n) => {
         setTrainElement(value, n);
@@ -1671,6 +1691,9 @@ let runButtonId = "lab7RunButton", lab7FindButton = "lab7FindButton", containerI
         svg.updateValues(value);
         container1.appendChild(svg.container);
     });
+    let activeSvgEl = new svgPicture_1.default(), activeState = d.slice(0);
+    container2.appendChild(activeSvgEl.container);
+    activeSvgEl.updateValues(activeState);
     perceprtor.addHiddenLayer(40);
     perceprtor.setPSI(psi, dpsi);
     perceprtor.init();
@@ -1681,6 +1704,11 @@ let runButtonId = "lab7RunButton", lab7FindButton = "lab7FindButton", containerI
         do {
             error = perceprtor.train(0.2);
         } while (error > 0.005);
+    });
+    addNoise.attachEvent("onItemClick", () => {
+        debugger;
+        let res = perceprtor.classify(toFlattenArray(activeState));
+        debugger;
     });
 };
 exports.ui = ui;
