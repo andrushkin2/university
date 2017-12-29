@@ -106,8 +106,8 @@ namespace Lab3
                 updateState(states, state);
                 l += GetInt(state[1]) > 0 ? 1 : 0;
             }
-
-            return new double[]{ (double)(output) / n, (double)(l) / n, (double)(w) / output, (double)otk / n };
+            double wOCH = output == 0 ? 0 : (double)(w) / output;
+            return new double[]{ (double)(output) / n, (double)(l) / n, wOCH, (double)otk / n };
         }
         private string getNewState(string state, int newValue, int valueIndex)
         {
