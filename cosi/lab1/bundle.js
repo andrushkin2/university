@@ -1355,17 +1355,21 @@ class Perceptron {
         let trainingSetError = 0;
         for (let t = 0, len = this.trainingSet.length; t < len; t++) {
             let te = this.trainingSet[t], x = te.in, y = te.out, actual = this.classify(x);
+            // calc global error
             let err = 0;
-            for (let i = 0, subLen = this.trainingSet.length; i < subLen; i++) {
-                err += Math.pow(y[t] - actual[t], 2);
+            for (let i = 0, subLen = actual.length; i < subLen; i++) {
+                err += Math.pow(y[i] - actual[i], 2);
             }
             trainingSetError += err * err;
+            // calc error for output layer
             for (let i = 0; i < this.layers[this.h - 1].dim; i++) {
                 this.layers[this.h - 1].err[i] = y[i] - actual[i];
             }
+            // backpropogate error
             for (let h = this.h - 2; h >= 0; h--) {
                 this.calcLayerError(h);
             }
+            // update weights
             for (let h = 1; h < this.h; h++) {
                 this.updateWeights(h, eta);
             }
@@ -1373,22 +1377,21 @@ class Perceptron {
         return Math.sqrt(trainingSetError);
     }
     calcLayerError(h) {
-        let w = this.weights[h];
-        debugger;
-        for (let i = 0; i < this.layers[h].dim; i++) {
-            let sum = 0;
-            for (let j = 0; j < this.layers[h + 1].dim; j++) {
-                sum += w.w[j * w.inputDim + i] * this.layers[h + 1].err[j];
+        let w = this.weights[h], inputDim = w.inputDim, weights = w.w, layer = this.layers[h], layerError = layer.err, layerInput = layer.in;
+        for (let i = 0, len = layer.dim; i < len; i++) {
+            let sum = 0, nextLayer = this.layers[h + 1], nextLayerErrors = nextLayer.err;
+            for (let j = 0, jLen = nextLayer.dim; j < jLen; j++) {
+                sum += weights[j * inputDim + i] * nextLayerErrors[j];
             }
-            this.layers[h].err[i] = this.dpsi(this.layers[h].in[i]) * sum;
+            layerError[i] = this.dpsi(layerInput[i]) * sum;
         }
     }
     updateWeights(h, eta) {
-        let w = this.weights[h - 1];
-        for (let i = 0; i < w.inputDim; i++) {
-            for (let j = 0; j < w.outputDim; j++) {
-                let dw = eta * (this.layers[h].err[i] * this.layers[h - 1].out[j]);
-                w.w[i * w.inputDim + j] += dw;
+        let w = this.weights[h - 1], inputDim = w.inputDim, weights = w.w, layerError = this.layers[h].err, prevLayerOutput = this.layers[h - 1].out;
+        for (let i = 0, len = w.outputDim; i < len; i++) {
+            for (let j = 0, jLen = inputDim; j < jLen; j++) {
+                let dw = eta * (layerError[i] * prevLayerOutput[j]);
+                weights[i * inputDim + j] += dw;
             }
         }
     }
@@ -1405,11 +1408,11 @@ class Perceptron {
     classify(x) {
         let h;
         if (x.length === this.inputDemension) {
-            let layer = this.layers[0];
+            let layer = this.layers[0].out;
             for (let i = 0; i < this.inputDemension; i++) {
-                layer.out[i] = x[i];
+                layer[i] = x[i];
             }
-            for (let i = 0; i < this.h; i++) {
+            for (let i = 1; i < this.h; i++) {
                 this.calcLayerInput(i);
                 this.calcLayerOutput(i);
             }
@@ -1419,18 +1422,20 @@ class Perceptron {
     }
     calcLayerInput(h) {
         if (h > 0 && h < this.h) {
-            let w = this.weights[h - 1];
-            for (let i = 0; i < this.layers[h].dim; i++) {
-                this.layers[h].in[i] = 0;
-                for (let j = 0; j < this.layers[h - 1].dim; j++) {
-                    this.layers[h].in[i] += this.layers[h - 1].out[j] * w.w[i * w.inputDim + j];
+            let w = this.weights[h - 1].w, wInputDim = this.weights[h - 1].inputDim, layer = this.layers[h], layerInput = layer.in;
+            for (let i = 0, len = layer.dim; i < len; i++) {
+                layerInput[i] = 0;
+                let prevLayer = this.layers[h - 1], prevLayerOutput = prevLayer.out;
+                for (let j = 0, jLen = prevLayer.dim; j < jLen; j++) {
+                    layerInput[i] += prevLayerOutput[j] * w[i * wInputDim + j];
                 }
             }
         }
     }
     calcLayerOutput(h) {
-        for (let i = 0; i < this.layers[h].dim; i++) {
-            this.layers[h].out[i] = this.psi(this.layers[h].in[i]);
+        let layer = this.layers[h], output = layer.out, inpit = layer.in;
+        for (let i = 0, len = layer.dim; i < len; i++) {
+            output[i] = this.psi(inpit[i]);
         }
     }
 }
@@ -1583,7 +1588,7 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
     rows: [
         {
             type: "toolbar",
-            height: 50,
+            height: 70,
             cols: [
                 uiItems_1.getButton(runButtonId, "Training"),
                 uiItems_1.getForm(lab7FormId, [
@@ -1592,27 +1597,30 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
             ]
         },
         {
-            template: `<div id="${lab7COntainer1Id}" style="width: 100:; height: auto; overflow-y: auto; padding: 5px; background: grey;"></div>`
+            height: 150,
+            template: `<div id="${lab7COntainer1Id}" style="width: 100%; height: auto; overflow-y: auto; padding: 5px; background: grey;"></div>`
         },
         {
             cols: [
                 {
                     type: "toolbar",
-                    height: 50,
+                    height: 70,
                     cols: [
-                        uiItems_1.getButton(runButton2Id, "Add noise"),
+                        uiItems_1.getButton(runButton2Id, "Classify", 150)
                     ]
                 },
                 {
-                    template: `<div id="${lab7COntainer2Id}" style="width: 100:; height: auto; overflow-y: auto; padding: 5px; background: grey;"></div>`
-                }
+                    height: 150,
+                    width: 150,
+                    template: `<div id="${lab7COntainer2Id}" style="width: 100%; height: auto; overflow-y: auto; padding: 5px; background: grey;"></div>`
+                },
+                {}
             ]
         },
         {
             type: "toolbar",
-            height: 50,
+            height: 70,
             cols: [
-                uiItems_1.getButton(lab7FindButton),
                 uiItems_1.getForm(lab7FormOutputId, [
                     uiItems_1.getTextField("1", "1:", 0),
                     uiItems_1.getTextField("2", "2:", 0),
@@ -1659,7 +1667,7 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
     [1, 0, 0, 0, 0, 0],
     [1, 0, 0, 0, 0, 0]
 ], initLab7 = () => {
-    let container1 = document.querySelector(`#${lab7COntainer1Id}`), container2 = document.querySelector(`#${lab7COntainer2Id}`), runButton = $$(runButtonId), addNoise = $$(runButton2Id), form = $$(lab7FormId), a = 0.5, psi = (value) => 1.0 / (1.0 + Math.exp(-a * value)), dpsi = (value) => psi(value) * (1.0 - psi(value));
+    let container1 = document.querySelector(`#${lab7COntainer1Id}`), container2 = document.querySelector(`#${lab7COntainer2Id}`), runButton = $$(runButtonId), addNoise = $$(runButton2Id), form = $$(lab7FormId), formOutput = $$(lab7FormOutputId), isLearned = false, a = 0.5, psi = (value) => 1.0 / (1.0 + Math.exp(-a * value)), dpsi = (value) => psi(value) * (1.0 - psi(value));
     let perceprtor = new perceptron_1.default(36, 5), trainingElements = [], setTrainElement = (image, n) => {
         if (!trainingElements[n]) {
             trainingElements[n] = new perceptron_1.TrainingElement([], []);
@@ -1684,11 +1692,31 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
             res = res.concat(array[i]);
         }
         return res;
+    }, classify = () => {
+        let res = perceprtor.classify(toFlattenArray(activeState));
+        formOutput.setValues({
+            "1": res[0],
+            "2": res[1],
+            "3": res[2],
+            "4": res[3],
+            "5": res[4]
+        });
+    }, getRandomInt = (min, max) => Math.floor(Math.random() * (max - min)) + min, addNoiseToImage = (image) => {
+        let i = getRandomInt(0, 6), j = getRandomInt(0, 6), value = image[i][j], result = image.slice(0);
+        result[i][j] = value === 0 ? 1 : 0;
+        return result;
     };
     [d, f, iLatter, nLatter, p].forEach((value, n) => {
         setTrainElement(value, n);
         let svg = new svgPicture_1.default();
         svg.updateValues(value);
+        svg.container.addEventListener("click", () => {
+            activeState = value.slice(0);
+            activeSvgEl.updateValues(activeState);
+            if (isLearned) {
+                classify();
+            }
+        }, false);
         container1.appendChild(svg.container);
     });
     let activeSvgEl = new svgPicture_1.default(), activeState = d.slice(0);
@@ -1698,17 +1726,24 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
     perceprtor.setPSI(psi, dpsi);
     perceprtor.init();
     runButton.attachEvent("onItemClick", () => {
-        debugger;
         perceprtor.setTrainingSet(trainingElements);
         let error;
         do {
             error = perceprtor.train(0.2);
         } while (error > 0.005);
+        isLearned = true;
     });
     addNoise.attachEvent("onItemClick", () => {
-        debugger;
-        let res = perceprtor.classify(toFlattenArray(activeState));
-        debugger;
+        if (!isLearned) {
+            webix.message({
+                type: "error",
+                text: "The network has not learned yet"
+            });
+            return;
+        }
+        activeState = addNoiseToImage(activeState);
+        activeSvgEl.updateValues(activeState);
+        classify();
     });
 };
 exports.ui = ui;
@@ -2009,11 +2044,11 @@ exports.initFunction = initFunction;
 },{"../modTest":23,"./uiItems":18}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let getButton = (buttonId, buttonText = "Run") => ({
+let getButton = (buttonId, buttonText = "Run", width = 100) => ({
     view: "button",
     css: "button_primary button_raised",
     id: buttonId,
-    width: 100,
+    width: width,
     value: buttonText
 }), getTextField = (name, label, value = "") => ({
     view: "text",

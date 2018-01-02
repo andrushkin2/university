@@ -36,20 +36,24 @@ export default class Perceptron {
                 y = te.out,
                 actual = this.classify(x);
 
+            // calc global error
             let err = 0;
-            for (let i = 0, subLen = this.trainingSet.length; i < subLen; i++) {
-                err += Math.pow(y[t] - actual[t], 2);
+            for (let i = 0, subLen = actual.length; i < subLen; i++) {
+                err += Math.pow(y[i] - actual[i], 2);
             }
             trainingSetError += err * err;
 
+            // calc error for output layer
             for (let i = 0; i < this.layers[this.h - 1].dim; i++) {
                 this.layers[this.h - 1].err[i] = y[i] - actual[i];
             }
 
+            // backpropogate error
             for (let h = this.h - 2; h >= 0; h--) {
                 this.calcLayerError(h);
             }
 
+            // update weights
             for (let h = 1; h < this.h; h++) {
                 this.updateWeights(h, eta);
             }
@@ -57,22 +61,36 @@ export default class Perceptron {
         return Math.sqrt(trainingSetError);
     }
     private calcLayerError(h: number) {
-        let w = this.weights[h];
-        debugger;
-        for (let i = 0; i < this.layers[h].dim; i++) {
-            let sum = 0;
-            for (let j = 0; j < this.layers[h + 1].dim; j++) {
-                sum += w.w[j * w.inputDim + i] * this.layers[h + 1].err[j];
+        let w = this.weights[h],
+            inputDim = w.inputDim,
+            weights = w.w,
+            layer = this.layers[h],
+            layerError = layer.err,
+            layerInput = layer.in;
+
+        for (let i = 0, len = layer.dim; i < len; i++) {
+            let sum = 0,
+                nextLayer = this.layers[h + 1],
+                nextLayerErrors = nextLayer.err;
+
+            for (let j = 0, jLen = nextLayer.dim; j < jLen; j++) {
+                sum += weights[j * inputDim + i] * nextLayerErrors[j];
             }
-            this.layers[h].err[i] = this.dpsi(this.layers[h].in[i]) * sum;
+
+            layerError[i] = this.dpsi(layerInput[i]) * sum;
         }
     }
     private updateWeights(h: number, eta: number) {
-        let w = this.weights[h - 1];
-        for (let i = 0; i < w.inputDim; i++) {
-            for (let j = 0; j < w.outputDim; j++) {
-                let dw = eta * (this.layers[h].err[i] * this.layers[h - 1].out[j]);
-                w.w[i * w.inputDim + j] += dw;
+        let w = this.weights[h - 1],
+            inputDim = w.inputDim,
+            weights = w.w,
+            layerError = this.layers[h].err,
+            prevLayerOutput = this.layers[h - 1].out;
+
+        for (let i = 0, len = w.outputDim; i < len; i++) {
+            for (let j = 0, jLen = inputDim; j < jLen; j++) {
+                let dw = eta * (layerError[i] * prevLayerOutput[j]);
+                weights[i * inputDim + j] += dw;
             }
         }
     }
@@ -90,11 +108,11 @@ export default class Perceptron {
     public classify(x: number[]) {
         let h: number;
         if (x.length === this.inputDemension) {
-            let layer = this.layers[0];
+            let layer = this.layers[0].out;
             for (let i = 0; i < this.inputDemension; i++) {
-                layer.out[i] = x[i];
+                layer[i] = x[i];
             }
-            for (let i = 0; i < this.h; i++) {
+            for (let i = 1; i < this.h; i++) {
                 this.calcLayerInput(i);
                 this.calcLayerOutput(i);
             }
@@ -104,20 +122,29 @@ export default class Perceptron {
     }
     private calcLayerInput(h: number) {
         if (h > 0 && h < this.h) {
-            let w = this.weights[h - 1];
+            let w = this.weights[h - 1].w,
+                wInputDim = this.weights[h - 1].inputDim,
+                layer = this.layers[h],
+                layerInput = layer.in;
 
-            for (let i = 0; i < this.layers[h].dim; i++) {
-                this.layers[h].in[i] = 0;
+            for (let i = 0, len = layer.dim; i < len; i++) {
+                layerInput[i] = 0;
 
-                for (let j = 0; j < this.layers[h - 1].dim; j++) {
-                    this.layers[h].in[i] += this.layers[h - 1].out[j] * w.w[i * w.inputDim + j];
+                let prevLayer = this.layers[h - 1],
+                    prevLayerOutput = prevLayer.out;
+
+                for (let j = 0, jLen = prevLayer.dim; j < jLen; j++) {
+                    layerInput[i] += prevLayerOutput[j] * w[i * wInputDim + j];
                 }
             }
         }
     }
     private calcLayerOutput(h: number) {
-        for (let i = 0; i < this.layers[h].dim; i++) {
-            this.layers[h].out[i] = this.psi(this.layers[h].in[i]);
+        let layer = this.layers[h],
+            output = layer.out,
+            inpit = layer.in;
+        for (let i = 0, len = layer.dim; i < len; i++) {
+            output[i] = this.psi(inpit[i]);
         }
     }
 }
