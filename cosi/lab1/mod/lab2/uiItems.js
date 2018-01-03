@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let getButton = (buttonId, buttonText = "Run", width = 100) => ({
+let getButton = (buttonId, buttonText = "Run", width = 100, height = 70) => ({
     view: "button",
     css: "button_primary button_raised",
     id: buttonId,
     width: width,
+    height: height,
     value: buttonText
 }), getTextField = (name, label, value = "") => ({
     view: "text",

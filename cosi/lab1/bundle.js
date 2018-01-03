@@ -1328,7 +1328,7 @@ class Perceptron {
         this.h = 0;
         this.inputDemension = 0;
         this.outputDemension = 0;
-        this.trainingSet = [];
+        this.trainingElements = [];
         this.layers = [];
         this.psi = (h) => h;
         this.dpsi = (h) => h;
@@ -1338,103 +1338,108 @@ class Perceptron {
         this.layers.push(new Layer(inputDemension));
         this.h = 1;
     }
-    addHiddenLayer(dimension) {
-        this.layers.push(new Layer(dimension));
+    addHiddenLayer(layerSize) {
+        this.layers.push(new Layer(layerSize));
         this.h++;
     }
     setPSI(psi, dpsi) {
         this.psi = (value) => psi(value);
         this.dpsi = (value) => dpsi(value);
     }
-    init() {
+    initOuputLayer() {
         this.layers.push(new Layer(this.outputDemension));
         this.h++;
+        // reset weights
         this.resetWeights();
     }
-    train(eta) {
+    startTraining(learningSpeed) {
         let trainingSetError = 0;
-        for (let t = 0, len = this.trainingSet.length; t < len; t++) {
-            let te = this.trainingSet[t], x = te.in, y = te.out, actual = this.classify(x);
+        for (let t = 0, len = this.trainingElements.length; t < len; t++) {
+            let trainingElement = this.trainingElements[t], elementInput = trainingElement.in, elementOutput = trainingElement.out;
+            // classify current element
+            let foundOutput = this.classifyElement(elementInput);
             // calc global error
             let err = 0;
-            for (let i = 0, subLen = actual.length; i < subLen; i++) {
-                err += Math.pow(y[i] - actual[i], 2);
+            for (let i = 0, subLen = foundOutput.length; i < subLen; i++) {
+                err += Math.pow(elementOutput[i] - foundOutput[i], 2);
             }
             trainingSetError += err * err;
             // calc error for output layer
-            for (let i = 0; i < this.layers[this.h - 1].dim; i++) {
-                this.layers[this.h - 1].err[i] = y[i] - actual[i];
+            for (let i = 0; i < this.layers[this.h - 1].size; i++) {
+                this.layers[this.h - 1].err[i] = elementOutput[i] - foundOutput[i];
             }
             // backpropogate error
             for (let h = this.h - 2; h >= 0; h--) {
-                this.calcLayerError(h);
+                this.updateLayerErrors(h);
             }
             // update weights
             for (let h = 1; h < this.h; h++) {
-                this.updateWeights(h, eta);
+                this.updateWeights(h, learningSpeed);
             }
         }
         return Math.sqrt(trainingSetError);
     }
-    calcLayerError(h) {
-        let w = this.weights[h], inputDim = w.inputDim, weights = w.w, layer = this.layers[h], layerError = layer.err, layerInput = layer.in;
-        for (let i = 0, len = layer.dim; i < len; i++) {
+    updateLayerErrors(h) {
+        let w = this.weights[h], inputSize = w.inputSize, weights = w.w, layer = this.layers[h], layerError = layer.err, layerInput = layer.in;
+        for (let i = 0, len = layer.size; i < len; i++) {
             let sum = 0, nextLayer = this.layers[h + 1], nextLayerErrors = nextLayer.err;
-            for (let j = 0, jLen = nextLayer.dim; j < jLen; j++) {
-                sum += weights[j * inputDim + i] * nextLayerErrors[j];
+            for (let j = 0, jLen = nextLayer.size; j < jLen; j++) {
+                sum += weights[j * inputSize + i] * nextLayerErrors[j];
             }
             layerError[i] = this.dpsi(layerInput[i]) * sum;
         }
     }
-    updateWeights(h, eta) {
-        let w = this.weights[h - 1], inputDim = w.inputDim, weights = w.w, layerError = this.layers[h].err, prevLayerOutput = this.layers[h - 1].out;
-        for (let i = 0, len = w.outputDim; i < len; i++) {
-            for (let j = 0, jLen = inputDim; j < jLen; j++) {
-                let dw = eta * (layerError[i] * prevLayerOutput[j]);
-                weights[i * inputDim + j] += dw;
+    updateWeights(h, learningSpeed) {
+        let w = this.weights[h - 1], wInputSize = w.inputSize, weights = w.w, layerError = this.layers[h].err, prevLayerOutput = this.layers[h - 1].out;
+        for (let i = 0, len = w.outputSize; i < len; i++) {
+            for (let j = 0, jLen = wInputSize; j < jLen; j++) {
+                let dw = learningSpeed * (layerError[i] * prevLayerOutput[j]);
+                weights[i * wInputSize + j] += dw;
             }
         }
     }
-    setTrainingSet(trainingSet) {
-        this.trainingSet = trainingSet;
+    setTrainingElements(trainingElements) {
+        this.trainingElements = trainingElements;
     }
     resetWeights() {
         this.weights = [];
         for (let h = 0; h < this.h - 1; h++) {
-            let dim0 = this.layers[h].dim, dim1 = this.layers[h + 1].dim;
+            let dim0 = this.layers[h].size, dim1 = this.layers[h + 1].size;
             this.weights.push(new WeightMatrix(dim0, dim1, 1.0));
         }
     }
-    classify(x) {
+    classifyElement(x) {
         let h;
         if (x.length === this.inputDemension) {
-            let layer = this.layers[0].out;
+            let layerOutput = this.layers[0].out;
+            // update first layer output
             for (let i = 0; i < this.inputDemension; i++) {
-                layer[i] = x[i];
+                layerOutput[i] = x[i];
             }
+            // update input/output of all layers
             for (let i = 1; i < this.h; i++) {
-                this.calcLayerInput(i);
-                this.calcLayerOutput(i);
+                this.updateLayerInput(i);
+                this.updateLayerOutput(i);
             }
             return this.layers[this.h - 1].out;
         }
         return x;
     }
-    calcLayerInput(h) {
-        if (h > 0 && h < this.h) {
-            let w = this.weights[h - 1].w, wInputDim = this.weights[h - 1].inputDim, layer = this.layers[h], layerInput = layer.in;
-            for (let i = 0, len = layer.dim; i < len; i++) {
+    updateLayerInput(layerIndex) {
+        if (layerIndex > 0 && layerIndex < this.h) {
+            let weightPrev = this.weights[layerIndex - 1].w, wPrevInputSize = this.weights[layerIndex - 1].inputSize, layer = this.layers[layerIndex], layerInput = layer.in;
+            for (let i = 0, len = layer.size; i < len; i++) {
                 layerInput[i] = 0;
-                let prevLayer = this.layers[h - 1], prevLayerOutput = prevLayer.out;
-                for (let j = 0, jLen = prevLayer.dim; j < jLen; j++) {
-                    layerInput[i] += prevLayerOutput[j] * w[i * wInputDim + j];
+                let weightIndex = i * wPrevInputSize, prevLayer = this.layers[layerIndex - 1], prevLayerOutput = prevLayer.out;
+                for (let j = 0, jLen = prevLayer.size; j < jLen; j++) {
+                    layerInput[i] += prevLayerOutput[j] * weightPrev[weightIndex + j];
                 }
             }
         }
     }
-    calcLayerOutput(h) {
-        let layer = this.layers[h], output = layer.out, inpit = layer.in;
-        for (let i = 0, len = layer.dim; i < len; i++) {
+    updateLayerOutput(layerIndex) {
+        let layer = this.layers[layerIndex], output = layer.out, inpit = layer.in;
+        for (let i = 0, len = layer.size; i < len; i++) {
             output[i] = this.psi(inpit[i]);
         }
     }
@@ -1442,12 +1447,12 @@ class Perceptron {
 exports.default = Perceptron;
 class WeightMatrix {
     constructor(inputDim, outputDim, widthScale) {
-        this.inputDim = 0;
-        this.outputDim = 0;
+        this.inputSize = 0;
+        this.outputSize = 0;
         this.w = [];
         this.w = [];
-        this.inputDim = inputDim;
-        this.outputDim = outputDim;
+        this.inputSize = inputDim;
+        this.outputSize = outputDim;
         for (let i = 0, len = inputDim * outputDim; i < len; i++) {
             this.w.push(2 * widthScale * Math.random() - widthScale);
         }
@@ -1466,7 +1471,7 @@ class Layer {
             this.error.push(0);
         }
     }
-    get dim() {
+    get size() {
         return this.count;
     }
     get in() {
@@ -1590,15 +1595,32 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
             type: "toolbar",
             height: 70,
             cols: [
-                uiItems_1.getButton(runButtonId, "Training"),
+                uiItems_1.getButton(runButtonId, "Start training"),
                 uiItems_1.getForm(lab7FormId, [
                     uiItems_1.getTextField("error", "Error:", 0.001)
-                ])
+                ]),
+                {}
             ]
         },
         {
             height: 150,
-            template: `<div id="${lab7COntainer1Id}" style="width: 100%; height: auto; overflow-y: auto; padding: 5px; background: grey;"></div>`
+            template: `<div id="${lab7COntainer1Id}" style="width: 100%; height: auto; overflow-y: auto; padding: 5px; background: #f1f1f1;"></div>`
+        },
+        {
+            type: "toolbar",
+            height: 70,
+            cols: [
+                uiItems_1.getForm(lab7FormOutputId, [
+                    uiItems_1.getTextField("1", "1:", 0),
+                    uiItems_1.getTextField("2", "2:", 0),
+                    uiItems_1.getTextField("3", "3:", 0),
+                    uiItems_1.getTextField("4", "4:", 0),
+                    uiItems_1.getTextField("5", "5:", 0)
+                ]),
+                {
+                    gravity: 0.4
+                }
+            ]
         },
         {
             cols: [
@@ -1612,60 +1634,46 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
                 {
                     height: 150,
                     width: 150,
-                    template: `<div id="${lab7COntainer2Id}" style="width: 100%; height: auto; overflow-y: auto; padding: 5px; background: grey;"></div>`
-                },
-                {}
-            ]
-        },
-        {
-            type: "toolbar",
-            height: 70,
-            cols: [
-                uiItems_1.getForm(lab7FormOutputId, [
-                    uiItems_1.getTextField("1", "1:", 0),
-                    uiItems_1.getTextField("2", "2:", 0),
-                    uiItems_1.getTextField("3", "3:", 0),
-                    uiItems_1.getTextField("4", "4:", 0),
-                    uiItems_1.getTextField("5", "5:", 0)
-                ])
+                    template: `<div id="${lab7COntainer2Id}" style="width: 100%; height: auto; overflow-y: auto; padding: 5px; background: #f1f1f1;"></div>`
+                }
             ]
         }
     ]
-}, d = [
-    [1, 1, 0, 0, 0, 0],
-    [1, 0, 1, 0, 0, 0],
-    [1, 0, 1, 0, 0, 0],
-    [1, 0, 1, 0, 0, 0],
-    [1, 0, 1, 0, 0, 0],
-    [1, 1, 0, 0, 0, 0]
-], f = [
-    [1, 1, 1, 1, 0, 0],
-    [1, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0],
-    [1, 1, 0, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0]
-], iLatter = [
-    [0, 1, 1, 1, 0, 0],
-    [0, 0, 1, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0],
-    [0, 1, 1, 1, 0, 0]
-], nLatter = [
-    [1, 0, 0, 0, 0, 1],
-    [1, 1, 0, 0, 0, 1],
-    [1, 0, 1, 0, 0, 1],
-    [1, 0, 0, 1, 0, 1],
-    [1, 0, 0, 0, 1, 1],
+}, up = [
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 0, 0],
+    [0, 1, 1, 1, 1, 0],
+    [1, 1, 0, 0, 1, 1],
     [1, 0, 0, 0, 0, 1]
-], p = [
-    [1, 1, 1, 0, 0, 0],
-    [1, 0, 0, 1, 0, 0],
-    [1, 0, 0, 1, 0, 0],
-    [1, 1, 1, 0, 0, 0],
+], down = [
+    [0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 1],
+    [1, 1, 0, 0, 1, 1],
+    [0, 1, 1, 1, 1, 0],
+    [0, 0, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0]
+], rewindE = [
+    [0, 1, 1, 1, 1, 0],
+    [0, 0, 0, 0, 1, 0],
+    [0, 0, 1, 1, 1, 0],
+    [0, 0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 1, 0],
+    [0, 1, 1, 1, 1, 0]
+], right = [
+    [0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0]
+    [1, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0]
+], left = [
+    [0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0, 0]
 ], initLab7 = () => {
     let container1 = document.querySelector(`#${lab7COntainer1Id}`), container2 = document.querySelector(`#${lab7COntainer2Id}`), runButton = $$(runButtonId), addNoise = $$(runButton2Id), form = $$(lab7FormId), formOutput = $$(lab7FormOutputId), isLearned = false, a = 0.5, psi = (value) => 1.0 / (1.0 + Math.exp(-a * value)), dpsi = (value) => psi(value) * (1.0 - psi(value));
     let perceprtor = new perceptron_1.default(36, 5), trainingElements = [], setTrainElement = (image, n) => {
@@ -1693,7 +1701,7 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
         }
         return res;
     }, classify = () => {
-        let res = perceprtor.classify(toFlattenArray(activeState));
+        let res = perceprtor.classifyElement(toFlattenArray(activeState));
         formOutput.setValues({
             "1": res[0],
             "2": res[1],
@@ -1706,7 +1714,7 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
         result[i][j] = value === 0 ? 1 : 0;
         return result;
     };
-    [d, f, iLatter, nLatter, p].forEach((value, n) => {
+    [up, down, rewindE, right, left].forEach((value, n) => {
         setTrainElement(value, n);
         let svg = new svgPicture_1.default();
         svg.updateValues(value);
@@ -1719,19 +1727,21 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
         }, false);
         container1.appendChild(svg.container);
     });
-    let activeSvgEl = new svgPicture_1.default(), activeState = d.slice(0);
+    let activeSvgEl = new svgPicture_1.default(), activeState = up.slice(0);
     container2.appendChild(activeSvgEl.container);
     activeSvgEl.updateValues(activeState);
     perceprtor.addHiddenLayer(40);
     perceprtor.setPSI(psi, dpsi);
-    perceprtor.init();
+    perceprtor.initOuputLayer();
     runButton.attachEvent("onItemClick", () => {
-        perceprtor.setTrainingSet(trainingElements);
+        perceprtor.setTrainingElements(trainingElements);
         let error;
         do {
-            error = perceprtor.train(0.2);
+            error = perceprtor.startTraining(0.2);
         } while (error > 0.005);
+        form.setValues({ error });
         isLearned = true;
+        runButton.disable();
     });
     addNoise.attachEvent("onItemClick", () => {
         if (!isLearned) {
@@ -2044,11 +2054,12 @@ exports.initFunction = initFunction;
 },{"../modTest":23,"./uiItems":18}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-let getButton = (buttonId, buttonText = "Run", width = 100) => ({
+let getButton = (buttonId, buttonText = "Run", width = 100, height = 70) => ({
     view: "button",
     css: "button_primary button_raised",
     id: buttonId,
     width: width,
+    height: height,
     value: buttonText
 }), getTextField = (name, label, value = "") => ({
     view: "text",

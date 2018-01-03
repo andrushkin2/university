@@ -20,15 +20,32 @@ let runButtonId = "lab7RunButton",
                 type: "toolbar",
                 height: 70,
                 cols: [
-                    getButton(runButtonId, "Training"),
+                    getButton(runButtonId, "Start training"),
                     getForm(lab7FormId, [
                         getTextField("error", "Error:", 0.001)
-                    ])
+                    ]),
+                    {}
                 ]
             },
             {
                 height: 150,
-                template: `<div id="${lab7COntainer1Id}" style="width: 100%; height: auto; overflow-y: auto; padding: 5px; background: grey;"></div>`
+                template: `<div id="${lab7COntainer1Id}" style="width: 100%; height: auto; overflow-y: auto; padding: 5px; background: #f1f1f1;"></div>`
+            },
+            <webix.ui.toolbarConfig>{
+                type: "toolbar",
+                height: 70,
+                cols: [
+                    getForm(lab7FormOutputId, [
+                        getTextField("1", "1:", 0),
+                        getTextField("2", "2:", 0),
+                        getTextField("3", "3:", 0),
+                        getTextField("4", "4:", 0),
+                        getTextField("5", "5:", 0)
+                    ]),
+                    <webix.ui.layoutConfig>{
+                        gravity: 0.4
+                    }
+                ]
             },
             {
                 cols: [
@@ -42,65 +59,51 @@ let runButtonId = "lab7RunButton",
                     {
                         height: 150,
                         width: 150,
-                        template: `<div id="${lab7COntainer2Id}" style="width: 100%; height: auto; overflow-y: auto; padding: 5px; background: grey;"></div>`
-                    },
-                    {}
-                ]
-            },
-            <webix.ui.toolbarConfig>{
-                type: "toolbar",
-                height: 70,
-                cols: [
-                    getForm(lab7FormOutputId, [
-                        getTextField("1", "1:", 0),
-                        getTextField("2", "2:", 0),
-                        getTextField("3", "3:", 0),
-                        getTextField("4", "4:", 0),
-                        getTextField("5", "5:", 0)
-                    ])
+                        template: `<div id="${lab7COntainer2Id}" style="width: 100%; height: auto; overflow-y: auto; padding: 5px; background: #f1f1f1;"></div>`
+                    }
                 ]
             }
         ]
     },
-    d = [
-        [1, 1, 0, 0, 0, 0],
-        [1, 0, 1, 0, 0, 0],
-        [1, 0, 1, 0, 0, 0],
-        [1, 0, 1, 0, 0, 0],
-        [1, 0, 1, 0, 0, 0],
-        [1, 1, 0, 0, 0, 0]
-    ],
-    f = [
-        [1, 1, 1, 1, 0, 0],
-        [1, 0, 0, 0, 0, 0],
-        [1, 0, 0, 0, 0, 0],
-        [1, 1, 0, 0, 0, 0],
-        [1, 0, 0, 0, 0, 0],
-        [1, 0, 0, 0, 0, 0]
-    ],
-    iLatter = [
-        [0, 1, 1, 1, 0, 0],
-        [0, 0, 1, 0, 0, 0],
-        [0, 0, 1, 0, 0, 0],
-        [0, 0, 1, 0, 0, 0],
-        [0, 0, 1, 0, 0, 0],
-        [0, 1, 1, 1, 0, 0]
-    ],
-    nLatter = [
-        [1, 0, 0, 0, 0, 1],
-        [1, 1, 0, 0, 0, 1],
-        [1, 0, 1, 0, 0, 1],
-        [1, 0, 0, 1, 0, 1],
-        [1, 0, 0, 0, 1, 1],
+    up = [
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 1, 1, 0, 0],
+        [0, 1, 1, 1, 1, 0],
+        [1, 1, 0, 0, 1, 1],
         [1, 0, 0, 0, 0, 1]
     ],
-    p = [
-        [1, 1, 1, 0, 0, 0],
-        [1, 0, 0, 1, 0, 0],
-        [1, 0, 0, 1, 0, 0],
-        [1, 1, 1, 0, 0, 0],
+    down = [
+        [0, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 1],
+        [1, 1, 0, 0, 1, 1],
+        [0, 1, 1, 1, 1, 0],
+        [0, 0, 1, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0]
+    ],
+    rewindE = [
+        [0, 1, 1, 1, 1, 0],
+        [0, 0, 0, 0, 1, 0],
+        [0, 0, 1, 1, 1, 0],
+        [0, 0, 0, 0, 1, 0],
+        [0, 0, 0, 0, 1, 0],
+        [0, 1, 1, 1, 1, 0]
+    ],
+    right = [
+        [0, 0, 0, 0, 0, 0],
+        [0, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 0, 0],
-        [1, 0, 0, 0, 0, 0]
+        [1, 0, 0, 0, 0, 0],
+        [0, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 0, 0]
+    ],
+    left = [
+        [0, 0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0, 1],
+        [0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0, 0]
     ],
     initLab7 = () => {
         let container1 = document.querySelector(`#${lab7COntainer1Id}`) as HTMLElement,
@@ -142,7 +145,7 @@ let runButtonId = "lab7RunButton",
                 return res;
             },
             classify = () => {
-                let res = perceprtor.classify(toFlattenArray(activeState));
+                let res = perceprtor.classifyElement(toFlattenArray(activeState));
                 formOutput.setValues({
                     "1": res[0],
                     "2": res[1],
@@ -160,7 +163,7 @@ let runButtonId = "lab7RunButton",
                 result[i][j] = value === 0 ? 1 : 0;
                 return result;
             };
-        [d, f, iLatter, nLatter, p].forEach((value, n) => {
+        [up, down, rewindE, right, left].forEach((value, n) => {
             setTrainElement(value, n);
             let svg = new CheckmatePicture();
             svg.updateValues(value);
@@ -175,23 +178,25 @@ let runButtonId = "lab7RunButton",
         });
 
         let activeSvgEl = new CheckmatePicture(),
-            activeState = d.slice(0);
+            activeState = up.slice(0);
 
         container2.appendChild(activeSvgEl.container);
         activeSvgEl.updateValues(activeState);
 
         perceprtor.addHiddenLayer(40);
         perceprtor.setPSI(psi, dpsi);
-        perceprtor.init();
+        perceprtor.initOuputLayer();
 
 
         runButton.attachEvent("onItemClick", () => {
-            perceprtor.setTrainingSet(trainingElements);
+            perceprtor.setTrainingElements(trainingElements);
             let error: number;
             do {
-                error = perceprtor.train(0.2);
+                error = perceprtor.startTraining(0.2);
             } while (error > 0.005);
+            form.setValues({ error });
             isLearned = true;
+            runButton.disable();
         });
 
 
