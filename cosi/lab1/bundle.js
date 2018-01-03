@@ -1710,7 +1710,7 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
             "5": res[4]
         });
     }, getRandomInt = (min, max) => Math.floor(Math.random() * (max - min)) + min, addNoiseToImage = (image) => {
-        let i = getRandomInt(0, 6), j = getRandomInt(0, 6), value = image[i][j], result = image.slice(0);
+        let i = getRandomInt(0, 6), j = getRandomInt(0, 6), value = image[i][j], result = image.slice();
         result[i][j] = value === 0 ? 1 : 0;
         return result;
     };
@@ -1719,7 +1719,7 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
         let svg = new svgPicture_1.default();
         svg.updateValues(value);
         svg.container.addEventListener("click", () => {
-            activeState = value.slice(0);
+            activeState = svg.getValues();
             activeSvgEl.updateValues(activeState);
             if (isLearned) {
                 classify();
@@ -1727,7 +1727,7 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
         }, false);
         container1.appendChild(svg.container);
     });
-    let activeSvgEl = new svgPicture_1.default(), activeState = up.slice(0);
+    let activeSvgEl = new svgPicture_1.default(), activeState = up.slice();
     container2.appendChild(activeSvgEl.container);
     activeSvgEl.updateValues(activeState);
     perceprtor.addHiddenLayer(40);

@@ -159,7 +159,7 @@ let runButtonId = "lab7RunButton",
                 let i = getRandomInt(0, 6),
                     j = getRandomInt(0, 6),
                     value = image[i][j],
-                    result = image.slice(0);
+                    result = image.slice();
                 result[i][j] = value === 0 ? 1 : 0;
                 return result;
             };
@@ -168,7 +168,7 @@ let runButtonId = "lab7RunButton",
             let svg = new CheckmatePicture();
             svg.updateValues(value);
             svg.container.addEventListener("click", () => {
-                activeState = value.slice(0);
+                activeState = svg.getValues();
                 activeSvgEl.updateValues(activeState);
                 if (isLearned) {
                     classify();
@@ -178,7 +178,7 @@ let runButtonId = "lab7RunButton",
         });
 
         let activeSvgEl = new CheckmatePicture(),
-            activeState = up.slice(0);
+            activeState = up.slice();
 
         container2.appendChild(activeSvgEl.container);
         activeSvgEl.updateValues(activeState);
