@@ -1603,7 +1603,7 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
             ]
         },
         {
-            height: 150,
+            height: 300,
             template: `<div id="${lab7COntainer1Id}" style="width: 100%; height: auto; overflow-y: auto; padding: 5px; background: #f1f1f1;"></div>`
         },
         {
@@ -1616,10 +1616,7 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
                     uiItems_1.getTextField("3", "3:", 0),
                     uiItems_1.getTextField("4", "4:", 0),
                     uiItems_1.getTextField("5", "5:", 0)
-                ]),
-                {
-                    gravity: 0.4
-                }
+                ])
             ]
         },
         {
@@ -1730,7 +1727,7 @@ let runButtonId = "lab7RunButton", runButton2Id = "runButton2Id", lab7FindButton
     let activeSvgEl = new svgPicture_1.default(), activeState = up.slice();
     container2.appendChild(activeSvgEl.container);
     activeSvgEl.updateValues(activeState);
-    perceprtor.addHiddenLayer(40);
+    perceprtor.addHiddenLayer(36);
     perceprtor.setPSI(psi, dpsi);
     perceprtor.initOuputLayer();
     runButton.attachEvent("onItemClick", () => {

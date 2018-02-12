@@ -28,7 +28,7 @@ let runButtonId = "lab7RunButton",
                 ]
             },
             {
-                height: 150,
+                height: 300,
                 template: `<div id="${lab7COntainer1Id}" style="width: 100%; height: auto; overflow-y: auto; padding: 5px; background: #f1f1f1;"></div>`
             },
             <webix.ui.toolbarConfig>{
@@ -41,10 +41,7 @@ let runButtonId = "lab7RunButton",
                         getTextField("3", "3:", 0),
                         getTextField("4", "4:", 0),
                         getTextField("5", "5:", 0)
-                    ]),
-                    <webix.ui.layoutConfig>{
-                        gravity: 0.4
-                    }
+                    ])
                 ]
             },
             {
@@ -183,7 +180,7 @@ let runButtonId = "lab7RunButton",
         container2.appendChild(activeSvgEl.container);
         activeSvgEl.updateValues(activeState);
 
-        perceprtor.addHiddenLayer(40);
+        perceprtor.addHiddenLayer(36);
         perceprtor.setPSI(psi, dpsi);
         perceprtor.initOuputLayer();
 
