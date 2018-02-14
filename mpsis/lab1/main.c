@@ -1,203 +1,111 @@
 #include <msp430.h>
 
-/*
-====================================== Config =======================================
-*/
-static const int LED_BLINK_TIMEOUT = 1500;
 
-
-static const int S1_PIN_NUM = 7;
-static const int S2_PIN_NUM = 2;
-
-#define S1_PORT_NAME            P1
-#define S2_PORT_NAME            P2
-
-
-static const int LED1_PIN_NUM = 1;
-static const int LED2_PIN_NUM = 2;
-
-#define LED1_PORT_NAME          P8
-#define LED2_PORT_NAME          P8
-
-/*
-=====================================================================================
-*/
-
-#define CONCAT2(x, y)     y ## x
-#define CONCAT(x, y)      CONCAT2(x, y)
-
-#define B1_DIR            CONCAT(DIR, S1_PORT_NAME)
-#define B1_REN            CONCAT(REN, S1_PORT_NAME)
-#define B1_IN             CONCAT(IN,  S1_PORT_NAME)
-
-#define B2_DIR            CONCAT(DIR, S2_PORT_NAME)
-#define B2_REN            CONCAT(REN, S2_PORT_NAME)
-#define B2_IN             CONCAT(IN,  S2_PORT_NAME)
-
-#define LED1_DIR          CONCAT(DIR, LED1_PORT_NAME)
-#define LED1_OUT          CONCAT(OUT, LED1_PORT_NAME)
-
-#define LED2_DIR          CONCAT(DIR, LED2_PORT_NAME)
-#define LED2_OUT          CONCAT(OUT, LED2_PORT_NAME)
-
-enum ButtonEvent {
-    BE_NONE,
-    BE_S1_UP,
-    BE_S2_UP
-};
-
-struct ProgramState {
-    int enable;
-    enum ButtonEvent buttonEvent;
-    int enableBlink, blinkCounter;
-    int isLedsOn;
-};
-
-/*
-==================
-InitLeds
-==================
-*/
+// InitLeds
 static void InitLeds() {
-    //set both port to OUT mode
-    LED1_DIR |= (1 << LED1_PIN_NUM);
-    LED2_DIR |= (1 << LED2_PIN_NUM);
+    //set ports to OUT mode
+    P8DIR |= BIT1;
+    P1DIR |= BIT0;
+    P8DIR |= BIT2;
 }
 
-/*
-==================
-InitButtons
-==================
-*/
+// InitButtons
 static void InitButtons() {
     //set port to IN
-    B1_DIR &= ~(1 << S1_PIN_NUM);
+    P1DIR &= !(BIT7);
+    P2DIR &= !(BIT2);
+
     //enable pull-up
-    B1_REN |= (1 << S1_PIN_NUM);
+    P1OUT |= BIT7; // set button 1 to output
+    P1REN |= BIT7; // enable pull-up
 
-    B2_DIR &= ~(1 << S2_PIN_NUM);
-    B2_REN |= (1 << S2_PIN_NUM);
+    P2OUT |= BIT2;
+    P2REN |= BIT2;
 }
 
-/*
-==================
-TurnLedsOn
-==================
-*/
+// TurnLedsOn
 static void TurnLedsOn() {
-    LED1_OUT |= (1 << LED1_PIN_NUM);
-    LED2_OUT |= (1 << LED2_PIN_NUM);
+    P1OUT |= BIT0;
+    P8OUT |= BIT1;
+    P8OUT |= BIT2;
 }
 
-/*
-==================
-TurnLedsOff
-==================
-*/
+// TurnLedsOff
 static void TurnLedsOff() {
-    LED1_OUT &= ~(1 << LED1_PIN_NUM);
-    LED2_OUT &= ~(1 << LED2_PIN_NUM);
+    P1OUT &= ~(BIT0);
+    P8OUT &= ~(BIT1);
+    P8OUT &= ~(BIT2);
 }
 
-/*
-==================
-UpdateLedsBlinking
-==================
-*/
-static void UpdateLedsBlinking(struct ProgramState * state) {
-    if (state->enable && state->enableBlink) {
-        if (++state->blinkCounter == LED_BLINK_TIMEOUT) {
-            if (state->isLedsOn) {
-                TurnLedsOff();
-                state->isLedsOn = 0;
-            } else {
-                TurnLedsOn();
-                state->isLedsOn = 1;
-            }
-            state->blinkCounter = 0;
-        }
-    }
-}
-
-/*
-==================
-ReadButtonsStates
-==================
-*/
-static void ReadButtonsStates(struct ProgramState * state) {
-    static int buttonReadDelayCounter = 0;
-    static int s1PrevState = 1, s2PrevState = 1;
-
-    if (++buttonReadDelayCounter == 500) {
-        buttonReadDelayCounter = 0;
-        const int s1NewState = (B1_IN & (1 << S1_PIN_NUM)) ? 1 : 0;
-        const int s2NewState = (B2_IN & (1 << S2_PIN_NUM)) ? 1 : 0;
-
-        if (s1NewState == 1 && s1PrevState == 0) {
-            state->buttonEvent = BE_S1_UP;
-        }
-        if (s2NewState == 1 && s2PrevState == 0) {
-            state->buttonEvent = BE_S2_UP;
-        }
-
-        s1PrevState = s1NewState;
-        s2PrevState = s2NewState;
-    }
-}
-
-/*
-==================
-ProcessButtons
-==================
-*/
-static void ProcessButtons(struct ProgramState * state) {
-    if (state->buttonEvent == BE_S1_UP) {
-        if (state->enable) {
-            state->enable = state->enableBlink = state->isLedsOn = state->blinkCounter = 0;
-            TurnLedsOff();
-        } else {
-            state->enable = state->isLedsOn = 1;
-            TurnLedsOn();
-        }
-    } else if (state->buttonEvent == BE_S2_UP && state->enable) {
-        if (state->enableBlink) {
-            state->enableBlink = state->blinkCounter = 0;
-            TurnLedsOn();
-            state->isLedsOn = 1;
-        } else {
-            state->enableBlink = 1;
-        }
-    }
-}
-
-/*
-==================
-main
-
-    Initialization and main loop.
-==================
-*/
 int main() {
-    struct ProgramState state = {
-        .enable = 0,
-        .buttonEvent = BE_NONE,
-        .enableBlink = 0,
-        .blinkCounter = 0,
-        .isLedsOn = 0
-    };
+    volatile unsigned int buttonS2;
+    volatile unsigned int buttonS1;
+    volatile unsigned int buttonS2MouseDown;
+    volatile unsigned int buttonS1MouseDown;
+
+    volatile unsigned int i = 0;
+    volatile unsigned int j = 0;
+    volatile unsigned int delay = 0;
+    volatile unsigned int enabled = 0;
 
     // WDTCTL = WDTPW | WDTHOLD;   // Stop watchdog timer
     InitLeds();
     InitButtons();
 
     while (1) {
-        ReadButtonsStates(&state);
+        // read buttons states
+        buttonS1 = (P1IN & BIT7);
+        buttonS2 = (P2IN & BIT2);
 
-        if(state.buttonEvent != BE_NONE) {
-            ProcessButtons(&state);
-            state.buttonEvent = BE_NONE;
+        if (j > 0 && i > 0 && enabled == 1) {
+            P8OUT ^= BIT1;
+            P1OUT ^= BIT0;
+            P8OUT ^= BIT2;
+            enabled = 0;
+        }
+        else if (j > 0 && i > 0) {
+            TurnLedsOn()
+            enabled = 1;
+        }
+        else if (j == 0 && i > 0) {
+            TurnLedsOn();
+            enabled = 1;
+        } else {
+            TurnLedsOff();
+            enabled = 0;
         }
 
-        UpdateLedsBlinking(&state);
+        // process button 2 logic
+        if (buttonS2MouseDown == 1 && buttonS2 != 0) {
+            if (i == 0) {
+                i++;
+                TurnLedsOn();
+            } else if (i > 0) {
+                i--;
+                TurnLedsOff();
+            }
+            buttonS2MouseDown = 0;
+        } else if (buttonS2 == 0) {
+            buttonS2MouseDown = 1;
+        }
+
+        // process button 1 logic
+        if (buttonS1MouseDown == 1 && buttonS1 != 0) {
+            if (j == 0) {
+                j++;
+            } else if (j > 0) {
+                j--;
+            }
+
+            buttonS1MouseDown = 0;
+        } else if (buttonS1 == 0 && i > 0) {
+            buttonS1MouseDown = 1;
+        }
+
+        // time delay
+        delay = 10000;
+        do
+            delay--;
+        while (delay != 0);
     }
 }
