@@ -64,7 +64,7 @@ int main() {
             enabled = 0;
         }
         else if (j > 0 && i > 0) {
-            TurnLedsOn()
+            TurnLedsOn();
             enabled = 1;
         }
         else if (j == 0 && i > 0) {
