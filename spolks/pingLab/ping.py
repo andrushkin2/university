@@ -35,8 +35,9 @@ def ping(destAddress, timeout = 2, count = 4):
     print("")
 
 
-def traceroute(destAddress, timeout=2, hops=30):
+def traceroute(destAddress, timeout=5, hops=30):
     ttl = 1
+    port = random.choice(range(33434, 33535))
 
     try:
         destIP = socket.gethostbyname(destAddress)
@@ -48,18 +49,56 @@ def traceroute(destAddress, timeout=2, hops=30):
 
     while True:
         reciever = getICMPSocket()
+        reciever.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack("ll", 5, 0))
+        try:
+            reciever.bind(('', port))
+        except socket.error as e:
+            raise IOError('Unable to bind receiver socket: {}'.format(e))
+
         sender = getUDPSocket(ttl)
 
         # get packet data
-        packerId, packet = getPacket(timeout)
+        # packerId, packet = getPacket(timeout)
 
+
+        # while packet:
+        #     sent = sender.sendto(b'', (destAddress, port))
+        #     # packet = packet[sent:]
+        sender.sendto(b'', (destAddress, port))
+
+        addr = None
+
+        try:
+            # delay, addr = recieveData(reciever, packerId, time.time(), timeout, False)
+            recPacket, addr = reciever.recvfrom(1024)
+        except socket.error as e:
+            pass
+            # raise IOError('Socket error: {}'.format(e))
+        finally:
+            reciever.close()
+            sender.close()
+
+        if addr and delay != None:
+            print('{:<4}\t{}ms\t{}'.format(ttl, round(delay * 1000.0, 4), addr[0]))
+
+            if addr[0] == destIP:
+                break;
+        else:
+            print('{:<4}\t*\tRequest timed out'.format(ttl))
+
+        ttl += 1
+
+        if ttl > hops:
+            break
+
+    print("Trace complete.")
 
 
 def getICMPSocket():
     ''' Get ICMP socket instance '''
 
     try:
-        socketObj = socket.socket(socket.AF_INET, socket.SOCK_RAW, IcpmCode)
+        socketObj = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
     except socket.error as e:
         if e.errno in ErrorDescriptions:
             raise socket.error("".join((e.args[1], ErrorDescriptions[e.errno])))
@@ -75,7 +114,7 @@ def getUDPSocket(ttl):
 
     try:
         socketObj = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        s.setsockopt(socket.SOL_IP, socket.IP_TTL, ttl)
+        socketObj.setsockopt(socket.SOL_IP, socket.IP_TTL, ttl)
     except socket.error as e:
         if e.errno in ErrorDescriptions:
             raise socket.error("".join((e.args[1], ErrorDescriptions[e.errno])))
@@ -120,14 +159,14 @@ def sendPingRequest(destAddress, timeout = 1):
         sent = socketObj.sendto(packet, (destAddress, 1))
         packet = packet[sent:]
 
-    delay = recievePing(socketObj, packerId, time.time(), timeout)
+    delay, addr = recieveData(socketObj, packerId, time.time(), timeout)
     socketObj.close()
 
     return delay, host
 
 
-def recievePing(socketObj, packetId, sentTime, timeout):
-    ''' Recieve the ping from the given socket '''
+def recieveData(socketObj, packetId, sentTime, timeout, waitForReady = True):
+    ''' Recieve data from the given socket '''
     timeLeft = timeout
 
     while True:
@@ -136,24 +175,27 @@ def recievePing(socketObj, packetId, sentTime, timeout):
         timeOffset = time.time() - startTime
 
         # if state empty -> timeout
-        if ready[0] == []:
-            return
+        if waitForReady and ready[0] == []:
+            return None, None
         
         timeRecieved = time.time()
 
         # get recieve data
-        recPacket, addr = socketObj.recvfrom(1024)
+        try:
+            recPacket, addr = socketObj.recvfrom(1024)
+        except:
+            raise
         icmpHeader = recPacket[20:28]
 
         # unpack header data
         type, code, checksum, p_id, sequence = struct.unpack('bbHHh', icmpHeader)
 
         if p_id == packetId:
-            return timeRecieved - startTime
+            return timeRecieved - startTime, addr
 
         timeLeft -= timeRecieved - startTime
         if timeLeft <= 0:
-            return
+            return None, None
 
 def getHeaderData(checksum, id):
     ''' Get bytes object of header data '''
