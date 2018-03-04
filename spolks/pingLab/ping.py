@@ -34,8 +34,19 @@ def ping(destAddress, timeout = 2, count = 4):
             print("Reply from {}: time={}ms".format(host, delay))
     print("")
 
+def getExtendedICMPSocket(port):
+    ''' Get extended ICPM socket '''
+    socketObj = getICMPSocket()
 
-def traceroute(destAddress, timeout=5, hops=30):
+    socketObj.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack("ll", 5, 0))
+    try:
+        socketObj.bind(('', port))
+    except socket.error as e:
+        raise IOError('Unable to bind receiver socket: {}'.format(e))
+
+    return socketObj
+
+def traceroute(destAddress, timeout=2, hops=30):
     ttl = 1
     port = random.choice(range(33434, 33535))
 
@@ -48,29 +59,21 @@ def traceroute(destAddress, timeout=5, hops=30):
     print('Traceroute to {} ({}), {} hops max'.format(destAddress, destIP, hops))
 
     while True:
-        reciever = getICMPSocket()
-        reciever.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, struct.pack("ll", 5, 0))
-        try:
-            reciever.bind(('', port))
-        except socket.error as e:
-            raise IOError('Unable to bind receiver socket: {}'.format(e))
-
+        reciever = getExtendedICMPSocket(port)
         sender = getUDPSocket(ttl)
 
         # get packet data
-        # packerId, packet = getPacket(timeout)
+        packerId, packet = getPacket(timeout)
 
 
-        # while packet:
-        #     sent = sender.sendto(b'', (destAddress, port))
-        #     # packet = packet[sent:]
-        sender.sendto(b'', (destAddress, port))
+        while packet:
+            sent = sender.sendto(packet, (destAddress, port))
+            packet = packet[sent:]
 
         addr = None
 
         try:
-            # delay, addr = recieveData(reciever, packerId, time.time(), timeout, False)
-            recPacket, addr = reciever.recvfrom(1024)
+            delay, addr = recieveData(reciever, packerId, time.time(), timeout, False)
         except socket.error as e:
             pass
             # raise IOError('Socket error: {}'.format(e))
@@ -79,12 +82,12 @@ def traceroute(destAddress, timeout=5, hops=30):
             sender.close()
 
         if addr and delay != None:
-            print('{:<4}\t{}ms\t{}'.format(ttl, round(delay * 1000.0, 4), addr[0]))
+            print('{:<4}\t{:<8}ms\t{}'.format(ttl, round(delay * 1000.0, 4), addr[0]))
 
             if addr[0] == destIP:
-                break;
+                break
         else:
-            print('{:<4}\t*\tRequest timed out'.format(ttl))
+            print('{:<4}\t\t*\tRequest timed out'.format(ttl))
 
         ttl += 1
 
@@ -190,7 +193,7 @@ def recieveData(socketObj, packetId, sentTime, timeout, waitForReady = True):
         # unpack header data
         type, code, checksum, p_id, sequence = struct.unpack('bbHHh', icmpHeader)
 
-        if p_id == packetId:
+        if p_id == packetId or not waitForReady:
             return timeRecieved - startTime, addr
 
         timeLeft -= timeRecieved - startTime
@@ -239,8 +242,6 @@ def getChecksum(dataString):
     # Swap bytes. Bugger me if I know why.
     answer = answer >> 8 | (answer << 8 & 0xff00)
     return answer
-
-
 
 if __name__ == "__main__":
     ping('www.heise.de')
