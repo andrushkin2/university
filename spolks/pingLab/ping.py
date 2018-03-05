@@ -6,6 +6,7 @@ import struct
 import select
 import random
 import asyncore
+import sys
 
 IcmpEchoRequest = 8
 IcpmCode = socket.getprotobyname("icmp")
@@ -14,6 +15,26 @@ ErrorDescriptions = {
     1: "ICPM messages can only be sent using ROOT permissions",
     10013: "ICPM messages can only be sent using ROOT permissions"
 }
+
+def smurf(src, dst, timeout = 2):
+    socketObj = getICMPSocket()
+    socketObj.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
+
+    port = random.choice(range(33434, 33535))
+
+    try:
+        socketObj.bind((src, port))
+    except socket.error as e:
+        raise IOError('Unable to bind receiver socket: {}'.format(e))
+
+    # get packet data
+    packerId, packet = getPacket(timeout)
+    while packet:
+        sent = socketObj.sendto(packet, (dst, port))
+        packet = packet[sent:]
+
+    select.select([socketObj], [], [], timeout)
+    socketObj.close()
 
 def ping(destAddress, timeout = 2, count = 4):
     ''' Sends a bunch of ping request to the given address that can be an IP or hostname
