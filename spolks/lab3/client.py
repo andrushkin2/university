@@ -56,17 +56,36 @@ def runClient():
                 data = sock.recv(4096)
                 if not data:
                     print("\nYou've been disconnected from chat server :(")
-                    sys.exit()
+                    sock.close()
+                    return
                 else:
                     sys.stdout.write(data)
                     promt()
             else:
                 message = sys.stdin.readline()
-                socketObj.send(message)
-                promt()
+                command = parseMessage(message)
+                if command == "leave":
+                    socketObj.send(message)
+                    socketObj.close()
+                    return
+                else:
+                    socketObj.send(message)
+                    promt()
 
     # close socket
     socketObj.close()
 
+def parseMessage(message = ""):
+    if message.startswith("/leave"):
+        return "leave"
+    
+    return message
+
 if __name__ == "__main__":
-    runClient()
+    while 1:
+        print("Type:\n\t1) Connect to the chat\n\t2) Exit\n")
+        code = sys.stdin.readline()
+        if code.startswith("1"):
+            runClient()
+        elif code.startswith("2"):
+            sys.exit()

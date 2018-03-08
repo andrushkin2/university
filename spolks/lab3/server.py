@@ -1,5 +1,6 @@
 import socket
 import select
+from client import parseMessage
 
 
 def getServerSocket(ipAddress = "0.0.0.0", port = 5000):
@@ -56,11 +57,15 @@ def runServer():
                     # get data and send it to other clients
                     data = sock.recv(BUFFER_SIZE)
                     if (data):
-                        sendMessage(sock, "\r<{}>{}".format(str(sock.getpeername()), data), serverSocketObj, CONNECTIONS_LIST)
+                        command = parseMessage(data)
+                        if command == "leave":
+                            leaveChat(sock, serverSocketObj, CONNECTIONS_LIST)
+                        else:
+                            sendMessage(sock, "\r<{}>{}".format(str(sock.getpeername()), data), serverSocketObj, CONNECTIONS_LIST)
                 except :
                     # something wrong with current socket connection
-                    message = "Client {} is offline".format(addr[0])
-                    sendMessage(sock, message,serverSocketObj, CONNECTIONS_LIST)
+                    message = "\nClient {} is offline\n".format(addr[0])
+                    sendMessage(sock, message, serverSocketObj, CONNECTIONS_LIST)
                     print(message)
 
                     sock.close()
@@ -70,6 +75,14 @@ def runServer():
 
     # close server socket
     serverSocketObj.close()
+
+def leaveChat(sock, serverSocketObj, CONNECTIONS_LIST):
+    message = "\nClient {} leave the chat\n".format(str(sock.getpeername()))
+    sendMessage(sock, message, serverSocketObj, CONNECTIONS_LIST)
+    print(message)
+
+    sock.close()
+    CONNECTIONS_LIST.remove(sock)
 
 
 def sendMessage(sock, message, serverSoket, CONNECTION_LIST):
