@@ -3,6 +3,9 @@ import select
 import string
 import sys
 
+LINE = "\n=================================================================="
+CONNECTED_MESSAGE = "\nYou've been connected to the host. You can start messaging\n"
+
 def getSocket():
     ''' Cteate a socket
 
@@ -14,8 +17,8 @@ def getSocket():
         socketObj = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         socketObj.settimeout(2)
     except socket.error as e:
-        raise IOError(
-            'Cannot create a socket({}, {}): {}'.format(ipAddress, port, e))
+        print('Cannot create a socket: {}\n'.format(e))
+        return None
 
     return socketObj
 
@@ -23,8 +26,10 @@ def connectToServer(s, host, port):
     try:
         s.connect((host, port))
     except socket.error as e:
-        print("Cannot connect to the server({}, {}): ".format(host, port, e))
-        sys.exit()
+        print("Cannot connect to the server({}, {}): {}\n".format(host, port, e))
+        return False
+
+    return True
 
 def promt():
     sys.stdout.write("<You> ")
@@ -32,17 +37,20 @@ def promt():
 
 def runClient():
     if len(sys.argv) < 3:
-        print("Usage: python client.py HOSTNAME PORT")
+        print("\nWrong execution of application!\n\tUsage: python client.py SERVER_IP SERVER_PORT")
         sys.exit()
 
     host = sys.argv[1]
     port = int(sys.argv[2])
 
     socketObj = getSocket()
+    if socketObj == None:
+        return
 
-    connectToServer(socketObj, host, port)
+    if connectToServer(socketObj, host, port) == False:
+        return
 
-    print("You've beeb connected to the host. Start messaging")
+    print("{}{}\nCommands:\n\t/leave - leave the chat\n\t/kill userIP userPORT - kill user with the entered IP{}\n\n".format(LINE, CONNECTED_MESSAGE, LINE))
     promt()
 
     while 1:
@@ -55,7 +63,7 @@ def runClient():
             if sock == socketObj:
                 data = sock.recv(4096)
                 if not data:
-                    print("\nYou've been disconnected from chat server :(")
+                    print("\n\nYou've been disconnected from chat server :(\n\n")
                     sock.close()
                     return
                 else:
@@ -76,10 +84,15 @@ def runClient():
     socketObj.close()
 
 def parseMessage(message = ""):
-    if message.startswith("/leave"):
-        return "leave"
+    newMessage = message.replace("\n", "").replace("\r", "")
+    if newMessage.startswith("/leave"):
+        return "leave", None
+    elif newMessage.startswith("/kill"):
+        splitted = newMessage.split(" ")
+        if len(splitted) == 3:
+            return "kill", [splitted[1], int(splitted[2])]
     
-    return message
+    return message, None
 
 if __name__ == "__main__":
     while 1:
