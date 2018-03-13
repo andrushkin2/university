@@ -76,10 +76,13 @@ class Receiver(threading.Thread):
     def kill(self):
         """ Kill current user and notify other ones """
 
-        global isConnected
-        isConnected = False
         # notify other users
         self.s.sendto('killed', MULTICAS_GROUP)
+
+        # disconnect from multigroup
+        disconectFromGroup(self.s)
+
+        # output
         print("\n\nYou've been killed!\nEnter any key to reconnect\n\n")
 
     def addToListIfNeedIt(self, addr):
@@ -116,7 +119,7 @@ class Sender(threading.Thread):
 
             if isConnected == False and len(msg) > 0:
                 # connect user 
-                isConnected = True
+                connectToGroup(self.s)
                 # notify other users
                 self.s.sendto('init', MULTICAS_GROUP)
 
@@ -156,8 +159,7 @@ class Sender(threading.Thread):
     
     def leave(self):
         """ Current user leave the chat """
-        global isConnected
-        isConnected = False
+        disconectFromGroup(self.s)
         print("\n\nYou've leaved the chat!\nEnter any key to reconnect\n\n")
 
     def exitApp(self):
@@ -165,10 +167,20 @@ class Sender(threading.Thread):
         global isExitProgram
         global isConnected
         # set flags and say Goodbye
-        isConnected = False
+        disconectFromGroup(self.s)
         isExitProgram = True
         print('\n\nGood Bye!\n\n')
 
+
+def disconectFromGroup(s):
+    s.setsockopt(socket.IPPROTO_IP, socket.IP_DROP_MEMBERSHIP, mreq)
+    global isConnected
+    isConnected = False
+
+def connectToGroup(s):
+    s.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+    global isConnected
+    isConnected = True
 
 # create an UDP socket
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -182,7 +194,7 @@ s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
 MULTICAS_GROUP = ('224.3.29.71', 2000)
 group = socket.inet_aton(MULTICAS_GROUP[0])
 mreq = struct.pack('4sL', group, socket.INADDR_ANY)
-s.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+connectToGroup(s)
 
 # bind to the port
 s.bind(('', 2000))
