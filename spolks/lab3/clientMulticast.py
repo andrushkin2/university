@@ -4,118 +4,140 @@ import sys
 import struct
 
 
-exit_flag = False
+isExitProgram = False
 isConnected = True
-ip_list = []
+IP_LIST = []
 
 
 class Receiver(threading.Thread):
     def __init__(self, s):
         self.s = s
         threading.Thread.__init__(self)
-        #self.ip_list = []
 
     def run(self):
         flag = False
-        global ip_list
-        global exit_flag
+        global IP_LIST
+        global isExitProgram
         global isConnected
         while True:
             if isConnected == True:
+                # get data
                 data, addr = self.s.recvfrom(1024)
+
                 if data == 'init':
                     if flag == False:
+                        # current user - first connect
                         flag = True
                         print("### Welcome to ChatRoom, user - {} ###".format(addr[0]))
-                        ip_list.append(addr[0])
+                        if addr[0] not in IP_LIST:
+                            IP_LIST.append(addr[0])
                     else:
+                        # nother user was connected
                         self.addToListIfNeedIt(addr)
+
                 elif data == "leave":
                     if isConnected == False:
                          continue
                     self.leaveGroup(addr)
+
                 elif data == 'exit':
-                    if exit_flag == True:
+                    if isExitProgram == True:
                         return
                     self.leaveGroup(addr)
+
                 elif data == "killed" and isConnected:
                     # some user was killed
                     self.userWasKilled(addr)
+
                 elif data.startswith("kill"):
                     # parse 'kill' command
                     splitted = data.split(" ")
                     
                     # if IP for killing is current socket address -> kill it
-                    if len(splitted) == 2 and splitted[1] == ip_list[0]:
+                    if len(splitted) == 2 and splitted[1] == IP_LIST[0]:
                         self.kill()
+
                 else:
                     # a simple message
                     self.addToListIfNeedIt(addr)
 
-                    if addr[0] != ip_list[0]:
+                    if addr[0] != IP_LIST[0]:
                         print("<{}> {}".format(addr[0], data))
 
-            if exit_flag == True:
+            if isExitProgram == True:
                 return
 
     def userWasKilled(self, addr):
+        """ Some user was killed. Show message and remove from known addresses """
+
         print("### User '{}' was killed ###".format(addr[0]))
-        ip_list.remove(addr[0])
+        IP_LIST.remove(addr[0])
 
     def kill(self):
+        """ Kill current user and notify other ones """
+
         global isConnected
         isConnected = False
         # notify other users
-        self.s.sendto('killed', multicast_group)
+        self.s.sendto('killed', MULTICAS_GROUP)
         print("\n\nYou've been killed!\nEnter any key to reconnect\n\n")
 
     def addToListIfNeedIt(self, addr):
-        if addr[0] not in ip_list:
+        """ Add a new address to known addresses of need it """
+
+        if addr[0] not in IP_LIST:
             print("New user enters the chatroom - {} ###".format(addr[0]))
-            ip_list.append(addr[0])
+            IP_LIST.append(addr[0])
 
     def leaveGroup(self, addr):
+        """ Someone leave the chat. Show message and remove from known addresses """
+
         print("### User '{}' leaves the chatroom ###".format(addr[0]))
-        ip_list.remove(addr[0])
+        IP_LIST.remove(addr[0])
 
 
 
 class Sender(threading.Thread):
     def __init__(self, s):
         self.s = s
-        #self.addr = addr
         threading.Thread.__init__(self)
 
     def run(self):
-        global multicast_group
+        global MULTICAS_GROUP
         global mreq
-        global ip_list
+        global IP_LIST
         global isConnected
+
         print("Enter any key to connect")
+
         while True:
             # wait for type anything
             msg = sys.stdin.readline().replace("\n", "").replace("\r", "")
 
             if isConnected == False and len(msg) > 0:
                 # connect user 
-                connectToGroup(self.s)
                 isConnected = True
-                self.s.sendto('init', multicast_group)
+                # notify other users
+                self.s.sendto('init', MULTICAS_GROUP)
+
             elif isConnected == False and len(msg) == 0:
                 continue
+
             elif msg == "leave":
                 # send a message
-                self.s.sendto(msg, multicast_group)
+                self.s.sendto(msg, MULTICAS_GROUP)
 
                 # leave chat
                 self.leave()
                 continue
+
             elif msg == 'list':
                 # show connections list
                 self.showList()
+
             else:
                 # send a message
-                self.s.sendto(msg, multicast_group)
+                self.s.sendto(msg, MULTICAS_GROUP)
 
                 # close program if type "exit"
                 if msg == 'exit':
@@ -124,44 +146,40 @@ class Sender(threading.Thread):
 
                 # otherwise, print what you've typed
                 print("<You> {}".format(msg))
+
         self.s.close()
 
     def showList(self):
-        for a in ip_list:
+        """ show the list of known IPs """
+        for a in IP_LIST:
             print("{}\n".format(str(a)))
     
     def leave(self):
+        """ Current user leave the chat """
         global isConnected
         isConnected = False
         print("\n\nYou've leaved the chat!\nEnter any key to reconnect\n\n")
-        disconnectFromGroup(self.s)
 
     def exitApp(self):
-        global exit_flag
+        """ Close the program """
+        global isExitProgram
         global isConnected
+        # set flags and say Goodbye
         isConnected = False
-        exit_flag = True
+        isExitProgram = True
         print('\n\nGood Bye!\n\n')
 
-def connectToGroup(s):
-    # s.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-    print("Connect...")
 
-def disconnectFromGroup(s):
-    # s.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, '')
-    print("Disonnect...")
-
-multicast_group = ('224.3.29.71', 2000)
+MULTICAS_GROUP = ('224.3.29.71', 2000)
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 ttl = struct.pack('b', 1)
 s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
 
-group = socket.inet_aton(multicast_group[0])
+group = socket.inet_aton(MULTICAS_GROUP[0])
 mreq = struct.pack('4sL', group, socket.INADDR_ANY)
 s.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-connectToGroup(s)
 
 s.bind(('', 2000))
 
