@@ -28,11 +28,11 @@ class Receiver(threading.Thread):
                     if flag == False:
                         # current user - first connect
                         flag = True
-                        print("### Welcome to ChatRoom, user - {} ###".format(addr[0]))
+                        print("\nWelcome to chat, user - {}\n".format(addr[0]))
                         if addr[0] not in IP_LIST:
                             IP_LIST.append(addr[0])
                     else:
-                        # nother user was connected
+                        # another user was connected
                         self.addToListIfNeedIt(addr)
 
                 elif data == "leave":
@@ -70,7 +70,7 @@ class Receiver(threading.Thread):
     def userWasKilled(self, addr):
         """ Some user was killed. Show message and remove from known addresses """
 
-        print("### User '{}' was killed ###".format(addr[0]))
+        print("User '{}' was killed".format(addr[0]))
         IP_LIST.remove(addr[0])
 
     def kill(self):
@@ -86,13 +86,13 @@ class Receiver(threading.Thread):
         """ Add a new address to known addresses of need it """
 
         if addr[0] not in IP_LIST:
-            print("New user enters the chatroom - {} ###".format(addr[0]))
+            print("New user enters the chatroom - {}".format(addr[0]))
             IP_LIST.append(addr[0])
 
     def leaveGroup(self, addr):
         """ Someone leave the chat. Show message and remove from known addresses """
 
-        print("### User '{}' leaves the chatroom ###".format(addr[0]))
+        print("User '{}' leaves the chatroom".format(addr[0]))
         IP_LIST.remove(addr[0])
 
 
@@ -170,18 +170,23 @@ class Sender(threading.Thread):
         print('\n\nGood Bye!\n\n')
 
 
-MULTICAS_GROUP = ('224.3.29.71', 2000)
+# create an UDP socket
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
+# multicast TTL
 ttl = struct.pack('b', 1)
 s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
 
+# create a multicast group and add it to socket options
+MULTICAS_GROUP = ('224.3.29.71', 2000)
 group = socket.inet_aton(MULTICAS_GROUP[0])
 mreq = struct.pack('4sL', group, socket.INADDR_ANY)
 s.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
+# bind to the port
 s.bind(('', 2000))
 
+# start
 Receiver(s).start()
 Sender(s).start()
