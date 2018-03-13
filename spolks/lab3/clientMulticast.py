@@ -38,7 +38,18 @@ class Receiver(threading.Thread):
                     if exit_flag == True:
                         return
                     self.leaveGroup(addr)
+                elif data == "killed" and isConnected:
+                    # some user was killed
+                    self.userWasKilled(addr)
+                elif data.startswith("kill"):
+                    # parse 'kill' command
+                    splitted = data.split(" ")
+                    
+                    # if IP for killing is current socket address -> kill it
+                    if len(splitted) == 2 and splitted[1] == ip_list[0]:
+                        self.kill()
                 else:
+                    # a simple message
                     self.addToListIfNeedIt(addr)
 
                     if addr[0] != ip_list[0]:
@@ -46,6 +57,17 @@ class Receiver(threading.Thread):
 
             if exit_flag == True:
                 return
+
+    def userWasKilled(self, addr):
+        print("### User '{}' was killed ###".format(addr[0]))
+        ip_list.remove(addr[0])
+
+    def kill(self):
+        global isConnected
+        isConnected = False
+        # notify other users
+        self.s.sendto('killed', multicast_group)
+        print("\n\nYou've been killed!\nEnter any key to reconnect\n\n")
 
     def addToListIfNeedIt(self, addr):
         if addr[0] not in ip_list:
