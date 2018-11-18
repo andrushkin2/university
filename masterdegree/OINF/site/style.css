@@ -54,11 +54,18 @@ h1 {
 .header .pages .pageName {
   padding: 7px;
 }
-.header .pages .pageName.active {
-  color: #fff;
-}
 .header .pages .pageName:hover {
   color: #fff;
+}
+.header .pages .pageName:hover .link {
+  text-decoration: underline;
+}
+.header .pages .pageName.active {
+  color: #fff;
+  cursor: default;
+}
+.header .pages .pageName.active .link {
+  text-decoration: none;
 }
 .header .pages .pageName .link,
 .header .pages .pageName .link:active,
@@ -67,6 +74,11 @@ h1 {
   display: inline-block;
   color: inherit;
   text-decoration: none;
+}
+@media screen and (max-width: 600px) {
+  .header .pages {
+    font-size: 0.95em;
+  }
 }
 .pageBody {
   display: block;
@@ -112,6 +124,12 @@ h1 {
   color: #0070af;
   font-weight: 400;
 }
+@media screen and (max-width: 600px) {
+  .headerWithText .headerName,
+  .headerWithText .headerNameMini {
+    font-size: 1.4em;
+  }
+}
 .headerWithText .headerNameMini {
   font-size: 1.5em;
 }
@@ -134,7 +152,7 @@ h1 {
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  padding: 5px;
+  padding: 10px 0;
 }
 .headerWithText .headerImageContainer .headerImage {
   -webkit-box-flex: 0 1 auto;
@@ -144,6 +162,7 @@ h1 {
   flex: 0 1 auto;
   max-width: 100%;
   height: auto;
+  border: 1px solid #d5d5d5;
 }
 @media screen and (max-width: 800px) {
   .headerWithText .headerImage {
