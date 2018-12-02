@@ -7,7 +7,7 @@ import { initLab6, ui as Lab6UI } from "./lab3/ui";
 import { initLab7, ui as Lab7UI } from "./lab4/ui";
 
 let getXData = (count: number): number[] => {
-        let i: number = 0,
+        let i = 0,
             res: number[] = [];
         for (i; i < count; i++) {
             res.push(i);
@@ -15,7 +15,7 @@ let getXData = (count: number): number[] => {
         return res;
     },
     getXDataComplex = (count: number): Complex[] => {
-        let i: number = 0,
+        let i = 0,
             res: Complex[] = [];
         for (i; i < count; i++) {
             res.push(new Complex(0.0, 0.0));
@@ -35,7 +35,7 @@ let getXData = (count: number): number[] => {
     bih = (noise: number[], grade: number) => {
         let result: number[] = [],
             temp: number[] = [],
-            acc: number = 0;
+            acc = 0;
         for (let t = grade / 2; t < noise.length; t++) {
             temp[t] = noise[t];
         }
@@ -67,7 +67,7 @@ let getXData = (count: number): number[] => {
             }
         }
 
-        let dSum: number = 0;
+        let dSum = 0;
         for (let i = 0; i < grade; i++) {
             dSum += blackman[i];
         }
@@ -98,13 +98,13 @@ let getXData = (count: number): number[] => {
     },
     runLab4 = () => {
         let amount = 1024,
-            grade: number = 64,
+            grade = 64,
             nF = 0.015,
             createData = (length: number, getSignal: (value: number) => number) => {
                 let step: number = 2 * Math.PI / length,
-                    curStep: number = 0.0,
+                    curStep = 0.0,
                     arr: number[] = [],
-                    i: number = 0;
+                    i = 0;
                 for (; curStep < 2 * Math.PI; curStep += step, i++) {
                     arr[i] = getSignal(curStep);
                 }
@@ -123,7 +123,7 @@ let getXData = (count: number): number[] => {
             drawChart(getXData(bihData.length), bihData, $$(lab4Data4) as webix.ui.chart);
     },
     runLab = () => {
-        let amount: number = 1024,
+        let amount = 1024,
             data: Complex[] = CreateSamples(amount, 8000, 187.5, (value: number) => {
                 return Math.sin(3.0 * value) + Math.cos(value);
             }),
@@ -166,14 +166,14 @@ let getXData = (count: number): number[] => {
             drawChart(getHalfData(xData), getRealFromComplex(correlationFourier), $$(lab2Corr2Id) as webix.ui.chart);
     },
     runLab3 = () => {
-        const   N: number = 8,
-                size: number = 64,
+        const   N = 8,
+                size = 64,
                 len: number = N * size;
         let createData = (length: number, getSignal: (value: number) => number) => {
                 let step: number = 2 * Math.PI / length,
-                    curStep: number = 0.0,
+                    curStep = 0.0,
                     arr: number[] = [],
-                    i: number = 0;
+                    i = 0;
                 for (; curStep < 2 * Math.PI; curStep += step, i++) {
                     arr[i] = getSignal(curStep);
                 }
@@ -183,7 +183,7 @@ let getXData = (count: number): number[] => {
             xData = getXData(len),
             data = createData(len, value => Math.cos(3.0 * value) + Math.sin(2.0 * value)),
             fwhtData = FWHT(data, len),
-            i: number = 0;
+            i = 0;
 
         for (; i < len; i++) {
             fwhtData[i] /= len; // this for normalisation

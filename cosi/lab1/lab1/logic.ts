@@ -211,7 +211,7 @@ export default class UiLogic {
                 if (FileReader) {
                     let loader = new FileReader();
                     loader.onload = () => {
-                        resolve(loader.result);
+                        resolve(loader.result as string);
                     };
                     loader.onerror = (e) => {
                         reject(e);
